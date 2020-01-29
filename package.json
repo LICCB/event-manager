@@ -1,0 +1,16 @@
+{
+  "name": "eventmanager",
+  "version": "1.0.0",
+  "description": "LICCB Event Manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "LICCB",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1"
+  }
+}
