@@ -8,7 +8,7 @@ app.set('view engine', 'ejs')
 
 app.get('/', function (req, res) {
     res.render('index');
-  })
+})
 
 app.get('/createEvent', function (req, res) {
   res.render('createEvent');
@@ -17,7 +17,7 @@ app.get('/createEvent', function (req, res) {
 app.post('/createEvent', function (req, res) {
     console.log(req.body);
     res.render('createEvent');
-  })
+})
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
