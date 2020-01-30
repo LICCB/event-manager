@@ -32,3 +32,21 @@ CREATE TABLE LICCB.events(
     FOREIGN KEY (creatorID)
         REFERENCES users(userID)
 );
+
+/*CREATE TABLE LICCB.event1(
+    participantID   BIGINT NOT NULL PRIMARY KEY,
+    partyID         BIGINT DEFAULT NULL,
+    isAdult         BOOLEAN NOT NULL,
+    canSwim         BOOLEAN NOT NULL,
+    phone           VARCHAR(30) NOT NULL,
+    email           VARCHAR(75) NOT NULL,
+    emergencyPhone  VARCHAR(30) NOT NULL,
+    emergencyName   VARCHAR(60) NOT NULL,
+    hasCPRCert      BOOLEAN NOT NULL,
+    regStatus       ENUM('Registered', 'Not Selected', 'Standby', 'Selected', 'Checked In', 'No Show', 'Cancelled'),
+    volunteer       BOOLEAN DEFAULT 0,
+    FOREIGN KEY (participantID)
+        REFERENCES history(participantID),
+    FOREIGN KEY (partyID)
+        REFERENCES event1(participantID)
+)*/
