@@ -1,1 +1,5 @@
 # event-manager
+
+## Software Choice
+One of the main reasons for picking a NodeJS/React stack was because we all have some level of familiarity or experience with this stack.  Several of us have taken web development classes that used NodeJS.  NodeJS also has one of the biggest sets of existing code with the modules provided by npm.  The decision over Flask or Django was mostly due to preference and our group's experience with NodeJS or lack of experience with Flask or Django.
+Other more high level web frameworks like Wordpress were not chosen due to their lack of flexibility.  We did not want to end up modifying existing code provided by a plugin inorder to create the user experience we are trying to acheive.  The fact that the previous groups to attempt this project used methods similar to this and did not succeed only bolstered our position.  It also seemed to us that we would get more out of the project by applying our knowledge of web development to code it ourselves as opposed to just putting plugins in Wordpress.  It is also free.
