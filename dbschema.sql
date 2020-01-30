@@ -1,11 +1,11 @@
-CREATE TABLE users(
+CREATE TABLE LICCB.users(
     userID      BIGINT NOT NULL PRIMARY KEY,
     firstName   VARCHAR(30) NOT NULL,
     lastName    VARCHAR(30) NOT NULL,
-    userRole    BOOLEAN NOT NULL
+    userEnabled BOOLEAN NOT NULL
 );
 
-CREATE TABLE history(
+CREATE TABLE LICCB.history(
     participantID   BIGINT NOT NULL PRIMARY KEY,
     firstName       VARCHAR(30) NOT NULL,
     lastName        VARCHAR(30) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE history(
     notes           TEXT
 );
 
-CREATE TABLE events(
+CREATE TABLE LICCB.events(
     eventID         BIGINT NOT NULL PRIMARY KEY,
     manager         BIGINT NOT NULL,
     capacity        INT NOT NULL,
