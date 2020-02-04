@@ -38,6 +38,13 @@ CREATE TABLE LICCB.events(
         REFERENCES users(userID)
 );
 
+/* basic run selection process, to be elaborted */
+-- CREATE TABLE selectedusers AS
+-- (SELECT * FROM LICCB.users user
+-- JOIN LICCB.history userhistory
+-- ON userhistory.firstName = user.firstName
+-- WHERE userhistory.volunteer = TRUE)
+
 CREATE TABLE LICCB.`event123e4567-e89b-12d3-a456-556642440000`(
     participantID   CHAR(36) NOT NULL PRIMARY KEY,
     partyID         CHAR(36) DEFAULT NULL,
