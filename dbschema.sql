@@ -1,12 +1,15 @@
+DROP TABLE IF EXISTS LICCB.`event123e4567-e89b-12d3-a456-556642440000`;
+DROP TABLE IF EXISTS LICCB.events, LICCB.history, LICCB.users;
+
 CREATE TABLE LICCB.users(
-    userID      BIGINT NOT NULL PRIMARY KEY,
+    userID      CHAR(36) NOT NULL PRIMARY KEY,
     firstName   VARCHAR(30) NOT NULL,
     lastName    VARCHAR(30) NOT NULL,
     userEnabled BOOLEAN NOT NULL
 );
 
 CREATE TABLE LICCB.history(
-    participantID   BIGINT NOT NULL PRIMARY KEY,
+    participantID   CHAR(36) NOT NULL PRIMARY KEY,
     firstName       VARCHAR(30) NOT NULL,
     lastName        VARCHAR(30) NOT NULL,
     eventCount      INT NOT NULL,
@@ -16,8 +19,9 @@ CREATE TABLE LICCB.history(
 );
 
 CREATE TABLE LICCB.events(
-    eventID         BIGINT NOT NULL PRIMARY KEY,
-    manager         BIGINT NOT NULL,
+    eventID         CHAR(36) NOT NULL PRIMARY KEY,
+    eventName       VARCHAR(100),
+    manager         CHAR(36) NOT NULL,
     capacity        INT NOT NULL,
     maxPartySize    INT NOT NULL,
     privateEvent    BOOLEAN NOT NULL,
@@ -26,16 +30,17 @@ CREATE TABLE LICCB.events(
     skillLevel      ENUM('Beginner', 'Intermediate', 'Difficult') NOT NULL,
     distance        INT,
     staffRatio      FLOAT NOT NULL,
-    creatorID       BIGINT NOT NULL,
+    creatorID       CHAR(36) NOT NULL,
+    eventNotes      TEXT,
     FOREIGN KEY (manager)
         REFERENCES users(userID),
     FOREIGN KEY (creatorID)
         REFERENCES users(userID)
 );
 
-/*CREATE TABLE LICCB.event1(
-    participantID   BIGINT NOT NULL PRIMARY KEY,
-    partyID         BIGINT DEFAULT NULL,
+CREATE TABLE LICCB.`event123e4567-e89b-12d3-a456-556642440000`(
+    participantID   CHAR(36) NOT NULL PRIMARY KEY,
+    partyID         CHAR(36) DEFAULT NULL,
     isAdult         BOOLEAN NOT NULL,
     canSwim         BOOLEAN NOT NULL,
     phone           VARCHAR(30) NOT NULL,
@@ -48,5 +53,5 @@ CREATE TABLE LICCB.events(
     FOREIGN KEY (participantID)
         REFERENCES history(participantID),
     FOREIGN KEY (partyID)
-        REFERENCES event1(participantID)
-)*/
+        REFERENCES `event123e4567-e89b-12d3-a456-556642440000`(participantID)
+);
