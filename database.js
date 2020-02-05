@@ -8,6 +8,8 @@ const pool = mariadb.createPool({
   connectTimeout: 10000
 });
 
+const uuidv4 = require('uuid/v4');
+
 async function queryAllUsers() {
   let conn;
   try {
@@ -39,19 +41,37 @@ async function queryEventByID(eventID, res) {
 }
 
   async function insertEvent(event) {
-    console.log(event);
-    console.log(event.eventname);
-    // let conn;
-    // try {
-    //   conn = await pool.getConnection();
-    //   const rows = await conn.query("INSERT");
-    //   console.log(rows);
+    const query = "INSERT INTO LICCB.events (eventID, eventName, manager, capacity, " +
+                  "maxPartySize, privateEvent, startTime, endTime, skillLevel, distance, " +
+                  "staffRatio, creatorID, eventNotes) VALUES(" +
+                  "'" + uuidv4() + "', " + 
+                  "'" + event.eventname + "', " + 
+                  "'" + event.manager + "', " + 
+                  event.capacity + ", " +
+                  event.maxpartysize + ", " + 
+                  event.privateevent + ", " +
+                  "'" + event.startdate + " " + event.starttime + ":00', " +  
+                  "'" + event.enddate + " " + event.endtime + ":00', " +
+                  "'" + event.skilllevel + "', " +
+                  event.distance + ", " + 
+                  event.staffratio + ", " + 
+                  "'1b671a64-40d5-491e-99b0-da01ff1f3341', " +
+                  "'" + event.notes + "');";
+    console.log(query);
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      conn.query(query)
+        .then(good => {
+          console.log("Successful Insertion:\n\t" + good);
+        })
+        .catch(err => {
+          console.log("Insertion Failed:\n\t" + err);
+        })
   
-    // } catch (err) {
-    //   throw err;
-    // } finally {
-    //   if (conn) return conn.end();
-    // }
+    } catch (err) {
+      throw err;
+    }
   }
 
 module.exports.queryAllUsers = queryAllUsers;

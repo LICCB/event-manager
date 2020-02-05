@@ -34,7 +34,7 @@ app.post('/createEvent', function (req, res) {
 app.get('/events', async (req, res) => {
   db.queryAllEvents()
     .then(rows => {
-      console.log(rows[0]);
+      console.log(rows);
       res.render('events', {events: rows});
     })
     .catch(err => {
