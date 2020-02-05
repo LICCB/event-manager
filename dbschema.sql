@@ -15,6 +15,7 @@ CREATE TABLE LICCB.history(
     eventCount      INT NOT NULL,
     cancellations   INT NOT NULL,
     volunteer       BOOLEAN NOT NULL,
+    thumbsCount     INT DEFAULT 0,
     notes           TEXT
 );
 
