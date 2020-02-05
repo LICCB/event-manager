@@ -38,12 +38,23 @@ CREATE TABLE LICCB.events(
         REFERENCES users(userID)
 );
 
+/*
+
+Selection Process:
+1. fill all users that are volunteers
+2. if more volunteers than event capacity, delete the bottom-most
+3. fill all users if not reached capacity
+
+*/
+
 /* basic run selection process, to be elaborted */
 -- CREATE TABLE selectedusers AS
 -- (SELECT * FROM LICCB.users user
 -- JOIN LICCB.history userhistory
 -- ON userhistory.firstName = user.firstName
 -- WHERE userhistory.volunteer = TRUE)
+
+
 
 CREATE TABLE LICCB.`event123e4567-e89b-12d3-a456-556642440000`(
     participantID   CHAR(36) NOT NULL PRIMARY KEY,
