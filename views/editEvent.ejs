@@ -7,8 +7,8 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
   </head>
   <body>
-      <% if(event !== null){%> 
-
+      <% if(event !== null && users !== null){%> 
+        <% console.log(event.eventName) %>
             <div class="container">
             <fieldset>
                 <!-- var Event = function(ename, mname, cap, psize, ptype, stime, etime, slevel, dist, sratio, cid) { -->
@@ -19,10 +19,11 @@
                     
                     <br>
 
-                    <label for="mname">Event Manager:</label>
-                    <select name="managername" form="eventform">
-                    <option value="david">David Matten</option>
-                    <option value="other">Other</option>
+                    <label for="man">Event Manager:</label>
+                    <select name="manager" form="eventform">
+                      <% for(i = 0; i < users.length; i++) { %>
+                        <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
+                      <% } %>
                     </select>
 
                     <br>
@@ -39,12 +40,12 @@
                     
                     <label for="ptype">Participation Type:</label>
                     <select id="ptype" name="participationtype" form="eventform">
-                        <option value="public"
+                        <option value="false"
                         <% if(event.privateEvent == false){ %>
                             <%= "selected" %>
                         <% } %>
                         >Public</option>
-                        <option value="private"
+                        <option value="true"
                         <% if(event.privateEvent == true){ %>
                             <%= "selected" %>
                         <% } %>
@@ -54,29 +55,34 @@
                 
                 <div class="right">
                     <label for="stime">Start Time:</label>
-                    <!-- <input type="time" id="stime" name="starttime" value= required> -->
                     <input type="time" id="stime" name="starttime" value=<%= utils.getTime(event.startTime) %> required>
+
+                    <label for="sdate">Start Date:</label>
+                    <input type="date" id="sdate" name="startdate" value=<%= utils.getDate(event.startTime) %> required>
                     
                     <br>
 
                     <label for="etime">End Time:</label>
                     <input type="time" id="etime" name="endtime" value=<%= utils.getTime(event.endTime) %>  required>
 
+                    <label for="edate">End Date:</label>
+                    <input type="date" id="edate" name="enddate" value=<%= utils.getDate(event.endTime) %> required>
+
                     <br>
 
                     <label for="skill">Skill Level:</label>
                     <select name="skilllevel" form="eventform">
-                        <option value="novice"  
+                        <option value="Beginner"  
                             <% if(event.skillLevel == "Beginner"){ %>
                                 <%= "selected" %>
                             <% } %>
                             >Novice</option>
-                        <option value="intermediate"
+                        <option value="Intermediate"
                             <% if(event.skillLevel == "Intermediate"){ %>
                                 <%= "selected" %>
                             <% } %>
                         >Intermediate</option>
-                            <option value="expert" 
+                            <option value="Difficult" 
                             <% if(event.skillLevel == "Expert"){ %>
                                 <%= "selected" %>
                             <% } %>
@@ -91,16 +97,17 @@
 
                     <label for="sratio">Staff Ratio:</label>
                     <input type="text" id="sratio" name="staffratio" value=<%= event.staffRatio %> required>
+
+                    <label for="notes">Notes:</label>
+                    <input type="text" id="notes" name="notes" value=<%= event.notes %>>
                 </div>
 
-                <br>
-
-                <div >
+                <div>
                     <input type="submit" value="Update Event" class="center">
                 </div>
                 </form>
             </fieldset>
             </div>
-            <% } %>
+        <% } %>
   </body>
 </html>

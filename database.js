@@ -4,78 +4,92 @@ const pool = mariadb.createPool({
   host: config.database.host, 
   user: config.database.user, 
   password: config.database.password,
-  connectionLimit: 5,
-  connectTimeout: 10000
+  connectionLimit: 10,
+  connectTimeout: 100000
 });
 
 const uuidv4 = require('uuid/v4');
 
 async function queryAllUsers() {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    return conn.query("SELECT * FROM LICCB.users");
-  } catch (err) {
-    throw err;
-  }
+  let conn = await pool.getConnection();
+  let users = await conn.query("SELECT * FROM LICCB.users");
+  conn.release();
+  return users;
 }
 
 async function queryAllEvents() {
-    let conn;
-    try {
-      conn = await pool.getConnection();
-      return conn.query("SELECT * FROM LICCB.events");
-    } catch (err) {
-      throw err;
-    }
+    let conn = await pool.getConnection();
+    let events = await conn.query("SELECT * FROM LICCB.events");
+    conn.release();
+    return events;
   }
 
-async function queryEventByID(eventID, res) {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    return conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'")
-  } catch (err) {
-    throw err;
-  }
+async function queryEventByID(eventID) {
+  let conn = await pool.getConnection();
+  let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'")
+  conn.release();
+  return event;
 }
 
-  async function insertEvent(event) {
-    const query = "INSERT INTO LICCB.events (eventID, eventName, manager, capacity, " +
-                  "maxPartySize, privateEvent, startTime, endTime, skillLevel, distance, " +
-                  "staffRatio, creatorID, eventNotes) VALUES(" +
-                  "'" + uuidv4() + "', " + 
-                  "'" + event.eventname + "', " + 
-                  "'" + event.manager + "', " + 
-                  event.capacity + ", " +
-                  event.maxpartysize + ", " + 
-                  event.privateevent + ", " +
-                  "'" + event.startdate + " " + event.starttime + ":00', " +  
-                  "'" + event.enddate + " " + event.endtime + ":00', " +
-                  "'" + event.skilllevel + "', " +
-                  event.distance + ", " + 
-                  event.staffratio + ", " + 
-                  "'1b671a64-40d5-491e-99b0-da01ff1f3341', " +
-                  "'" + event.notes + "');";
-    console.log(query);
-    let conn;
-    try {
-      conn = await pool.getConnection();
-      conn.query(query)
-        .then(good => {
-          console.log("Successful Insertion:\n\t" + good);
-        })
-        .catch(err => {
-          console.log("Insertion Failed:\n\t" + err);
-        })
-  
-    } catch (err) {
-      throw err;
-    }
-  }
+async function deleteEvent(id) {
+  let conn = await pool.getConnection();
+  let del = await conn.query("DELETE FROM LICCB.events WHERE eventID='" + id + "'");
+  conn.release();
+  return del;
+}
+
+async function insertEvent(event) {
+  const query = "INSERT INTO LICCB.events " +
+                    "(eventID, eventName, manager, creatorID, " +
+                    "capacity, maxPartySize, privateEvent, startTime, " + 
+                    "endTime, staffRatio, published, eventNotes, eventMetadata) " + 
+                "VALUES(" +
+                    "'" + uuidv4() + "', " + 
+                    "'" + event.eventname + "', " + 
+                    "'" + event.manager + "', " +
+                    "'1b671a64-40d5-491e-99b0-da01ff1f3341', " +
+                    event.capacity + ", " +
+                    event.maxpartysize + ", " + 
+                    event.privateevent + ", " +
+                    "'" + event.startdate + " " + event.starttime + ":00', " +  
+                    "'" + event.enddate + " " + event.endtime + ":00', " +
+                    event.staffratio + ", " + 
+                    "1, " +
+                    "'" + event.notes + "', " +
+                    "NULL);";
+  console.log(query);
+
+  let conn = await pool.getConnection();
+  let rows = await conn.query(query);
+  conn.release();
+  return rows;
+}
+
+async function updateEvent(event, id) {
+  const update = "UPDATE LICCB.events " + 
+                "SET " +
+                  "eventName='" + event.eventname + "', " + 
+                  "manager='" + event.manager + "', " + 
+                  "capacity=" + event.capacity + ", " +
+                  "maxPartySize=" + event.maxpartysize + ", " + 
+                  "privateEvent=" + event.participationtype + ", " +
+                  "startTime='" + event.startdate + " " + event.starttime + ":00', " +  
+                  "endTime='" + event.enddate + " " + event.endtime + ":00', " +
+                  "staffRatio=" + event.staffratio + ", " + 
+                  "creatorID='1b671a64-40d5-491e-99b0-da01ff1f3341', " +
+                  "eventNotes='" + event.notes + "' " +
+                "WHERE eventID='" + id + "';"
+  // console.log(update);
+  let conn = await pool.getConnection();
+  let upd = await conn.query(update);
+  conn.release();
+  return upd;
+}
 
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
 module.exports.insertEvent = insertEvent;
+module.exports.updateEvent = updateEvent;
+module.exports.deleteEvent = deleteEvent;
 queryEventByID("123e4567-e89b-12d3-a456-556642440000");

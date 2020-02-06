@@ -37,7 +37,7 @@
             <br>
             
             <label for="ptype">Participation Type:</label>
-            <select id="ptype" name="privateEvent" form="eventform">
+            <select id="ptype" name="privateevent" form="eventform">
               <option value="false">Public</option>
               <option value="true">Private</option>
             </select>
@@ -46,6 +46,8 @@
           <div class="right">
             <label for="stime">Start Time:</label>
             <input type="time" id="stime" name="starttime" placeholder="Start Time" required>
+
+            <br> 
 
             <label for="sdate">Start Date:</label>
             <input type="date" id="sdate" name="startdate" placeholder="Start Date" required>
@@ -56,28 +58,30 @@
             <label for="etime">End Time:</label>
             <input type="time" id="etime" name="endtime" placeholder="End Time" required>
 
+            <br>
             
             <label for="edate">End Date:</label>
             <input type="date" id="edate" name="enddate" placeholder="End Date" required>
 
-            <br>
+            <!-- <br> -->
 
-            <label for="skill">Skill Level:</label>
+            <!-- <label for="skill">Skill Level:</label>
             <select name="skilllevel" form="eventform">
-              <option value="novice">Novice</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="expert">Expert</option>           
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Difficult">Difficult</option>           
             </select>
 
             <br>
 
             <label for="dist">Distance:</label>
-            <input type="text" id="dist" name="distance" placeholder="Distance" required>
+            <input type="text" id="dist" name="distance" placeholder="Distance" required> -->
 
             <br>
 
             <label for="sratio">Staff Ratio:</label>
             <input type="text" id="sratio" name="staffratio" placeholder="Staff Ratio" required>
+            <br>
 
             <label for="notes">Notes:</label>
             <input type="text" id="notes" name="notes" placeholder="Notes">
@@ -85,7 +89,7 @@
 
           <br>
 
-          <div >
+          <div>
             <input type="submit" value="Create Event" class="center">
           </div>
         </form>

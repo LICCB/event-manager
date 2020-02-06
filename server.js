@@ -20,43 +20,62 @@ app.get('/createEvent', function (req, res) {
     res.render('createEvent', {users: users});
   })
   .catch(err => {
-    res.render('createEvent', {users: null});
+    console.log("ERROR:\n\t" + err);
+    res.redirect('/createEvent');
   });
 })
 
-app.post('/createEvent', function (req, res) {
-  // var event = Event(req.body);
-  // console.log(event.name);
-  db.insertEvent(req.body);
-  res.render('events');
+app.post('/createEvent', async (req, res) => {
+  // console.log(req.body);
+  // db.insertEvent(req.body)
+  //   .then(success => {
+  //     console.log("Created new event:\n\t" + req.body);
+  //     res.redirect('/events')
+  //   })
+  //   .catch(err => {
+  //     console.log("Failed To Create New Event:\t" + req.body.eventname);
+  //     res.redirect('/events');
+  //   })
+  await db.insertEvent(req.body);
+  res.redirect('/events');
 });
 
 app.get('/events', async (req, res) => {
-  db.queryAllEvents()
-    .then(rows => {
-      console.log(rows);
-      res.render('events', {events: rows});
-    })
-    .catch(err => {
-      res.render('events', {events: null});
-    })
+  res.render('events', {events: await db.queryAllEvents()});
 })
 
 app.get('/editEvent/:id', async (req, res) => {
-  db.queryEventByID(req.params.id, res)
-    .then(rows => {
-      console.log(rows[0]);
-      res.render("editEvent", {event: rows[0], utils: utils});
-    })
-    .catch(err => {
-      console.log(err);
-      res.render("editEvent", {event: null, utils: utils});
-    });
+  // db.queryEventByID(req.params.id, res)
+  //   .then(rows => {
+  //     console.log(rows[0]);
+  //     db.queryAllUsers()
+  //     .then(users => {
+  //       res.render("editEvent", {event: rows[0], users: users, utils: utils});
+  //     })
+  //     .catch(err =>{
+  //       console.log("ERROR:\n\t\t" + err);
+  //       res.render("editEvent", {event: rows[0], users: users, utils: utils});
+  //     }); 
+  //   })
+  //   .catch(err => {
+  //     console.log("ERROR:\n\t\t" + err);
+  //     res.render("editEvent", {event: null, utils: utils});
+  //   });
+  // let event = await db.queryEventByID(req.params.id);
+  // // console.log(event);
+  // let users = await db.queryAllUsers();
+  // // console.log(users);
+  res.render("editEvent", {event: (await db.queryEventByID(req.params.id))[0], users: await db.queryAllUsers(), utils: utils});
+});
+
+app.get('/deleteEvent/:id', async (req, res) => {
+  await db.deleteEvent(req.params.id);
+  res.redirect('/events');
 })
 
-app.post('/editEvent/:id', async (req, res) => {
-  console.log(req.body);
-  db.updateEvent(req.body);
+app.post('/editEvent/:id', function (req, res) {
+  db.updateEvent(req.body, req.params.id);
+  res.redirect('/events');
 })
 
 app.listen(3000, function () {
