@@ -14,6 +14,7 @@ CREATE TABLE LICCB.history(
     lastName        VARCHAR(30) NOT NULL,
     eventCount      INT DEFAULT 0 NOT NULL,
     cancellations   INT DEFAULT 0 NOT NULL,
+    lateCancel      INT DEFAULT 0 NOT NULL,
     volunteerCount  INT DEFAULT 0 NOT NULL,
     thumbsCount     INT DEFAULT 0 NOT NULL,
     notes           TEXT
