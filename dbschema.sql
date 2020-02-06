@@ -12,16 +12,16 @@ CREATE TABLE LICCB.history(
     participantID   CHAR(36) NOT NULL PRIMARY KEY,
     firstName       VARCHAR(30) NOT NULL,
     lastName        VARCHAR(30) NOT NULL,
-    eventCount      INT NOT NULL,
-    cancellations   INT NOT NULL,
-    volunteer       BOOLEAN NOT NULL,
-    thumbsCount     INT DEFAULT 0,
+    eventCount      INT DEFAULT 0 NOT NULL,
+    cancellations   INT DEFAULT 0 NOT NULL,
+    volunteerCount  INT DEFAULT 0 NOT NULL,
+    thumbsCount     INT DEFAULT 0 NOT NULL,
     notes           TEXT
 );
 
 CREATE TABLE LICCB.events(
     eventID         CHAR(36) NOT NULL PRIMARY KEY,
-    eventName       VARCHAR(100),
+    eventName       VARCHAR(100) NOT NULL,
     manager         CHAR(36) NOT NULL,
     creatorID       CHAR(36) NOT NULL,
     capacity        INT NOT NULL,
