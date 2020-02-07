@@ -12,62 +12,49 @@ CREATE TABLE LICCB.history(
     participantID   CHAR(36) NOT NULL PRIMARY KEY,
     firstName       VARCHAR(30) NOT NULL,
     lastName        VARCHAR(30) NOT NULL,
-    eventCount      INT NOT NULL,
-    cancellations   INT NOT NULL,
-    volunteer       BOOLEAN NOT NULL,
+    eventCount      INT DEFAULT 0 NOT NULL,
+    cancellations   INT DEFAULT 0 NOT NULL,
+    lateCancel      INT DEFAULT 0 NOT NULL,
+    volunteerCount  INT DEFAULT 0 NOT NULL,
+    thumbsCount     INT DEFAULT 0 NOT NULL,
     notes           TEXT
 );
 
 CREATE TABLE LICCB.events(
     eventID         CHAR(36) NOT NULL PRIMARY KEY,
-    eventName       VARCHAR(100),
+    eventName       VARCHAR(100) NOT NULL,
     manager         CHAR(36) NOT NULL,
+    creatorID       CHAR(36) NOT NULL,
     capacity        INT NOT NULL,
     maxPartySize    INT NOT NULL,
     privateEvent    BOOLEAN NOT NULL,
     startTime       DATETIME NOT NULL,
     endTime         DATETIME NOT NULL,
-    skillLevel      ENUM('Beginner', 'Intermediate', 'Difficult') NOT NULL,
-    distance        INT,
     staffRatio      FLOAT NOT NULL,
-    creatorID       CHAR(36) NOT NULL,
+    published       BOOLEAN NOT NULL,
     eventNotes      TEXT,
+    eventMetadata   TEXT,
     FOREIGN KEY (manager)
         REFERENCES users(userID),
     FOREIGN KEY (creatorID)
         REFERENCES users(userID)
 );
 
-/*
-
-Selection Process:
-1. fill all users that are volunteers
-2. if more volunteers than event capacity, delete the bottom-most
-3. fill all users if not reached capacity
-
-*/
-
-/* basic run selection process, to be elaborted */
--- CREATE TABLE selectedusers AS
--- (SELECT * FROM LICCB.users user
--- JOIN LICCB.history userhistory
--- ON userhistory.firstName = user.firstName
--- WHERE userhistory.volunteer = TRUE)
-
-
-
 CREATE TABLE LICCB.`event123e4567-e89b-12d3-a456-556642440000`(
     participantID   CHAR(36) NOT NULL PRIMARY KEY,
     partyID         CHAR(36) DEFAULT NULL,
     isAdult         BOOLEAN NOT NULL,
-    canSwim         BOOLEAN NOT NULL,
     phone           VARCHAR(30) NOT NULL,
     email           VARCHAR(75) NOT NULL,
     emergencyPhone  VARCHAR(30) NOT NULL,
     emergencyName   VARCHAR(60) NOT NULL,
     hasCPRCert      BOOLEAN NOT NULL,
-    regStatus       ENUM('Registered', 'Not Selected', 'Standby', 'Selected', 'Checked In', 'No Show', 'Cancelled'),
+    regTime         DATETIME,
+    regStatus       ENUM('Awaiting Confirmation', 'Registered', 'Not Selected', 'Standby', 'Selected', 'Cancelled', 'Same Day Cancel'),
+    checkinStatus   ENUM('Pending', 'Checked In', 'No Show'),
+    thumbsUpDown    ENUM('Neutral', 'Thumbs Up', 'Thumbs Down'),
     volunteer       BOOLEAN DEFAULT 0,
+    regComments     TEXT,
     FOREIGN KEY (participantID)
         REFERENCES history(participantID),
     FOREIGN KEY (partyID)
