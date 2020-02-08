@@ -57,8 +57,6 @@ async function insertEvent(event) {
                     "1, " +
                     "'" + event.notes + "', " +
                     "NULL);";
-  console.log(query);
-
   let conn = await pool.getConnection();
   let rows = await conn.query(query);
   conn.release();
@@ -79,7 +77,6 @@ async function updateEvent(event, id) {
                   "creatorID='1b671a64-40d5-491e-99b0-da01ff1f3341', " +
                   "eventNotes='" + event.notes + "' " +
                 "WHERE eventID='" + id + "';"
-  // console.log(update);
   let conn = await pool.getConnection();
   let upd = await conn.query(update);
   conn.release();
@@ -92,4 +89,3 @@ module.exports.queryEventByID = queryEventByID;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
 module.exports.deleteEvent = deleteEvent;
-queryEventByID("123e4567-e89b-12d3-a456-556642440000");
