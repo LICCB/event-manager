@@ -24,10 +24,10 @@ app.get('/createEvent', async (req, res) => {
 })
 
 /**
- * Redirects to the events page after inserting the new event into the database
+ * Redirects to the events page after inserting the new event into the database and creating its participant table
  */
 app.post('/createEvent', async (req, res) => {
-  await db.insertEvent(req.body);
+  await db.createEventTable(await db.insertEvent(req.body));
   res.redirect('/events');
 });
 

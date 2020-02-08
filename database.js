@@ -39,12 +39,13 @@ async function deleteEvent(id) {
 }
 
 async function insertEvent(event) {
-  const query = "INSERT INTO LICCB.events " +
+  const id = uuidv4();
+  const insertStmt = "INSERT INTO LICCB.events " +
                     "(eventID, eventName, manager, creatorID, " +
                     "capacity, maxPartySize, privateEvent, startTime, " + 
                     "endTime, staffRatio, published, eventNotes, eventMetadata) " + 
                 "VALUES(" +
-                    "'" + uuidv4() + "', " + 
+                    "'" + id + "', " + 
                     "'" + event.eventname + "', " + 
                     "'" + event.manager + "', " +
                     "'1b671a64-40d5-491e-99b0-da01ff1f3341', " +
@@ -58,9 +59,32 @@ async function insertEvent(event) {
                     "'" + event.notes + "', " +
                     "NULL);";
   let conn = await pool.getConnection();
-  let rows = await conn.query(query);
+  let insert = await conn.query(insertStmt);
   conn.release();
-  return rows;
+  return id;
+}
+
+async function createEventTable(id){
+  const createStmt = "CREATE TABLE LICCB.event" + id.replace(/-/g, "") + "(" + 
+                      "participantID   char(36) NOT NULL PRIMARY KEY, " + 
+                      "partyID         char(36) NOT NULL, " + 
+                      "isAdult         BOOLEAN NOT NULL, " +
+                      "canSwim         BOOLEAN NOT NULL, " +
+                      "phone           VARCHAR(30) NOT NULL, " +
+                      "email           VARCHAR(75) NOT NULL, " +
+                      "emergencyPhone  VARCHAR(30) NOT NULL, " +
+                      "emergencyName   VARCHAR(60) NOT NULL, " +
+                      "hasCPRCert      BOOLEAN NOT NULL, " + 
+                      "regStatus       ENUM('Registered', 'Not Selected', 'Standby', 'Selected', 'Checked In', 'No Show', 'Cancelled'), " + 
+                      "volunteer       BOOLEAN DEFAULT 0, " + 
+                      "FOREIGN KEY (`participantID`) " + 
+                          "REFERENCES `history` (`participantID`), " +
+                      "FOREIGN KEY (`partyID`) " + 
+                          "REFERENCES `history` (`participantID`));";
+  let conn = await pool.getConnection();
+  let create = await conn.query(createStmt);
+  conn.release();
+  return create;
 }
 
 async function updateEvent(event, id) {
@@ -89,3 +113,4 @@ module.exports.queryEventByID = queryEventByID;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
 module.exports.deleteEvent = deleteEvent;
+module.exports.createEventTable = createEventTable;
