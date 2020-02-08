@@ -2,7 +2,7 @@ div {
     text-align: center;
 }
 input[type=text], select, input[type=time] {
-    width: 10%;
+    width: 20%;
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
@@ -125,4 +125,22 @@ input[type=text], select, input[type=time] {
 @keyframes fade {
   from {opacity: .4} 
   to {opacity: 1}
+}
+
+.left {
+  width:50%;
+  height: 40%;
+  text-align: right;
+  float: left;
+}
+
+.right {
+  width:50%;
+  height: 40%;
+  float: right;
+  text-align: left;
+}
+
+.center {
+
 }
