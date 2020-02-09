@@ -5,6 +5,7 @@ const utils = require('./utils');
 const app = express();
 
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 app.set('view engine', 'ejs');
@@ -20,7 +21,7 @@ app.get('/', function (req, res) {
  * Renders the createEvent page with the list of possible event managers
  */
 app.get('/createEvent', async (req, res) => {
-  res.render('event/createEvent', {users: await db.queryAllUsers()});
+  res.render('event/createEvent', {title: "Create Event", users: await db.queryAllUsers()});
 })
 
 /**
@@ -35,14 +36,14 @@ app.post('/createEvent', async (req, res) => {
  * Renders the events page with the list of all events
  */
 app.get('/events', async (req, res) => {
-  res.render('event/events', {events: await db.queryAllEvents()});
+  res.render('event/events', {title: "Events", events: await db.queryAllEvents()});
 })
 
 /**
  * Renders the editEvent page with the properties of the given event
  */
 app.get('/editEvent/:id', async (req, res) => {
-  res.render("event/editEvent", {event: (await db.queryEventByID(req.params.id))[0], users: await db.queryAllUsers(), utils: utils});
+  res.render("event/editEvent", {title: "Edit Event",event: (await db.queryEventByID(req.params.id))[0], users: await db.queryAllUsers(), utils: utils});
 });
 
 /**
