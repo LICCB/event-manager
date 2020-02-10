@@ -7,7 +7,11 @@ This is repository for the LICCB Event Manager.
 1. Clone the Git repository onto your machine
 2. Navigate to the root project folder in a terminal
 3. Install the Node modules with:  
-  `npm install`
+  `npm install`  
+
+## Configuring the Application
+1. Find and download the config.json file from the Google Drive folder
+2. Move this file into the root project folder
 
 ## Running the Application
 1. Navigate to the root project folder in a terminal
