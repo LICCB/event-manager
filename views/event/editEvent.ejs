@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Edit Event</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <%- include('../partials/head', {title: title}) %>
   </head>
-  <body>
+  <body class="bg-gray">
+    <%- include('../partials/header', {title: title}) %>
       <% if(event !== null && users !== null){%> 
-            <div class="container">
+            <div class="content container">
             <fieldset>
                 <!-- var Event = function(ename, mname, cap, psize, ptype, stime, etime, slevel, dist, sratio, cid) { -->
                 <form action= <%= "/editEvent/" + event.eventID %> method="post" id="eventform">
@@ -87,23 +85,21 @@
                             <% } %>
                         >Expert</option>           
                     </select>
-                    <br>
-
-                    <label for="dist">Distance:</label>
-                    <input type="text" id="dist" name="distance" value=<%= event.distance %> required>
 
                     <br>
 
                     <label for="sratio">Staff Ratio:</label>
                     <input type="text" id="sratio" name="staffratio" value=<%= event.staffRatio %> required>
 
+                    <br>
+
                     <label for="notes">Notes:</label>
                     <input type="text" id="notes" name="notes" value=<%= event.eventNotes %>>
                 </div>
 
-                <div>
-                    <input type="submit" value="Update Event" class="center">
-                </div>
+                <div class="center content">
+                    <button class="btn btn-dark" type="submit" value="Update Event">Update Event</button>
+                  </div>
                 </form>
             </fieldset>
             </div>
