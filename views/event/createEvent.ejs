@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head', {title: title}) %>
+  </head>
+  <body class="bg-gray">
+    <%- include('../partials/header', {title: title}) %>
+  <body>
+    <div class="container content">
+      <fieldset>
+        <!-- var Event = function(ename, mname, cap, psize, ptype, stime, etime, slevel, dist, sratio, cid) { -->
+        <form action="/createEvent" method="post" id="eventform">
+          <div class="left">
+            <label for="ename">Event Name:</label>
+            <input type="text" id="ename" name="eventname" placeholder="Event Name" required>
+            <br>
+            <label for="man">Event Manager:</label>
+            <select name="manager" form="eventform">
+              <% for(i = 0; i < users.length; i++) { %>
+                <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
+              <% } %>
+            </select>
+            <br>
+            <label for="cap">Capacity:</label>
+            <input type="text" id="cap" name="capacity" placeholder="Capacity" required>
+            <br>
+            <label for="psize">Max Party Size:</label>
+            <input type="text" id="psize" name="maxpartysize" placeholder="Max Pary Size" required>
+            <br>
+            <label for="ptype">Participation Type:</label>
+            <select id="ptype" name="privateevent" form="eventform">
+              <option value="false">Public</option>
+              <option value="true">Private</option>
+            </select>
+          </div>
+          <div class="right">
+            <label for="stime">Start Time:</label>
+            <input type="time" id="stime" name="starttime" placeholder="Start Time" required>
+            <br> 
+            <label for="sdate">Start Date:</label>
+            <input type="date" id="sdate" name="startdate" placeholder="Start Date" required>
+            <br>
+            <label for="etime">End Time:</label>
+            <input type="time" id="etime" name="endtime" placeholder="End Time" required>
+            <br>
+            <label for="edate">End Date:</label>
+            <input type="date" id="edate" name="enddate" placeholder="End Date" required>
+            <br>
+            <label for="sratio">Staff Ratio:</label>
+            <input type="text" id="sratio" name="staffratio" placeholder="Staff Ratio" required>
+            <br>
+            <label for="notes">Notes:</label>
+            <input type="text" id="notes" name="notes" placeholder="Notes">
+          </div>
+          <br>
+          <div class="center content">
+            <button class="btn btn-dark" type="submit" value="Create Event">Submit</button>
+          </div>
+        </form>
+      </fieldset>
+        <footer class="footer">
+          <%- include('../partials/footer') %>
+        </footer>
+    </div>
+    <%- include('../partials/bootstrapScripts') %>
+  </body>
+</html>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Create Event</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/form.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
 </head>
 
@@ -29,25 +29,26 @@
                     Partial shift contributions are wholely welcomed. Please register all the same, and note your
                     specific availability in the form comments at the end.</p>
 
+                <label for="ename">Event:</label>
+                <select name="eventname" form="volunteerSignup">
+                    <option selected disabled hidden style='display: none' value=''>Select an event</option>
+                    <% for(i = 0; i < events.length; i++) { %>
+                        <option value=<%= events[i].eventID %>> <%= events[i].eventName%> </option>
+                        <% } %>
+                </select>
                 <div class="reginfo">
-                    <label for="ename">Event:</label>
-                    <select name="eventname" form="volunteerSignup">
-                        <option value="2019-37">Saturday 9/21/2019 - 9/22/2019 1pm-1:30am Manhattan Circumnavigation
-                            [Event Id 2019-37]</option>
-                        <option value="2019-39">Friday 9/27/2019 8:30am-5:30pm Partnership for Parks Paddle [Event Id
-                            2019-39]</option>
-                    </select>
-
                     <label for="priorvol">Prior Volunteer:</label>
                     <select name="priorvol" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="rolefam">Role Familiarity:</label>
                     <select name="priorvol" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <br>
@@ -57,26 +58,30 @@
 
                     <label for="regadult">Over 18?</label>
                     <select name="regadult" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="regswim">Swimmer</label>
                     <select name="regswim" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="regboat">Boating Experience</label>
                     <select name="regboat" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="regcpr">CPR Certification</label>
                     <select name="regcpr" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="regemail">Registrant Email:</label>
@@ -93,8 +98,10 @@
 
                     <label for="partysize">Party Size</label>
                     <select name="partysize" form="volunteerSignup">
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="1">1</option>
                         <option value="2">2</option>
+                        <option value="3">3</option>
                     </select>
                 </div>
 
@@ -106,26 +113,30 @@
 
                     <label for="part1adult">Over 18?</label>
                     <select name="part1adult" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="part1swim">Swimmer</label>
                     <select name="part1swim" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="part1boat">Boating Experience</label>
                     <select name="part1boat" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="part1cpr">CPR Certification</label>
                     <select name="part1cpr" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="part1email">Participant 1 Email:</label>
@@ -149,26 +160,30 @@
 
                     <label for="part2adult">Over 18?</label>
                     <select name="part2adult" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="part2swim">Swimmer</label>
                     <select name="part2swim" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="part2boat">Boating Experience</label>
                     <select name="part2boat" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="part2cpr">CPR Certification</label>
                     <select name="part2cpr" form="volunteerSignup">
-                        <option value="yes">Yes</option>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="no">No</option>
+                        <option value="yes">Yes</option>
                     </select>
 
                     <label for="part2email">Participant 2 Email:</label>
@@ -188,10 +203,11 @@
 
                 <div class="discinfo">
                     <label for="zip">Zip Code:</label>
-                    <input type="text" id="zip" name="zipcode" placeholder="Zip Code">
+                    <input type="text" id="zip" name="zipcode" placeholder="Zip Code" required>
 
                     <label for="ediscovery">Event Discovery:</label>
-                    <select name="eventdiscovery" form="volunteerSignup">
+                    <select name="eventdiscovery" form="volunteerSignup" required>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="callendar">LICCB Calendar</option>
                         <option value="subscriber">LICCB subscriber Newsletter or direct email</option>
                         <option value="blog">LICCB Web Site Blog</option>
@@ -210,7 +226,8 @@
                     </select>
 
                     <label for="bhdiscovery">Boat House Discovery:</label>
-                    <select name="bhdiscovery" form="volunteerSignup">
+                    <select name="bhdiscovery" form="volunteerSignup" required>
+                        <option selected disabled hidden style='display: none' value=''></option>
                         <option value="facebook">Facebook</option>
                         <option value="instagram">Instagram</option>
                         <option value="twitter">Twitter</option>
@@ -226,6 +243,12 @@
                         <option value="meeting">Civic Meeting</option>
                         <option value="other">Other</option>
                     </select>
+
+                    <label for="notes">Additional Notes:</label>
+                    <textarea name="notes" form="publicSignupform">
+                        Add any additional notes here.
+                    </textarea>
+
                 </div>
 
                 <br>

@@ -1,0 +1,34 @@
+<h1 class="text-center text-info font-weight-bold font-italic">Long Island City Community Boathouse</h1>
+<div class="wrapper">
+	<nav id="sidebar">
+		<% console.log(title) %>
+        <ul class="list-unstyled components">
+			<li
+				<% if(title == "Events" || title == "Create Event" || title == "Edit Event") { %>
+					class="active"
+				<% } %>
+			><a href="/events">Events</a></li>
+			<li
+				<% if(title == "Participants") { %>
+					class="active"
+				<% } %>
+			><a href="/participants">Participants</a></li>
+			<li
+				<% if(title == "Lottery") { %>
+					class="active"
+				<% } %>
+			><a href="/lottery">Lottery</a></li>
+			<li
+				<% if(title == "Settings") { %>
+					class="active"
+				<% } %>
+			><a href="/settings">Settings</a></li>
+			<li
+				<% if(title == "Export") { %>
+					class="active"
+				<% } %>
+			><a href="/export">Export</a></li>
+        </ul>
+    </nav>
+
+</div>
