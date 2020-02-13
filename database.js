@@ -33,7 +33,7 @@ async function queryEventByID(eventID) {
 
 async function queryParticipantsByEventID(eventID) {
   let conn = await pool.getConnection();
-  let participants = await conn.query("SELECT * FROM LICCB.`event" + eventID + "`");
+  let participants = await conn.query("SELECT * FROM LICCB.`event" + eventID + "` e INNER JOIN LICCB.history h ON e.participantID = h.participantID");
   conn.release();
   return participants;
 }
