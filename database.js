@@ -39,6 +39,8 @@ async function deleteEvent(id) {
 }
 
 async function insertEvent(event) {
+  const eventMetadata = getEventMetadata(event);
+  console.log(event);
   const id = uuidv4();
   const insertStmt = "INSERT INTO LICCB.events " +
                     "(eventID, eventName, manager, creatorID, " +

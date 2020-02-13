@@ -1,26 +1,29 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <%- include('../partials/head', {title: title}) %>
-  </head>
-  <body class="bg-gray">
+</head>
+
+<body class="bg-gray">
     <%- include('../partials/header', {title: title}) %>
-      <% if(event !== null && users !== null){%> 
-            <div class="content container">
-            <fieldset>
-                <!-- var Event = function(ename, mname, cap, psize, ptype, stime, etime, slevel, dist, sratio, cid) { -->
-                <form action= <%= "/editEvent/" + event.eventID %> method="post" id="eventform">
+    <% if(event !== null && users !== null){%>
+    <div class="content container">
+        <fieldset>
+            <!-- var Event = function(ename, mname, cap, psize, ptype, stime, etime, slevel, dist, sratio, cid) { -->
+            <form action=<%= "/editEvent/" + event.eventID %> method="post" id="eventform">
                 <div class="left">
                     <label for="ename">Event Name:</label>
                     <input type="text" id="ename" name="eventname" value=<%= event.eventName %> required>
-                    
+
                     <br>
 
                     <label for="man">Event Manager:</label>
                     <select name="manager" form="eventform">
-                      <% for(i = 0; i < users.length; i++) { %>
-                        <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
-                      <% } %>
+                        <% for(i = 0; i < users.length; i++) { %>
+                        <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %>
+                        </option>
+                        <% } %>
                     </select>
 
                     <br>
@@ -32,35 +35,29 @@
 
                     <label for="psize">Max Party Size:</label>
                     <input type="text" id="psize" name="maxpartysize" value=<%= event.maxPartySize %> required>
-                    
+
                     <br>
-                    
+
                     <label for="ptype">Participation Type:</label>
                     <select id="ptype" name="participationtype" form="eventform">
-                        <option value="false"
-                        <% if(event.privateEvent == false){ %>
-                            <%= "selected" %>
-                        <% } %>
-                        >Public</option>
-                        <option value="true"
-                        <% if(event.privateEvent == true){ %>
-                            <%= "selected" %>
-                        <% } %>
-                        >Private</option>
+                        <option value="false" <% if(event.privateEvent == false){ %> <%= "selected" %> <% } %>>Public
+                        </option>
+                        <option value="true" <% if(event.privateEvent == true){ %> <%= "selected" %> <% } %>>Private
+                        </option>
                     </select>
                 </div>
-                
+
                 <div class="right">
                     <label for="stime">Start Time:</label>
                     <input type="time" id="stime" name="starttime" value=<%= utils.getTime(event.startTime) %> required>
 
                     <label for="sdate">Start Date:</label>
                     <input type="date" id="sdate" name="startdate" value=<%= utils.getDate(event.startTime) %> required>
-                    
+
                     <br>
 
                     <label for="etime">End Time:</label>
-                    <input type="time" id="etime" name="endtime" value=<%= utils.getTime(event.endTime) %>  required>
+                    <input type="time" id="etime" name="endtime" value=<%= utils.getTime(event.endTime) %> required>
 
                     <label for="edate">End Date:</label>
                     <input type="date" id="edate" name="enddate" value=<%= utils.getDate(event.endTime) %> required>
@@ -69,21 +66,12 @@
 
                     <label for="skill">Skill Level:</label>
                     <select name="skilllevel" form="eventform">
-                        <option value="Beginner"  
-                            <% if(event.skillLevel == "Beginner"){ %>
-                                <%= "selected" %>
-                            <% } %>
-                            >Novice</option>
-                        <option value="Intermediate"
-                            <% if(event.skillLevel == "Intermediate"){ %>
-                                <%= "selected" %>
-                            <% } %>
-                        >Intermediate</option>
-                            <option value="Difficult" 
-                            <% if(event.skillLevel == "Expert"){ %>
-                                <%= "selected" %>
-                            <% } %>
-                        >Expert</option>           
+                        <option value="Beginner" <% if(event.skillLevel == "Beginner"){ %> <%= "selected" %> <% } %>>
+                            Novice</option>
+                        <option value="Intermediate" <% if(event.skillLevel == "Intermediate"){ %> <%= "selected" %>
+                            <% } %>>Intermediate</option>
+                        <option value="Difficult" <% if(event.skillLevel == "Expert"){ %> <%= "selected" %> <% } %>>
+                            Expert</option>
                     </select>
 
                     <br>
@@ -99,10 +87,11 @@
 
                 <div class="center content">
                     <button class="btn btn-dark" type="submit" value="Update Event">Update Event</button>
-                  </div>
-                </form>
-            </fieldset>
-            </div>
-        <% } %>
-  </body>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+    <% } %>
+</body>
+
 </html>
