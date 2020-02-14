@@ -32,5 +32,22 @@ function getDate(time){
     return time.getFullYear() + "-" + month + "-" + day;
 }
 
+function getEventMetadata(event) {
+    var md = '{';
+    const keys = Object.keys(event);
+    for(i=0; i < keys.length - 1;i++){
+        if(/\d/.test(keys[i])){
+            md += `"${keys[i]}"` + ' : ' + `"${keys[i+1]}"`;
+            i++;
+            if(i < keys.length - 1){
+                md += ",";
+            }
+        }
+    }
+    md += "}";
+    return JSON.parse(md);
+}
+
 module.exports.getTime = getTime;
 module.exports.getDate = getDate;
+module.exports.getEventMetadata = getEventMetadata;

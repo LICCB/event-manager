@@ -1,5 +1,6 @@
 const config = require('./config.json');
 const mariadb = require('mariadb');
+const utils = require('./utils');
 const pool = mariadb.createPool({
   host: config.database.host, 
   user: config.database.user, 
