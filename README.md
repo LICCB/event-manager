@@ -1,5 +1,25 @@
 # LICCB Event Manager Project 2019-2020
-This is the repository for the LICCB Event Manager.
+
+This is the repository for the LICCB Event Manager. 
+
+## Installing Node
+1. Download and run the LTS installer for your system at https://nodejs.org/en/download/
+## Installing the Application
+1. Clone the Git repository onto your machine
+2. Navigate to the root project folder in a terminal
+3. Install the Node modules with:  
+  `npm install`  
+
+## Configuring the Application
+1. Find and download the config.json file from the Google Drive folder
+2. Move this file into the root project folder
+
+## Running the Application
+1. Navigate to the root project folder in a terminal
+2. Start the application with:  
+  `node server.js`  
+3. Access the application at the URL:  
+   `localhost:3000`
 
 ## Software Choice
 One of the main reasons for picking a NodeJS/React stack was because we all have some level of familiarity or experience with this stack. Several of us have taken web development classes that used NodeJS. NodeJS also has one of the biggest sets of existing code with the modules provided by npm. The decision over Flask or Django was mostly due to preference and our group's experience with NodeJS or lack of experience with Flask or Django.
