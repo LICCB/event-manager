@@ -1,96 +1,94 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <%- include('../partials/head', {title: title}) %>
-  </head>
-  <body class="bg-gray">
-    <%- include('../partials/header', {title: title}) %>
-  <body>
-    <div class="container content">
-      <fieldset>
-        <!-- var Event = function(ename, mname, cap, psize, ptype, stime, etime, slevel, dist, sratio, cid) { -->
-        <form action="/createEvent" method="post" id="eventform">
-          <div class="left">
-            <label for="ename">Event Name:</label>
-            <input type="text" id="ename" name="eventname" placeholder="Event Name" required>
-            <br>
-            <label for="man">Event Manager:</label>
-            <select name="manager" form="eventform">
-              <% for(i = 0; i < users.length; i++) { %>
-                <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
-              <% } %>
-            </select>
-            <br>
-            <label for="cap">Capacity:</label>
-            <input type="text" id="cap" name="capacity" placeholder="Capacity" required>
-            <br>
-            <label for="psize">Max Party Size:</label>
-            <input type="text" id="psize" name="maxpartysize" placeholder="Max Pary Size" required>
-            <br>
-            <label for="ptype">Participation Type:</label>
-            <select id="ptype" name="privateevent" form="eventform">
-              <option value="false">Public</option>
-              <option value="true">Private</option>
-            </select>
-          </div>
-          <div class="right">
-            <label for="stime">Start Time:</label>
-            <input type="time" id="stime" name="starttime" placeholder="Start Time" required>
-            <br> 
-            <label for="sdate">Start Date:</label>
-            <input type="date" id="sdate" name="startdate" placeholder="Start Date" required>
-            <br>
-            <label for="etime">End Time:</label>
-            <input type="time" id="etime" name="endtime" placeholder="End Time" required>
-            <br>
-            <label for="edate">End Date:</label>
-            <input type="date" id="edate" name="enddate" placeholder="End Date" required>
-            <br>
-            <label for="sratio">Staff Ratio:</label>
-            <input type="text" id="sratio" name="staffratio" placeholder="Staff Ratio" required>
-            <br>
-            <label for="notes">Notes:</label>
-            <input type="text" id="notes" name="notes" placeholder="Notes">
 
-            <br>
+<head>
+  <%- include('../partials/head', {title: title}) %>
+</head>
 
-            <input type="button" value="Add a field" class="addfield" id="addfield" />
-
-            <div id="newfields" form="eventform">
-
-            </div>
-          </div>
+<body class="bg-gray">
+  <%- include('../partials/header', {title: title}) %>
+  <div class="container content">
+    <fieldset>
+      <form action="/createEvent" method="post" id="eventform">
+        <div class="left">
+          <label for="ename">Event Name:</label>
+          <input type="text" id="ename" name="eventname" placeholder="Event Name" required>
           <br>
-          <div class="center content">
-            <button class="btn btn-dark" type="submit" value="Create Event">Submit</button>
-          </div>
-        </form>
-      </fieldset>
-        <footer class="footer">
-          <%- include('../partials/footer') %>
-        </footer>
-    </div>
-    <%- include('../partials/bootstrapScripts') %>
-    <script>
-      $("#addfield").click(function() {
-          var lastField = $("#newfields div:last");
-          var intId = (lastField && lastField.length && lastField.data("idx") + 1) || 1;
-          var fieldWrapper = $("<div class=\"fieldwrapper\" id=\"field" + intId + "\"/>");
-          fieldWrapper.data("idx", intId);
-          var fLabel = $("<label for=\"field" + intId+ "\" >Field" + intId + ": </label>")
-          // var fName = $("<input type=\"text\" class=\"fieldname\" id=\"field" + id + "\" form=\"eventform\" />");
-          var fName = $("<input type=\"text\" id=\"field" + intId + "\" name=\"field" + intId + "\" class=\"fieldname\" form=\"eventform\" />");
-          var fType = $("<select class=\"fieldtype\" name=\"type" + intId + "\" form=\"eventform\"><option value=\"checkbox\">Checked</option><option value=\"textbox\">Text</option><option value=\"textarea\">Paragraph</option></select>");
-          var removeButton = $("<input type=\"button\" class=\"remove\" value=\"-\" />");
-          removeButton.click(function() {
-              $(this).parent().remove();
-          });
-          fieldWrapper.append(fLabel);
-          fieldWrapper.append(fName);
-          fieldWrapper.append(fType);
-          fieldWrapper.append(removeButton);
-          $("#newfields").append(fieldWrapper);
+          <label for="man">Event Manager:</label>
+          <select name="manager" form="eventform">
+            <% for(i = 0; i < users.length; i++) { %>
+            <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
+            <% } %>
+          </select>
+          <br>
+          <label for="cap">Capacity:</label>
+          <input type="text" id="cap" name="capacity" placeholder="Capacity" required>
+          <br>
+          <label for="psize">Max Party Size:</label>
+          <input type="text" id="psize" name="maxpartysize" placeholder="Max Pary Size" required>
+          <br>
+          <label for="ptype">Participation Type:</label>
+          <select id="ptype" name="privateevent" form="eventform">
+            <option value="false">Public</option>
+            <option value="true">Private</option>
+          </select>
+        </div>
+        <div class="right">
+          <label for="stime">Start Time:</label>
+          <input type="time" id="stime" name="starttime" placeholder="Start Time" required>
+          <br>
+          <label for="sdate">Start Date:</label>
+          <input type="date" id="sdate" name="startdate" placeholder="Start Date" required>
+          <br>
+          <label for="etime">End Time:</label>
+          <input type="time" id="etime" name="endtime" placeholder="End Time" required>
+          <br>
+          <label for="edate">End Date:</label>
+          <input type="date" id="edate" name="enddate" placeholder="End Date" required>
+          <br>
+          <label for="sratio">Staff Ratio:</label>
+          <input type="text" id="sratio" name="staffratio" placeholder="Staff Ratio" required>
+          <br>
+          <label for="notes">Notes:</label>
+          <input type="text" id="notes" name="notes" placeholder="Notes">
+          <br>
+          <input type="button" value="Add a field" class="addfield" id="addfield" />
+          <div id="newfields" form="eventform"></div>
+        </div>
+        <br>
+        <div class="center content">
+          <button class="btn btn-dark" type="submit" value="Create Event">Submit</button>
+        </div>
+      </form>
+    </fieldset>
+    <footer class="footer">
+      <%- include('../partials/footer') %>
+    </footer>
+  </div>
+  <%- include('../partials/scripts') %>
+  <script>
+    $("#addfield").click(function () {
+      var lastField = $("#newfields div:last");
+      var intId = (lastField && lastField.length && lastField.data("idx") + 1) || 1;
+      var fieldWrapper = $("<div class=\"fieldwrapper\" id=\"field" + intId + "\"/>");
+      fieldWrapper.data("idx", intId);
+      var fLabel = $("<label for=\"field" + intId + "\" >Field" + intId + ": </label>");
+      var fName = $("<input type=\"text\" id=\"field" + intId + "\" name=\"field" + intId +
+        "\" class=\"fieldname\" form=\"eventform\" />");
+      var fType = $("<select class=\"fieldtype\" name=\"type" + intId +
+        "\" form=\"eventform\"><option value=\"checkbox\">Checked</option><option value=\"textbox\">Text</option><option value=\"textarea\">Paragraph</option></select>"
+      );
+      var removeButton = $("<input type=\"button\" class=\"remove\" value=\"-\" />");
+      removeButton.click(function () {
+        $(this).parent().remove();
       });
-    </script>
-  </body>
+      fieldWrapper.append(fLabel);
+      fieldWrapper.append(fName);
+      fieldWrapper.append(fType);
+      fieldWrapper.append(removeButton);
+      $("#newfields").append(fieldWrapper);
+    });
+  </script>
+</body>
+
 </html>
