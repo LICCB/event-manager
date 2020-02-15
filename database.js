@@ -68,43 +68,23 @@ async function insertEvent(event) {
   return eventID;
 }
 
-async function createEventTable(id){
-  const createStmt = "CREATE TABLE LICCB.event" + id.replace(/-/g, "") + "(" + 
-                      "participantID   char(36) NOT NULL PRIMARY KEY, " + 
-                      "partyID         char(36) NOT NULL, " + 
-                      "isAdult         BOOLEAN NOT NULL, " +
-                      "canSwim         BOOLEAN NOT NULL, " +
-                      "phone           VARCHAR(30) NOT NULL, " +
-                      "email           VARCHAR(75) NOT NULL, " +
-                      "emergencyPhone  VARCHAR(30) NOT NULL, " +
-                      "emergencyName   VARCHAR(60) NOT NULL, " +
-                      "hasCPRCert      BOOLEAN NOT NULL, " + 
-                      "regStatus       ENUM('Registered', 'Not Selected', 'Standby', 'Selected', 'Checked In', 'No Show', 'Cancelled'), " + 
-                      "volunteer       BOOLEAN DEFAULT 0, " + 
-                      "FOREIGN KEY (`participantID`) " + 
-                          "REFERENCES `history` (`participantID`), " +
-                      "FOREIGN KEY (`partyID`) " + 
-                          "REFERENCES `history` (`participantID`));";
-  let conn = await pool.getConnection();
-  let create = await conn.query(createStmt);
-  conn.release();
-  return create;
-}
-
 async function updateEvent(event, id) {
+  const eventMetadata = utils.getEventMetadata(event);
   const update = "UPDATE LICCB.events " + 
                 "SET " +
-                  "eventName='" + event.eventname + "', " + 
-                  "manager='" + event.manager + "', " + 
+                  "managerID='" + event.managerID + "', " + 
+                  "creatorID='" + event.managerID + "', " + 
+                  "eventName='" + event.eventName + "', " + 
+                  "maxPartySize=" + event.maxPartySize + ", " + 
+                  "privateEvent=" + event.privateEvent + ", " +
+                  "startTime='" + event.startDate + " " + event.startTime + ":00', " +  
+                  "endTime='" + event.endDate + " " + event.endTime + ":00', " +
                   "capacity=" + event.capacity + ", " +
-                  "maxPartySize=" + event.maxpartysize + ", " + 
-                  "privateEvent=" + event.participationtype + ", " +
-                  "startTime='" + event.startdate + " " + event.starttime + ":00', " +  
-                  "endTime='" + event.enddate + " " + event.endtime + ":00', " +
-                  "staffRatio=" + event.staffratio + ", " + 
-                  "creatorID='1b671a64-40d5-491e-99b0-da01ff1f3341', " +
-                  "eventNotes='" + event.notes + "' " +
-                "WHERE eventID='" + id + "';"
+                  "staffRatio=" + event.staffRatio + ", " + 
+                  "eventDesc='" + event.eventDesc + "', " +
+                  "eventNotes='" + event.eventNotes + "', " +
+                  "eventMetadata='" + eventMetadata + "' " +                  
+                "WHERE eventID='" + eventID + "';"
   let conn = await pool.getConnection();
   let upd = await conn.query(update);
   conn.release();
@@ -117,4 +97,3 @@ module.exports.queryEventByID = queryEventByID;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
 module.exports.deleteEvent = deleteEvent;
-module.exports.createEventTable = createEventTable;

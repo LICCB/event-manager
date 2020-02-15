@@ -32,6 +32,10 @@ function getDate(time){
     return time.getFullYear() + "-" + month + "-" + day;
 }
 
+/**
+ * Returns the JSON representation of the dynamic event fields
+ * @param {JSON} event 
+ */
 function getEventMetadata(event) {
     var md = '{';
     const keys = Object.keys(event);
