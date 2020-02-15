@@ -19,8 +19,11 @@ CREATE TABLE LICCB.events(
     privateEvent    BOOLEAN NOT NULL,
     startTime       DATETIME NOT NULL,
     endTime         DATETIME NOT NULL,
-    eventStatus     ENUM('Unpublished', 'Registration Open', 'Registration Closed', 'Cancelled', 'Selection Finished'),
+    eventStatus     ENUM('Unpublished', 'Registration Open', 'Registration Closed', 'Cancelled', 'Selection Finished', 'Archived'),
+    capacity        INT,
+    staffRatio      FLOAT,
     eventDesc       TEXT,
+    eventNotes      TEXT,
     eventMetadata   TEXT,
 
     -- Foreign key for manager to ensure it is a real user
