@@ -31,11 +31,28 @@ async function queryEventByID(eventID) {
   return event;
 }
 
+async function queryParticipants() {
+  let conn = await pool.getConnection();
+  let participants = await conn.query("SELECT * FROM LICCB.participants");
+  conn.release();
+  return participants;
+}
+
 async function queryParticipantsByEventID(eventID) {
   let conn = await pool.getConnection();
   let participants = await conn.query("SELECT * FROM LICCB.participants WHERE eventID = '" + eventID + "'");
   conn.release();
   return participants;
+}
+
+async function checkinParticipant(participantID, eventID) {
+  let conn = await pool.getConnection();
+  let participant = await conn.query("UPDATE LICCB.participants " +
+                                     "SET checkinStatus = 'Checked In' " +
+                                     "WHERE LICCB.participants.participantID = '" + participantID + "' " +
+                                           "AND LICCB.participants.eventID = '" + eventID + "'");
+  conn.release();
+  return participant;
 }
 
 async function deleteEvent(id) {
@@ -117,7 +134,9 @@ async function updateEvent(event, id) {
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
+module.exports.queryParticipants = queryParticipants;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
+module.exports.checkinParticipant = checkinParticipant;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
 module.exports.deleteEvent = deleteEvent;
