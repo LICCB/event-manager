@@ -68,6 +68,14 @@ app.get('/participants/:id', async (req, res) => {
   res.render('event/participants', {participants: await db.queryParticipantsByEventID(req.params.id)})
 });
 
+/**
+ * Checks in a participant and redirects back to the event's participant table
+ */
+app.post('/participants/checkin/:eventid/:participantid', async (req, res) => {
+  await db.checkinParticipant(req.params.participantid, req.params.eventid);
+  res.redirect('/participants/' + eventid);
+});
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 })
