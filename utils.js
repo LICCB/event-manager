@@ -35,9 +35,10 @@ function getDate(time){
 function getEventMetadata(event) {
     var md = '{';
     const keys = Object.keys(event);
+    const vals = Object.values(event);
     for(i=0; i < keys.length - 1;i++){
         if(/\d/.test(keys[i])){
-            md += `"${keys[i]}"` + ' : ' + `"${keys[i+1]}"`;
+            md += `"${keys[i]}"` + ' : ' + `"${vals[i+1]}"`;
             i++;
             if(i < keys.length - 1){
                 md += ",";
@@ -45,7 +46,7 @@ function getEventMetadata(event) {
         }
     }
     md += "}";
-    return JSON.parse(md);
+    return JSON.stringify(JSON.parse(md));
 }
 
 module.exports.getTime = getTime;

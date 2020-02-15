@@ -12,10 +12,10 @@
       <form action="/createEvent" method="post" id="eventform">
         <div class="left">
           <label for="ename">Event Name:</label>
-          <input type="text" id="ename" name="eventname" placeholder="Event Name" required>
+          <input type="text" id="ename" name="eventName" placeholder="Event Name" required>
           <br>
           <label for="man">Event Manager:</label>
-          <select name="manager" form="eventform">
+          <select name="managerID" form="eventform">
             <% for(i = 0; i < users.length; i++) { %>
             <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
             <% } %>
@@ -25,32 +25,35 @@
           <input type="text" id="cap" name="capacity" placeholder="Capacity" required>
           <br>
           <label for="psize">Max Party Size:</label>
-          <input type="text" id="psize" name="maxpartysize" placeholder="Max Pary Size" required>
+          <input type="text" id="psize" name="maxPartySize" placeholder="Max Pary Size" required>
           <br>
           <label for="ptype">Participation Type:</label>
-          <select id="ptype" name="privateevent" form="eventform">
+          <select id="ptype" name="privateEvent" form="eventform">
             <option value="false">Public</option>
             <option value="true">Private</option>
           </select>
+          <br>
+          <label for="notes">Notes:</label>
+          <input type="text" id="notes" name="eventNotes" placeholder="Notes">
         </div>
         <div class="right">
           <label for="stime">Start Time:</label>
-          <input type="time" id="stime" name="starttime" placeholder="Start Time" required>
+          <input type="time" id="stime" name="startTime" placeholder="Start Time" required>
           <br>
           <label for="sdate">Start Date:</label>
-          <input type="date" id="sdate" name="startdate" placeholder="Start Date" required>
+          <input type="date" id="sdate" name="startDate" placeholder="Start Date" required>
           <br>
           <label for="etime">End Time:</label>
-          <input type="time" id="etime" name="endtime" placeholder="End Time" required>
+          <input type="time" id="etime" name="endTime" placeholder="End Time" required>
           <br>
           <label for="edate">End Date:</label>
-          <input type="date" id="edate" name="enddate" placeholder="End Date" required>
+          <input type="date" id="edate" name="endDate" placeholder="End Date" required>
           <br>
           <label for="sratio">Staff Ratio:</label>
-          <input type="text" id="sratio" name="staffratio" placeholder="Staff Ratio" required>
+          <input type="text" id="sratio" name="staffRatio" placeholder="Staff Ratio" required>
           <br>
-          <label for="notes">Notes:</label>
-          <input type="text" id="notes" name="notes" placeholder="Notes">
+          <label for="desc">Description:</label>
+          <input type="text" id="desc" name="eventDesc" placeholder="Notes">
           <br>
           <input type="button" value="Add a field" class="addfield" id="addfield" />
           <div id="newfields" form="eventform"></div>

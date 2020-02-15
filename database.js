@@ -40,31 +40,32 @@ async function deleteEvent(id) {
 }
 
 async function insertEvent(event) {
-  const eventMetadata = getEventMetadata(event);
+  const eventMetadata = utils.getEventMetadata(event);
   console.log(event);
-  const id = uuidv4();
+  const eventID = uuidv4();
   const insertStmt = "INSERT INTO LICCB.events " +
-                    "(eventID, eventName, manager, creatorID, " +
-                    "capacity, maxPartySize, privateEvent, startTime, " + 
-                    "endTime, staffRatio, published, eventNotes, eventMetadata) " + 
+                    "(eventID, managerID, creatorID, eventName, " +
+                    "maxPartySize, privateEvent, startTime, " + 
+                    "endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata) " + 
                 "VALUES(" +
-                    "'" + id + "', " + 
-                    "'" + event.eventname + "', " + 
-                    "'" + event.manager + "', " +
-                    "'1b671a64-40d5-491e-99b0-da01ff1f3341', " +
+                    "'" + eventID + "', " + 
+                    "'" + event.managerID + "', " +
+                    "'" + event.managerID + "', " + // in place of creatorID               
+                    "'" + event.eventName + "', " + 
+                    event.maxPartySize + ", " + 
+                    event.privateEvent + ", " +
+                    "'" + event.startDate + " " + event.startTime + ":00', " +  
+                    "'" + event.endDate + " " + event.endTime + ":00', " +
+                    "'Unpublished', " +
                     event.capacity + ", " +
-                    event.maxpartysize + ", " + 
-                    event.privateevent + ", " +
-                    "'" + event.startdate + " " + event.starttime + ":00', " +  
-                    "'" + event.enddate + " " + event.endtime + ":00', " +
-                    event.staffratio + ", " + 
-                    "1, " +
-                    "'" + event.notes + "', " +
-                    "NULL);";
+                    event.staffRatio + ", " + 
+                    "'" + event.eventDesc + "', " +
+                    "'" + event.eventNotes + "', " +
+                    "'" + eventMetadata + "');";
   let conn = await pool.getConnection();
   let insert = await conn.query(insertStmt);
   conn.release();
-  return id;
+  return eventID;
 }
 
 async function createEventTable(id){

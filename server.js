@@ -29,7 +29,7 @@ app.get('/createEvent', async (req, res) => {
  */
 app.post('/createEvent', async (req, res) => {
   console.log(req);
-  await db.createEventTable(await db.insertEvent(req.body));
+  await db.insertEvent(req.body);
   res.redirect('/events');
 });
 
