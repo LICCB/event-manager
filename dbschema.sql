@@ -44,16 +44,19 @@ CREATE TABLE LICCB.participants(
     -- Contact Info and Details
     firstName       VARCHAR(30) NOT NULL,
     lastName        VARCHAR(30) NOT NULL,
-    phone           VARCHAR(30) NOT NULL,
-    email           VARCHAR(75) NOT NULL,
+    phone           VARCHAR(30),
+    email           VARCHAR(75),
     emergencyPhone  VARCHAR(30) NOT NULL,
     emergencyName   VARCHAR(60) NOT NULL,
+    zip             CHAR(5),
 
     -- User Submitted Selection Information
     isAdult         BOOLEAN NOT NULL,
     hasCPRCert      BOOLEAN NOT NULL,
     canSwim         BOOLEAN NOT NULL,
-    skillLevel      ENUM('Beginner', 'Intermediate', 'Advanced'),
+    boatExperience  BOOLEAN NOT NULL,
+    boathouseDisc   VARCHAR(100),
+    eventDisc       VARCHAR(100),
     regComments     TEXT,
 
     -- Backend (Not filled by participant)
