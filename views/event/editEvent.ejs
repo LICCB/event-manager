@@ -1,108 +1,105 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <%- include('../partials/head', {title: title}) %>
-  </head>
-  <body class="bg-gray">
+</head>
+
+<body class="bg-gray">
     <%- include('../partials/header', {title: title}) %>
-      <% if(event !== null && users !== null){%> 
-            <div class="content container">
-            <fieldset>
-                <!-- var Event = function(ename, mname, cap, psize, ptype, stime, etime, slevel, dist, sratio, cid) { -->
-                <form action= <%= "/editEvent/" + event.eventID %> method="post" id="eventform">
+    <% if(event !== null && users !== null){%>
+    <div class="content container">
+        <fieldset>
+            <form action=<%= "/editEvent/" + event.eventID %> method="post" id="eventform">
                 <div class="left">
                     <label for="ename">Event Name:</label>
-                    <input type="text" id="ename" name="eventname" value=<%= event.eventName %> required>
-                    
+                    <input type="text" id="ename" name="eventName" value=<%= event.eventName %> required>
                     <br>
-
                     <label for="man">Event Manager:</label>
-                    <select name="manager" form="eventform">
-                      <% for(i = 0; i < users.length; i++) { %>
-                        <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
-                      <% } %>
+                    <select name="managerID" form="eventform">
+                        <% for(i = 0; i < users.length; i++) { %>
+                        <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %>
+                        </option>
+                        <% } %>
                     </select>
-
                     <br>
-
                     <label for="cap">Capacity:</label>
                     <input type="text" id="cap" name="capacity" value=<%= event.capacity %> required>
-
                     <br>
-
                     <label for="psize">Max Party Size:</label>
-                    <input type="text" id="psize" name="maxpartysize" value=<%= event.maxPartySize %> required>
-                    
+                    <input type="text" id="psize" name="maxPartySize" value=<%= event.maxPartySize %> required>
                     <br>
-                    
                     <label for="ptype">Participation Type:</label>
-                    <select id="ptype" name="participationtype" form="eventform">
-                        <option value="false"
-                        <% if(event.privateEvent == false){ %>
-                            <%= "selected" %>
-                        <% } %>
-                        >Public</option>
-                        <option value="true"
-                        <% if(event.privateEvent == true){ %>
-                            <%= "selected" %>
-                        <% } %>
-                        >Private</option>
+                    <select id="ptype" name="privateEvent" form="eventform">
+                        <option value="false" <% if(event.privateEvent == false){ %> <%= "selected" %> <% } %>>Public
+                        </option>
+                        <option value="true" <% if(event.privateEvent == true){ %> <%= "selected" %> <% } %>>Private
+                        </option>
                     </select>
+                    <br>
+                    <label for="desc">Description:</label>
+                    <input type="text" id="desc" name="eventDesc" value=<%= event.eventDesc %>>
                 </div>
-                
                 <div class="right">
                     <label for="stime">Start Time:</label>
-                    <input type="time" id="stime" name="starttime" value=<%= utils.getTime(event.startTime) %> required>
-
+                    <input type="time" id="stime" name="startTime" value=<%= utils.getTime(event.startTime) %> required>
                     <label for="sdate">Start Date:</label>
-                    <input type="date" id="sdate" name="startdate" value=<%= utils.getDate(event.startTime) %> required>
-                    
+                    <% console.log(utils.getTime(event.startTime)) %>
+                    <input type="date" id="sdate" name="startDate" value=<%= utils.getDate(event.startTime) %> required>
                     <br>
-
                     <label for="etime">End Time:</label>
-                    <input type="time" id="etime" name="endtime" value=<%= utils.getTime(event.endTime) %>  required>
-
+                    <input type="time" id="etime" name="endTime" value=<%= utils.getTime(event.endTime) %> required>
+                    <% console.log(utils.getTime(event.endTime)) %>
                     <label for="edate">End Date:</label>
-                    <input type="date" id="edate" name="enddate" value=<%= utils.getDate(event.endTime) %> required>
-
+                    <input type="date" id="edate" name="endDate" value=<%= utils.getDate(event.endTime) %> required>
                     <br>
-
-                    <label for="skill">Skill Level:</label>
-                    <select name="skilllevel" form="eventform">
-                        <option value="Beginner"  
-                            <% if(event.skillLevel == "Beginner"){ %>
-                                <%= "selected" %>
-                            <% } %>
-                            >Novice</option>
-                        <option value="Intermediate"
-                            <% if(event.skillLevel == "Intermediate"){ %>
-                                <%= "selected" %>
-                            <% } %>
-                        >Intermediate</option>
-                            <option value="Difficult" 
-                            <% if(event.skillLevel == "Expert"){ %>
-                                <%= "selected" %>
-                            <% } %>
-                        >Expert</option>           
-                    </select>
-
-                    <br>
-
                     <label for="sratio">Staff Ratio:</label>
-                    <input type="text" id="sratio" name="staffratio" value=<%= event.staffRatio %> required>
-
+                    <input type="text" id="sratio" name="staffRatio" value=<%= event.staffRatio %> required>
                     <br>
-
                     <label for="notes">Notes:</label>
-                    <input type="text" id="notes" name="notes" value=<%= event.eventNotes %>>
+                    <input type="text" id="notes" name="eventNotes" value=<%= event.eventNotes %>>
+                    <br>
+                    <input type="button" value="Add a field" class="addfield" id="addfield" />
+                    <div id="newfields" form="eventform">
+                        <% if(event.eventMetadata != null) { %>
+                        <% var md = JSON.parse(event.eventMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
+                        <% for(i=0; i < keys.length; i++){ %>
+                        <div class="fieldwrapper<%= i %>">
+                            <label for="field<%= -1-i %>">Field:</label>
+                            <input type="text" id="field<%= -1-i %>" name="field<%= -1-i %>" class="fieldname"
+                                form="eventform" value=<%= keys[i] %>>
+                            <select class="fieldtype" name="type<%= -1-i %>" form="eventform">
+                                <option value="checkbox" <% if(vals[i] == "checkbox"){ %> <%= "selected" %> <% } %>>
+                                    Checked</option>
+                                <option value="textbox" <% if(vals[i] == "textbox"){ %> <%= "selected" %> <% } %>>Text
+                                </option>
+                                <option value="textarea" <% if(vals[i] == "textarea"){ %> <%= "selected" %> <% } %>>
+                                    Paragraph</option>
+                            </select>
+                            <input type="button" onclick="remove(<%= i %>)" class="remove" value="X">
+                        </div>
+                        <script>
+                            var remove = function (i) {
+                                $(`.fieldwrapper${i}`).remove()
+                            };
+                        </script>
+                        <br>
+                        <% } %>
+                        <% } %>
+                    </div>
                 </div>
-
                 <div class="center content">
                     <button class="btn btn-dark" type="submit" value="Update Event">Update Event</button>
-                  </div>
-                </form>
-            </fieldset>
-            </div>
-        <% } %>
-  </body>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+    <% } %>
+    <footer>
+        <%- include('../partials/footer') %>
+    </footer>
+    <%- include('../partials/scripts') %>
+    <script src="/scripts/addFields.js" metadata="<%= event.eventMetadata %>"></script>
+</body>
+
 </html>
