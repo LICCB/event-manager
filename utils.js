@@ -4,12 +4,12 @@
  */
 function getTime(time) {
     var minutes = time.getMinutes().toString();
-    if(minutes.length == 1){
+    if (minutes.length == 1) {
         minutes = "0" + minutes;
     }
 
     var hours = time.getHours().toString();
-    if(hours.length == 1){
+    if (hours.length == 1) {
         hours = "0" + hours;
     }
     return hours + ":" + minutes;
@@ -19,14 +19,14 @@ function getTime(time) {
  * Returns the date in YYYY-MM-DD from the JS Date object
  * @param {Date} time 
  */
-function getDate(time){
-    var month = time.getMonth().toString();
-    if(month.length == 1){
+function getDate(time) {
+    var month = (time.getMonth() + 1).toString();
+    if (month.length == 1) {
         month = "0" + month;
     }
-    
+
     var day = time.getDate().toString();
-    if(day.length == 1){
+    if (day.length == 1) {
         day = "0" + day;
     }
     return time.getFullYear() + "-" + month + "-" + day;
@@ -40,11 +40,11 @@ function getEventMetadata(event) {
     var md = '{';
     const keys = Object.keys(event);
     const vals = Object.values(event);
-    for(i=0; i < keys.length - 1;i++){
-        if(/\d/.test(keys[i])){
-            md += `"${keys[i]}"` + ' : ' + `"${vals[i+1]}"`;
+    for (i = 0; i < keys.length - 1; i++) {
+        if (/\d/.test(keys[i])) {
+            md += `"${vals[i]}"` + ' : ' + `"${vals[i+1]}"`;
             i++;
-            if(i < keys.length - 1){
+            if (i < keys.length - 1) {
                 md += ",";
             }
         }

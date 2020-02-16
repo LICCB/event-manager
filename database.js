@@ -29,6 +29,7 @@ async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
   let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'")
   conn.release();
+  console.log(event);
   return event;
 }
 
@@ -70,6 +71,7 @@ async function insertEvent(event) {
 
 async function updateEvent(event, id) {
   const eventMetadata = utils.getEventMetadata(event);
+  console.log(eventMetadata);
   const update = "UPDATE LICCB.events " + 
                 "SET " +
                   "managerID='" + event.managerID + "', " + 
@@ -84,7 +86,8 @@ async function updateEvent(event, id) {
                   "eventDesc='" + event.eventDesc + "', " +
                   "eventNotes='" + event.eventNotes + "', " +
                   "eventMetadata='" + eventMetadata + "' " +                  
-                "WHERE eventID='" + eventID + "';"
+                "WHERE eventID='" + id + "';"
+  console.log(update);
   let conn = await pool.getConnection();
   let upd = await conn.query(update);
   conn.release();
