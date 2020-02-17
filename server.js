@@ -76,6 +76,37 @@ app.get('/deleteEvent/:id', async (req, res) => {
   res.redirect('/events');
 })
 
+/**
+ * Redirects to the export page where the user can export event or participant data
+ */
+app.get('/export', async (req, res) => {
+  res.render("export/export", {
+    title: "Export",
+    download: null,
+  });
+});
+
+/**
+ * Redirects back to export page after starting a download for the information requested
+ */
+app.post('/export/exportData', async (req, res) => {
+  download = {};
+  download.fileName = `${req.body.fileName}.${req.body.fileType}`;
+  console.log(req.body);
+  toExport = req.body.toExport;
+  if (toExport == 'exportParticipants') {
+    participants = await db.queryAllParticipants();
+    delete participants.meta;
+    console.log(participants);
+    download.fileData = participants;
+  }
+
+  res.render("export/export", {
+    title: "Export",
+    download: download
+  });
+});
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 })

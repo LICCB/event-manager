@@ -25,6 +25,13 @@ async function queryAllEvents() {
     return events;
   }
 
+async function queryAllParticipants() {
+    let conn = await pool.getConnection();
+    let participants = await conn.query("SELECT * FROM LICCB.participants");
+    conn.release();
+    return participants;
+  }
+
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
   let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'")
@@ -96,6 +103,7 @@ async function updateEvent(event, id) {
 
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryAllEvents = queryAllEvents;
+module.exports.queryAllParticipants = queryAllParticipants;
 module.exports.queryEventByID = queryEventByID;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
