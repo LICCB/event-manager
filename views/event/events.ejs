@@ -22,8 +22,11 @@
       <tbody>
         <% for(i = 0; i < events.length; i++){ %>
         <tr>
-          <td> <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> | <a
-              href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a></td>
+          <td> <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a>
+            <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a> 
+            <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> 
+            <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> 
+          </td>
           <% var vals = Object.values(events[i]) %>
           <% for(j = 0; j < vals.length; j++){ %>
           <td> <%=  vals[j] %> </td>
