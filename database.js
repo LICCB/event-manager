@@ -61,6 +61,17 @@ async function cancelEvent(id) {
   return canc;
 }
 
+async function publishEvent(id) {
+  let conn = await pool.getConnection();
+  const publish = "UPDATE LICCB.events " + 
+                  "SET " +
+                    "eventStatus='Registration Open'" +              
+                  "WHERE eventID='" + id + "';"
+  let pub = await conn.query(publish);
+  conn.release();
+  return pub;
+}
+
 async function insertEvent(event) {
   const eventMetadata = utils.getEventMetadata(event);
   const eventID = uuidv4();
@@ -120,3 +131,4 @@ module.exports.updateEvent = updateEvent;
 module.exports.archiveEvent = archiveEvent;
 module.exports.cancelEvent = cancelEvent;
 module.exports.deleteEvent = deleteEvent;
+module.exports.publishEvent = publishEvent;

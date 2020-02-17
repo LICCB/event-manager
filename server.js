@@ -84,6 +84,14 @@ app.get('/archiveEvent/:id', async (req, res) => {
 })
 
 /**
+* Redirects to the events page after publishing a given event
+*/
+app.get('/publishEvent/:id', async (req, res) => {
+ await db.publishEvent(req.params.id);
+ res.redirect('/events');
+})
+
+/**
  * Redirects to the events page after cancelling a given event
  */
 app.get('/cancelEvent/:id', async (req, res) => {
