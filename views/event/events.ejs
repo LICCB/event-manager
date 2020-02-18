@@ -9,11 +9,11 @@
   <%- include('../partials/header', {title: title}) %>
   <div class="content">
     <button class="button-left btn btn-dark"><a href="createEvent">New Event</a></button>
-    <label for="archived">Archived</label>
-    <input type="checkbox" id="archived">
+    <label for="archived" >Archived</label>
+    <input type="checkbox" id="archived" checked=checked>
     <label for="cancelled">Cancelled</label>
-    <input type="checkbox" id="cancelled">
-    <table class="table table-striped table-dark table-bordered table-hover table-sm">
+    <input type="checkbox" id="cancelled" checked=checked>
+    <table class="table table-striped table-dark table-bordered table-hover table-sm" id="eventsTable">
       <thead>
         <% var keys = Object.keys(events[0]) %>
         <tr>
@@ -25,7 +25,8 @@
       </thead>
       <tbody>
         <% for(i = 0; i < events.length; i++){ %>
-        <tr>
+        <% console.log(events[i].eventStatus) %>
+        <tr <%= `class=${events[i].eventStatus.replace(/\s/g, '')}` %>>
           <td>
             <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a>
             <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> 
@@ -47,6 +48,7 @@
   </div>
   <br>
   <%- include('../partials/scripts') %>
+  <script src="/scripts/filterEvents.js"></script>
 </body>
 
 </html>
