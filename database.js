@@ -23,7 +23,7 @@ async function queryAllEvents() {
     let events = await conn.query("SELECT * FROM LICCB.events");
     conn.release();
     return events;
-  }
+}
 
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();

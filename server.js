@@ -43,7 +43,7 @@ app.post('/createEvent', async (req, res) => {
 app.get('/events', async (req, res) => {
   res.render('event/events', {
     title: "Events",
-    events: await db.queryAllEvents()
+    events: utils.filterEventData(await db.queryAllEvents())
   });
 })
 

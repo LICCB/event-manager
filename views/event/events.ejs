@@ -28,11 +28,11 @@
         <% console.log(events[i].eventStatus) %>
         <tr <%= `class=${events[i].eventStatus.replace(/\s/g, '')}` %>>
           <td>
-            <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a>
-            <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> 
-            <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> 
-            <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> 
-            <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a> 
+            <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> |
+            <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> | 
+            <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> |
+            <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> |
+            <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a> |
           </td>
           <% var vals = Object.values(events[i]) %>
           <% for(j = 0; j < vals.length; j++){ %>
