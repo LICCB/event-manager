@@ -5,7 +5,7 @@
     <%- include('../partials/head', {title: title}) %>
 </head>
 
-<body class="bg-gray">
+<body class="bg-gray" onload="checkDownload()">
     <%- include('../partials/header', {title: title}) %>
     <div class="container content">
 
@@ -28,9 +28,9 @@
         <footer>
             <%- include('../partials/footer') %>
         </footer>
+        <div style="display:none;" id="downloadInfo" fileName="<%= download.fileName %>" fileData="<%= download.fileData %>"></div>
     </div>
 
-    <div style="display: none;" onload="checkDownload(download)"></div>
     <%- include('../partials/scripts') %>
     <script src="/scripts/export.js"></script>
 </body>

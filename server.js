@@ -82,7 +82,7 @@ app.get('/deleteEvent/:id', async (req, res) => {
 app.get('/export', async (req, res) => {
   res.render("export/export", {
     title: "Export",
-    download: null,
+    download: req.body.download,
   });
 });
 
@@ -92,7 +92,6 @@ app.get('/export', async (req, res) => {
 app.post('/export/exportData', async (req, res) => {
   download = {};
   download.fileName = `${req.body.fileName}.${req.body.fileType}`;
-  console.log(req.body);
   toExport = req.body.toExport;
   if (toExport == 'exportParticipants') {
     participants = await db.queryAllParticipants();
@@ -100,6 +99,14 @@ app.post('/export/exportData', async (req, res) => {
     console.log(participants);
     download.fileData = participants;
   }
+  if (toExport == 'exportEvents') {
+    events = await db.queryAllEvents();
+    delete events.meta;
+    console.log(events);
+    download.fileData = events;
+  }
+  // Find a way to pass the fileData through to javascript for download
+  console.log(download);
 
   res.render("export/export", {
     title: "Export",
