@@ -65,7 +65,7 @@ app.get('/deleteEvent/:id', async (req, res) => {
 /**
  * Redirects to the lottery run selection page
  */
-app.get('/events/lottery/:id', async (req, res) => {
+app.get('/lottery/:id', async (req, res) => {
   res.render('event/lottery', {participants: await db.runSelection(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });
 

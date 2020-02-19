@@ -3,10 +3,17 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title><%= event.eventName %> Participants</title>
+    <title>Event: <%= event.eventName %> -  Selected Participants</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   </head>
   <body>
+    <title> Run Selection! </title>
+    <button class="button-left btn btn-dark"><a href="123e4567-e89b-12d3-a456-556642440000">regStatus</a></button>
+    <button class="button-left btn btn-dark"><a href="123e4567-e89b-12d3-a456-556642440000">isAdult</a></button>
+    <button class="button-left btn btn-dark"><a href="123e4567-e89b-12d3-a456-556642440000">canSwim</a></button>
+    <button class="button-left btn btn-dark"><a href="123e4567-e89b-12d3-a456-556642440000">hasCPRCert</a></button>
+    <button class="button-left btn btn-dark"><a href="123e4567-e89b-12d3-a456-556642440000">volunteer</a></button>
+    <button class="button-left btn btn-dark"><a href="123e4567-e89b-12d3-a456-556642440000">boatExperience</a></button>
     <table class="table table-striped table-dark table-bordered table-hover">
       <thead>
         <% var keys = Object.keys(participants[0]) %> 

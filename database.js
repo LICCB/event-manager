@@ -17,14 +17,6 @@ async function queryAllUsers() {
   return users;
 }
 
-// return all users registered to event ID with default qualifications
-async function queryAllUsersDefaultSettings(eventID) {
-  let conn = await pool.getConnection();
-  let default_qualified_users = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "' AND isAdult=true AND canSwim=true");
-  conn.release();
-  return default_qualified_users;
-}
-
 async function queryAllEvents() {
     let conn = await pool.getConnection();
     let events = await conn.query("SELECT * FROM LICCB.events");
@@ -39,7 +31,7 @@ async function queryEventByID(eventID) {
   return event;
 }
 
-// initializes run selection process, NEED column for registrant with sign-up timestamp
+// initializes run selection process
 async function runSelection(eventID/*, canSwimFilter, CPRFilter, hasCPRCertFilter, isAdultFilter, */) {
   let conn = await pool.getConnection();
   // populate all contenders into new table
@@ -47,8 +39,9 @@ async function runSelection(eventID/*, canSwimFilter, CPRFilter, hasCPRCertFilte
                                                     "FROM LICCB.participants " +  
                                                     "WHERE eventID = '" + eventID + "'" +
                                                     "AND regStatus = 'Registered' " + 
-                                                    "AND isAdult='true'");
-  /* SELECT * FROM selectedMembers ORDER BY timestamp WHILE (@@RowCount > LICCB.eventID.capacity) BEGIN DELETE FROM selectedMembers END END"); */
+                                                    "AND isAdult='true'" + 
+                                                    "ORDER BY regTime");
+  /* WHILE (@@RowCount > LICCB.eventID.capacity) BEGIN DELETE FROM selectedMembers END END"); */
 
   conn.release();
   return returnSelectedRegistrants;
