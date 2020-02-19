@@ -87,7 +87,7 @@ app.get('/participants/checkin/:id', async (req, res) => {
  */
 app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { // Should be changed to POST
   await db.checkinParticipant(req.params.participantid, req.params.eventid);
-  res.redirect('/participants/' + req.params.eventid);
+  res.redirect('/participants/checkin/' + req.params.eventid);
 });
 
 app.listen(3000, function () {
