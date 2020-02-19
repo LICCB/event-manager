@@ -2,13 +2,14 @@ div {
     text-align: center;
 }
 input[type=text], select, input[type=time] {
-    width: 20%;
-    padding: 12px 20px;
-    margin: 8px 0;
+    width: 30%;
+    padding: 10px 10px;
+    margin: 7px 0;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+
   }
 
   input[type=submit] {
@@ -28,23 +29,26 @@ input[type=text], select, input[type=time] {
 
   div {
     border-radius: 5px;
-    background-color: #f2f2f2;
+    background-color: #fff;
     padding: 20px;
   }
 
   * {box-sizing:border-box}
 /*needs clean up in header.ejs*/
 .header {
+  width: 100%;
   color: #082B47;
   text-align: left;
   position: relative;
-  padding-left: 500px;
-  padding-top: 50px;
+  padding-left: 450px;
+  padding-top: 40px;
   font-family: Verdana, Arial, sans-serif;
+  background-color: #fff;
   background-image: url("/images/img1.png");
+  background-size: 180px 180px;
   background-position: 20% 50%;
   background-repeat: no-repeat;
-  height: 230px;
+  height: 190px;
 }
 
 
@@ -142,7 +146,7 @@ input[type=text], select, input[type=time] {
 }
 
 .left {
-  width:50%;
+  width: 50%;
   height: 40%;
   text-align: right;
   float: left;
@@ -151,7 +155,7 @@ input[type=text], select, input[type=time] {
 }
 
 .right {
-  width:50%;
+  width: 50%;
   height: 40%;
   float: right;
   padding-left: 50px;
@@ -183,12 +187,38 @@ input[type=text], select, input[type=time] {
   padding-left: 0%;
   padding-right: 0%;
   margin-right: 0px;
-  background-color: #fff;/*gainsboro*/
+  background-color: #fff; /*gainsboro*/
 }
+
 .table {
+  /*table-striped table-dark table-bordered table-hover table-sm*/
   width: 100%;
-  padding: 0%;
-  margin: 0em;
+  padding: 2%;
+  /*margin: 0em;*/
+}
+
+.table tr {
+  background-color: #eef2fd;
+  color: #000;
+}
+
+.table td {
+    border: 1px solid #000;
+}
+
+.table th {
+  text-align: center;
+  background-color: #082B47;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+.table tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+.table tr:hover {
+  background-color: #fff6c3;
 }
 
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
@@ -222,6 +252,7 @@ a, a:hover, a:focus {
 
 #sidebar ul li {
   background: #082B47; /*212529*/
+  border-bottom: .5px solid #082B47;
 }
 #sidebar ul.components {m
     padding: 20px 0;
@@ -241,6 +272,7 @@ a, a:hover, a:focus {
 #sidebar ul li a:hover {
   color: #082B47; /*fff*/
   background-color: #fff6c3;
+  border-left: 15px solid #082B47;
 }
 
 #sidebar ul li.active > a, a[aria-expanded="true"] {
@@ -271,7 +303,7 @@ ul ul a {
 .button {
   color: #082b47;
   padding: 5px;
-  margin: 5px;
+  margin: 10px;
   background-color: #fff6c3;
   border-color: #082b47;
   border-radius: 4px;
@@ -290,10 +322,15 @@ ul ul a {
   background-color: #fff; /*gainsboro*/
 }
 
+::placeholder {
+  font-size: small;
+  color: gainsboro;
+}
+
 footer {
   position: relative;
   text-align: center;
-  color: #082b47;
+  color: #10368e;
   font-family: Verdana, Arial, sans-serif;
   /*background-color: #fff;*/
   /*left: 0;
