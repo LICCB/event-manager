@@ -83,7 +83,7 @@ app.get('/participants/checkin/:id', async (req, res) => {
 });
 
 /**
- * Checks in a participant and redirects back to the event's participant table
+ * Checks in a participant and redirects back to the event's check in table
  */
 app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { // Should be changed to POST
   await db.checkinParticipant(req.params.participantid, req.params.eventid);
