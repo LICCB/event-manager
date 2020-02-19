@@ -43,7 +43,7 @@ app.post('/createEvent', async (req, res) => {
 app.get('/events', async (req, res) => {
   res.render('event/events', {
     title: "Events",
-    events: await db.queryAllEvents()
+    events: utils.filterEventData(await db.queryAllEvents())
   });
 })
 
@@ -63,7 +63,6 @@ app.get('/editEvent/:id', async (req, res) => {
  * Redirects to the events page after updating the event in the database
  */
 app.post('/editEvent/:id', async (req, res) => {
-  console.log(req.body);
   await db.updateEvent(req.body, req.params.id);
   res.redirect('/events');
 })
@@ -73,6 +72,30 @@ app.post('/editEvent/:id', async (req, res) => {
  */
 app.get('/deleteEvent/:id', async (req, res) => {
   await db.deleteEvent(req.params.id);
+  res.redirect('/events');
+})
+
+/**
+ * Redirects to the events page after archiving a given event
+ */
+app.get('/archiveEvent/:id', async (req, res) => {
+  await db.archiveEvent(req.params.id);
+  res.redirect('/events');
+})
+
+/**
+* Redirects to the events page after publishing a given event
+*/
+app.get('/publishEvent/:id', async (req, res) => {
+ await db.publishEvent(req.params.id);
+ res.redirect('/events');
+})
+
+/**
+ * Redirects to the events page after cancelling a given event
+ */
+app.get('/cancelEvent/:id', async (req, res) => {
+  await db.cancelEvent(req.params.id);
   res.redirect('/events');
 })
 

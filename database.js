@@ -23,13 +23,12 @@ async function queryAllEvents() {
     let events = await conn.query("SELECT * FROM LICCB.events");
     conn.release();
     return events;
-  }
+}
 
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
   let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'")
   conn.release();
-  console.log(event);
   return event;
 }
 
@@ -64,9 +63,41 @@ async function deleteEvent(id) {
   return del;
 }
 
+async function archiveEvent(id) {
+  let conn = await pool.getConnection();
+  const archive = "UPDATE LICCB.events " + 
+                  "SET " +
+                    "eventStatus='Archived'" +              
+                  "WHERE eventID='" + id + "';"
+  let arc = await conn.query(archive);
+  conn.release();
+  return arc;
+}
+
+async function cancelEvent(id) {
+  let conn = await pool.getConnection();
+  const cancel = "UPDATE LICCB.events " + 
+                  "SET " +
+                    "eventStatus='Cancelled'" +              
+                  "WHERE eventID='" + id + "';"
+  let canc = await conn.query(cancel);
+  conn.release();
+  return canc;
+}
+
+async function publishEvent(id) {
+  let conn = await pool.getConnection();
+  const publish = "UPDATE LICCB.events " + 
+                  "SET " +
+                    "eventStatus='Registration Open'" +              
+                  "WHERE eventID='" + id + "';"
+  let pub = await conn.query(publish);
+  conn.release();
+  return pub;
+}
+
 async function insertEvent(event) {
   const eventMetadata = utils.getEventMetadata(event);
-  console.log(event);
   const eventID = uuidv4();
   const insertStmt = "INSERT INTO LICCB.events " +
                     "(eventID, managerID, creatorID, eventName, " +
@@ -95,7 +126,6 @@ async function insertEvent(event) {
 
 async function updateEvent(event, id) {
   const eventMetadata = utils.getEventMetadata(event);
-  console.log(eventMetadata);
   const update = "UPDATE LICCB.events " + 
                 "SET " +
                   "managerID='" + event.managerID + "', " + 
@@ -111,7 +141,6 @@ async function updateEvent(event, id) {
                   "eventNotes='" + event.eventNotes + "', " +
                   "eventMetadata='" + eventMetadata + "' " +                  
                 "WHERE eventID='" + id + "';"
-  console.log(update);
   let conn = await pool.getConnection();
   let upd = await conn.query(update);
   conn.release();
@@ -126,4 +155,7 @@ module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
 module.exports.checkinParticipant = checkinParticipant;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
+module.exports.archiveEvent = archiveEvent;
+module.exports.cancelEvent = cancelEvent;
 module.exports.deleteEvent = deleteEvent;
+module.exports.publishEvent = publishEvent;
