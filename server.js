@@ -62,18 +62,18 @@ app.get('/deleteEvent/:id', async (req, res) => {
 })
 
 /**
- * Renders the event's participant list
+ * Renders the participant list for the specified event
  */
 app.get('/participants/:id', async (req, res) => {
-  res.render('event/participants', {participants: await db.queryParticipantsByEventID(req.params.id)})
+  res.render('participants/participants', {participants: await db.queryParticipantsByEventID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });
 
 /**
  * Checks in a participant and redirects back to the event's participant table
  */
-app.post('/participants/checkin/:eventid/:participantid', async (req, res) => {
+app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { // Should be changed to POST
   await db.checkinParticipant(req.params.participantid, req.params.eventid);
-  res.redirect('/participants/' + eventid);
+  res.redirect('/participants/' + req.params.eventid);
 });
 
 app.listen(3000, function () {
