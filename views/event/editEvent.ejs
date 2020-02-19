@@ -65,7 +65,7 @@
                         <div class="fieldwrapper<%= i %>">
                             <label for="field<%= -1-i %>">Field:</label>
                             <input type="text" id="field<%= -1-i %>" name="field<%= -1-i %>" class="fieldname"
-                                form="eventform" value=<%= keys[i] %>>
+                                form="eventform" value="<%= keys[i] %>">
                             <select class="fieldtype" name="type<%= -1-i %>" form="eventform">
                                 <option value="checkbox" <% if(vals[i] == "checkbox"){ %> <%= "selected" %> <% } %>>
                                     Checked</option>
