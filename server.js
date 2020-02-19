@@ -63,10 +63,25 @@ app.get('/deleteEvent/:id', async (req, res) => {
 })
 
 /**
- * Redirects to the lottery run selection page
+ * Redirects to the lottery run selection pages
  */
 app.get('/lottery/:id', async (req, res) => {
-  res.render('event/lottery', {participants: await db.runSelection(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  res.render('event/lottery', {participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
+app.get('/lottery/:id/REGSTATUS', async (req, res) => {
+  res.render('event/lottery', {participants: await db.runSelectionREGSTATUS(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
+app.get('/lottery/:id/ISADULT', async (req, res) => {
+  res.render('event/lottery', {participants: await db.runSelectionISADULT(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
+app.get('/lottery/:id/CANSWIM', async (req, res) => {
+  res.render('event/lottery', {participants: await db.runSelectionCANSWIM(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
+app.get('/lottery/:id/HASCPRCERT', async (req, res) => {
+  res.render('event/lottery', {participants: await db.runSelectionHASCPRCERT(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
+app.get('/lottery/:id/VOLUNTEER', async (req, res) => {
+  res.render('event/lottery', {participants: await db.runSelectionVOLUNTEER(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });
 
 app.listen(3000, function () {
