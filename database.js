@@ -43,9 +43,15 @@ async function queryEventByID(eventID) {
 async function runSelection(eventID/*, canSwimFilter, CPRFilter, hasCPRCertFilter, isAdultFilter, */) {
   let conn = await pool.getConnection();
   // populate all contenders into new table
-  let returnSelectedRegistrants = await conn.query("BEGIN SELECT * INTO selectedMembers FROM LICCB.events WHERE eventID='" + eventID + "AND regStatus='Registered' AND isAdult='true' SELECT * FROM selectedMembers ORDER BY timestamp WHILE (@@RowCount > LICCB.eventID.capacity) BEGIN DELETE FROM selectedMembers END END");
+  let returnSelectedRegistrants = await conn.query("SELECT *" +  
+                                                    "FROM LICCB.participants " +  
+                                                    "WHERE eventID = '" + eventID + "'" +
+                                                    "AND regStatus = 'Registered' " + 
+                                                    "AND isAdult='true'");
+  /* SELECT * FROM selectedMembers ORDER BY timestamp WHILE (@@RowCount > LICCB.eventID.capacity) BEGIN DELETE FROM selectedMembers END END"); */
+
   conn.release();
-  return selectedMembers;
+  return returnSelectedRegistrants;
 }
 
 async function deleteEvent(id) {
@@ -131,3 +137,5 @@ module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
 module.exports.deleteEvent = deleteEvent;
 module.exports.createEventTable = createEventTable;
+module.exports.runSelection = runSelection;
+
