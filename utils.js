@@ -73,7 +73,36 @@ function getEventMetadata(event) {
     return JSON.stringify(JSON.parse(md));
 }
 
+function filterEventData(events){
+    for(i = 0; i < events.length; i++){
+        // delete events[i].eventID;
+        delete events[i].creatorID;
+        delete events[i].eventMetadata;
+        delete events[i].maxPartySize;
+        delete events[i].capacity;
+        delete events[i].staffRatio;
+        events[i].startTime = trimTime(events[i].startTime);
+        events[i].endTime = trimTime(events[i].endTime);
+        var keys = Object.keys(events[i]);
+        // for(j = 0; j <  keys.length; j++) {
+        //     var key = keys[j];
+        //     var newKey = key.replace(/([A-Z])/g, ' $1').trim();
+        //     var val = events[i].key;
+        //     delete events[i].key;
+        //     events[i][newKey] = val;
+        // }
+    }
+    return events;
+}
+
+function trimTime(time){
+    var timeStr = time.toString();
+    const stop = timeStr.indexOf(":00 ");
+    return timeStr.slice(0, stop);
+}
+
 module.exports.getTime = getTime;
 module.exports.getDate = getDate;
-module.exports.getDateTime = getDateTime;
 module.exports.getEventMetadata = getEventMetadata;
+module.exports.filterEventData = filterEventData;
+module.exports.getDateTime = getDateTime;

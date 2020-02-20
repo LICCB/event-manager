@@ -38,18 +38,16 @@
                     </select>
                     <br>
                     <label for="desc">Description:</label>
-                    <input type="text" id="desc" name="eventDesc" value=<%= event.eventDesc %>>
+                    <input type="text" id="desc" name="eventDesc" value="<%= event.eventDesc %>">
                 </div>
                 <div class="right">
                     <label for="stime">Start Time:</label>
                     <input type="time" id="stime" name="startTime" value=<%= utils.getTime(event.startTime) %> required>
                     <label for="sdate">Start Date:</label>
-                    <% console.log(utils.getTime(event.startTime)) %>
                     <input type="date" id="sdate" name="startDate" value=<%= utils.getDate(event.startTime) %> required>
                     <br>
                     <label for="etime">End Time:</label>
                     <input type="time" id="etime" name="endTime" value=<%= utils.getTime(event.endTime) %> required>
-                    <% console.log(utils.getTime(event.endTime)) %>
                     <label for="edate">End Date:</label>
                     <input type="date" id="edate" name="endDate" value=<%= utils.getDate(event.endTime) %> required>
                     <br>
@@ -57,7 +55,7 @@
                     <input type="text" id="sratio" name="staffRatio" value=<%= event.staffRatio %> required>
                     <br>
                     <label for="notes">Notes:</label>
-                    <input type="text" id="notes" name="eventNotes" value=<%= event.eventNotes %>>
+                    <input type="text" id="notes" name="eventNotes" value="<%= event.eventNotes %>">
                     <br>
                     <input type="button" value="Add a field" class="addfield" id="addfield" />
                     <div id="newfields" form="eventform">
@@ -67,7 +65,7 @@
                         <div class="fieldwrapper<%= i %>">
                             <label for="field<%= -1-i %>">Field:</label>
                             <input type="text" id="field<%= -1-i %>" name="field<%= -1-i %>" class="fieldname"
-                                form="eventform" value=<%= keys[i] %>>
+                                form="eventform" value="<%= keys[i] %>">
                             <select class="fieldtype" name="type<%= -1-i %>" form="eventform">
                                 <option value="checkbox" <% if(vals[i] == "checkbox"){ %> <%= "selected" %> <% } %>>
                                     Checked</option>
