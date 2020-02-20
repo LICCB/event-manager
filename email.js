@@ -22,4 +22,4 @@ async function sendConfirmationEmail(email, eventID, registrantID) {
   console.log(`Successfully sent email confirmation to ${email}`);
 }
 
-sendConfirmationEmail("jhandwer@stevens.edu, cbarnwel@stevens.edu, kmorel1339@gmail.com, cjlando3297@gmail.com, senholmes.21@gmail.com, ankdave97@gmail.com", 666, 666);
+sendConfirmationEmail("jhandwer@stevens.edu", 666, 666);
