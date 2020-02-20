@@ -9,7 +9,8 @@ app.use(express.static(__dirname + '/views'));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(bodyParser.json())
+
+app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
 /**
@@ -27,7 +28,6 @@ app.get('/createEvent', async (req, res) => {
     title: "Create Event",
     users: await db.queryAllUsers()
   });
-})
 
 /**
  * Redirects to the events page after inserting the new event into the database and creating its participant table
@@ -43,6 +43,46 @@ app.post('/createEvent', async (req, res) => {
 app.get('/events', async (req, res) => {
   res.render('event/events', {
     title: "Events",
+    events: await db.queryAllEvents()
+  });
+})
+
+app.get('/publicSignup', async (req, res) => {
+  res.render('signup/publicSignup', {
+    title: "PublicSingup",
+    events: await db.queryAllEvents()
+  });
+});
+/**
+ * Update to redirect to THANKS page
+ */
+app.post('/publicSignup', async (req, res) => {
+  await db.insertParty(req.body);
+  res.redirect('signup/signupThanks');
+});
+
+app.get('/privateSignup', async (req, res) => {
+  res.render('signup/privateSignup', {
+    title: "PrivateSingup",
+    events: await db.queryAllEvents()
+  });
+});
+
+app.post('/privateSignup', async (req, res) => {
+  await db.insertParty(req.body);
+  res.redirect('signup/signupThanks');
+});
+
+app.get('/volunteerSignup', async (req, res) => {
+  res.render('signup/volunteerSignup', {
+    title: "VolunteerSingup",
+    events: await db.queryAllEvents()
+  });
+});
+
+app.post('/volunteerSignup', async (req, res) => {
+  await db.insertVolunteerParty(req.body);
+  res.redirect('signup/signupThanks', {
     events: utils.filterEventData(await db.queryAllEvents())
   });
 })
@@ -130,4 +170,5 @@ app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { /
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
-})
+});
+

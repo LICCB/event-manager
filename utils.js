@@ -16,6 +16,26 @@ function getTime(time) {
 }
 
 /**
+ * Returns the datetime in YYYY-MM-DD HH:MM:SS
+ */
+function getDateTime() {
+    var now = new Date();
+    var year,month,day,hour,minute,second;
+    year = now.getFullYear().toString();
+    if(now.getMonth() + 1 < 10) {
+        month = "0" + (now.getMonth() + 1).toString();
+    } else {month = now.getMonth + 1};
+    if(now.getDay() < 10) {
+        day = "0" + now.getDay().toString();
+    } else {day = now.getDay().toString();}
+    hour = now.getHours().toString();
+    minute = now.getMinutes().toString();
+    second = now.getSeconds().toString();
+
+    return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+};
+
+/**
  * Returns the date in YYYY-MM-DD from the JS Date object
  * @param {Date} time 
  */
@@ -85,3 +105,4 @@ module.exports.getTime = getTime;
 module.exports.getDate = getDate;
 module.exports.getEventMetadata = getEventMetadata;
 module.exports.filterEventData = filterEventData;
+module.exports.getDateTime = getDateTime;
