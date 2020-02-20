@@ -117,25 +117,36 @@ input[type=text], select, input[type=time] {
   animation-duration: 1.5s;
 }
 
+/*.labelicon {
+  background-image: url("/images/qmark.png");
+  background-repeat: no-repeat;
+  background-position: right;
+}*/
+
 .icon {
-  position: relative;
-  display: inline-grid;
-  width: 10px;
-  height: 10px;
+  /*background-image: url("/images/qmark.png");
+  background-repeat: no-repeat;
+  background-position: right;*/
+  background-size: 15px 15px;
+  position: absolute;
+  vertical-align: middle;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
 }
 
 .icon .tooltiptext {
   visibility: hidden;
-  width: 120px;
-  background-color: #eef2fd;
+  width: 150px;
+  background-color: #84a5f1;
   color: #000;
   text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
+  border-radius: 9px;
+  padding: 5px; /*5px 0*/
   position: absolute;
-  z-index: 1;
-  top: 150%;
-  left: 50%;
+  /*z-index: 1;*/
+  top: 100%; /*150*/
+  /*left: 50%;*/
   margin-left: -60px;
   opacity: 0;
   transition: opacity 1s;
@@ -149,7 +160,7 @@ input[type=text], select, input[type=time] {
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: transparent transparent black transparent;
+  border-color: transparent transparent #84a5f1 transparent;
 }
 
 .icon:hover .tooltiptext {
