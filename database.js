@@ -147,6 +147,17 @@ async function updateEvent(event, id) {
   return upd;
 }
 
+async function confirmEmail(eventID, registrantID){
+  const confirm = "UPDATE LICCB.participants " + 
+                  "SET " +
+                    "regStatus='Registered' " +                 
+                  "WHERE eventID='" + eventID + "' AND partyID='" + registrantID +"';";
+  let conn = await pool.getConnection();
+  let con = await conn.query(confirm);
+  conn.release();
+  return con;
+}
+
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
@@ -159,3 +170,4 @@ module.exports.archiveEvent = archiveEvent;
 module.exports.cancelEvent = cancelEvent;
 module.exports.deleteEvent = deleteEvent;
 module.exports.publishEvent = publishEvent;
+module.exports.confirmEmail = confirmEmail;
