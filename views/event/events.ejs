@@ -1,39 +1,54 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <%- include('../partials/head', {title: title}) %>
-  </head>
-  <body class="bg-gray">
-    <%- include('../partials/header', {title: title}) %>
-    <div class="content">
-      <button class="button-left"><a href="/createEvent">Create New Event</a></button>
-      <table class="table">
-        <thead>
-          <% var keys = Object.keys(events[0]) %>
-            <tr>
-              <th></th>
-              <% for(i = 0; i < keys.length; i++){ %>
-              <th scope="col"> <%=  keys[i].charAt(0).toUpperCase() + keys[i].substring(1) %> </th>
-              <% } %>
-            </tr>
-        </thead>
-        <tbody>
-          <% for(i = 0; i < events.length; i++){ %>
-            <tr>
-              <td> <a href= <%= "editEvent/" + events[i].eventID %>>Edit</a> | <a href= <%= "deleteEvent/" + events[i].eventID %>>Delete</a></td>
-              <% var vals = Object.values(events[i]) %>
-              <% for(j = 0; j < vals.length; j++){ %>
-              <td> <%=  vals[j] %> </td>
-              <% } %>
-            </tr>
+
+<head>
+  <%- include('../partials/head', {title: title}) %>
+</head>
+
+<body class="bg-gray">
+  <%- include('../partials/header', {title: title}) %>
+  <div class="content">
+    <button class="button-left"><a href="createEvent">Create New Event</a></button>
+    <label for="archived">Archived</label>
+    <input type="checkbox" id="archived" checked=checked>
+    <label for="cancelled">Cancelled</label>
+    <input type="checkbox" id="cancelled" checked=checked>
+    <table class="table" id="eventsTable">
+      <thead>
+        <% var keys = Object.keys(events[0]) %>
+        <tr>
+          <th></th>
+          <% for(i = 0; i < keys.length; i++){ %>
+          <th scope="col"> <%=  keys[i].charAt(0).toUpperCase() + keys[i].substring(1) %> </th>
           <% } %>
-        </tbody>
-      </table>
-      <footer class="footer">
-        <%- include('../partials/footer') %>
-      </footer>
-    </div>
-    <br>
-    <%- include('../partials/bootstrapScripts') %>
-  </body>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(i = 0; i < events.length; i++){ %>
+        <tr <%= `class=${events[i].eventStatus.replace(/\s/g, '')}` %>>
+          <td>
+            <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> |
+            <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> |
+            <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> |
+            <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> |
+            <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a> |
+          </td>
+          <% var vals = Object.values(events[i]) %>
+          <% for(j = 0; j < vals.length; j++){ %>
+          <td> <%=  vals[j] %> </td>
+          <% } %>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <footer class="footer">
+      <%- include('../partials/footer') %>
+    </footer>
+  </div>
+  <br>
+  <%- include('../partials/scripts') %>
+  <script src="/scripts/filterEvents.js"></script>
+  <script src="/scripts/tableSorter.js"></script>
+</body>
+
 </html>

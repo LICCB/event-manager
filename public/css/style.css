@@ -40,7 +40,7 @@ input[type=text], select, input[type=time] {
   color: #082B47;
   text-align: left;
   position: relative;
-  padding-left: 450px;
+  padding-left: 33%;
   padding-top: 40px;
   font-family: Verdana, Arial, sans-serif;
   background-color: #fff;
@@ -198,7 +198,8 @@ input[type=text], select, input[type=time] {
 }
 
 .table tr {
-  background-color: #eef2fd;
+  /*background-color: #eef2fd;*/
+  background-image: repeating-linear-gradient(#fff, #eef2fd);
   color: #000;
 }
 
@@ -213,12 +214,12 @@ input[type=text], select, input[type=time] {
   border: 1px solid #fff;
 }
 
-.table tr:nth-child(odd) {
+/*.table tr:nth-of-type(odd) {
   background-color: #fff;
-}
+}*/
 
 .table tr:hover {
-  background-color: #fff6c3;
+  background-image: linear-gradient(#fff, #fff6c3);
 }
 
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
@@ -254,7 +255,7 @@ a, a:hover, a:focus {
   background: #082B47; /*212529*/
   border-bottom: .5px solid #082B47;
 }
-#sidebar ul.components {m
+#sidebar ul.components {
     padding: 20px 0;
     padding-top: 40%;
 }
