@@ -58,10 +58,10 @@ app.get('/publicSignup', async (req, res) => {
 /**
  * Update to redirect to THANKS page
  */
-app.post('/publicSignup', async (req, res) => {
-  await db.insertParty(req.body);
-  res.redirect('signup/signupThanks');
-});
+// app.post('/publicSignup', async (req, res) => {
+//   await db.insertParty(req.body);
+//   res.redirect('signup/signupThanks');
+// });
 
 app.get('/privateSignup', async (req, res) => {
   res.render('signup/privateSignup', {
@@ -70,10 +70,10 @@ app.get('/privateSignup', async (req, res) => {
   });
 });
 
-app.post('/privateSignup', async (req, res) => {
-  await db.insertParty(req.body);
-  res.redirect('signup/signupThanks');
-});
+// app.post('/privateSignup', async (req, res) => {
+//   await db.insertParty(req.body);
+//   res.redirect('signup/signupThanks');
+// });
 
 app.get('/volunteerSignup', async (req, res) => {
   res.render('signup/volunteerSignup', {
@@ -82,11 +82,9 @@ app.get('/volunteerSignup', async (req, res) => {
   });
 });
 
-app.post('/volunteerSignup', async (req, res) => {
+app.post('/signup', async (req, res) => {
   await db.insertVolunteerParty(req.body);
-  res.redirect('signup/signupThanks', {
-    events: utils.filterEventData(await db.queryAllEvents())
-  });
+  res.redirect('signup/signupThanks')
 });
 
 /**
