@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Create Event</title>
+    <link rel="stylesheet" type="text/css" href="/css/form.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="/node_modules/jquery-validation/dist/jquery.validate.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <fieldset>
+            <form action=<%= "/editPublic/" + event.eventID + "/" + participants[0].partyID %> method="post" id="publicSignupform">
+                <h1>Public Event</h1>
+                <p>Events displayed on the public calendars will not be available for registration until their
+                    registration windows officially open (typically a few weeks ahead of the event date). If you don't
+                    see the event you seek available for selection, check back at a later date.</p>
+
+                <p>For trips open to the public, Parties are selected by lottery when demand is greater than
+                    availability (this is typical).
+                    Selected registrants will receive email notification before the start of the trip. The first round
+                    of selections will usually take place 3 to 2 days ahead of the trip. A final round of selections are
+                    usually made the day before, along with the Declines.</p>
+                <label for="ename">Event:</label>
+                <select name="eventID" form="publicSignupform" required>
+                    <option value='' selected="selected" disabled hidden style='display: none' >Select an event</option>
+                    <% for(i = 0; i < events.length; i++) { %>
+                        <% if(events[i].eventStatus == "Registration Open" && !events[i].privateEvent) {%>
+                            <option value=<%= events[i].eventID %>> <%= events[i].eventName%> </option>
+                        <% } %>
+                      <% } %>
+                </select>
+
+                <br>
+
+                <div class="reginfo">
+                    <label for="regfirstname">Registrant First Name:</label>
+                    <input type="text" id="regfirstname" name="regfirstname" class = "fname " value=<%= participants[0].firstName %> required>
+                    
+                    <label for="reglastname">Registrant Last Name:</label>
+                    <input type="text" id="reglastname" name="reglastname" class = "lname" value=<%= participants[0].lastName %> required>
+
+                    <label for="regadult">Over 18?</label>
+                    <select name="regadult" form="publicSignupform" required>
+                        <option value="false" <% if(participants[0].isAdult == false){ %> <%= "selected" %> <% } %>>No</option>
+                        <option value="true" <% if(participants[0].isAdult == true){ %> <%= "selected" %> <% } %>>Yes</option>
+                    </select>
+
+                    <label for="regswim">Swimmer</label>
+                    <select name="regswim" form="publicSignupform" required>
+                        <option value="false" <% if(participants[0].canSwim == false){ %> <%= "selected" %> <% } %>>No</option>
+                        <option value="true" <% if(participants[0].canSwim == true){ %> <%= "selected" %> <% } %>>Yes</option>
+                    </select>
+
+                    <label for="regboat">Boating Experience</label>
+                    <select name="regboat" form="publicSignupform" required>
+                        <option value="false" <% if(participants[0].boatExperience == false){ %> <%= "selected" %> <% } %>>No</option>
+                        <option value="true" <% if(participants[0].boatExperience == true){ %> <%= "selected" %> <% } %>>Yes</option>
+                    </select>
+
+                    <label for="regcpr">CPR Certification</label>
+                    <select name="regcpr" form="publicSignupform" required>
+                        <option value="false" <% if(participants[0].hasCPRCert == false){ %> <%= "selected" %> <% } %>>No</option>
+                        <option value="true" <% if(participants[0].hasCPRCert == true){ %> <%= "selected" %> <% } %>>Yes</option>
+                    </select>
+
+                    <!--All of this must be validated to be correct email and phone #-->
+                    <label for="regemail">Registrant Email:</label>
+                    <input type="text" id="regemail" name="regemail" class = "email" value=<%= participants[0].email %> required>
+
+                    <label for="regphone">Registrant Phone Number:</label>
+                    <input type="text" id="regphone" name="regphone" class = "phone" value=<%= participants[0].phone %> required>
+
+                    <label for="regename">Registrant Emergency Contact Name:</label>
+                    <input type="text" id="regename" name="regename" class = "name" value=<%= participants[0].emergencyName %> required>
+
+                    <label for="regephone">Registrant Emergency Contact Phone Number:</label>
+                    <input type="text" id="regephone" name="regephone" class = "phone" value=<%= participants[0].emergencyPhone %> required>
+
+                    <label for="partysize">Add Party Member</label>
+                    <input type="button" value="Add a Party Member" class="button" id="addpart" />
+                </div>
+
+                <div id="partymembers" form="PublicSignup">
+                    <!--Help looping through each participant-->
+                    <% if(participants.length > 1) { %>
+                    <% for(i=1; i < participants.length; i++){ %>
+                    <div class="participantwrapper<%= i %>">
+                        <h2>Party Member <%= i %></h2>
+                        <label for="part<%= i %>fname" >Participant <%= i %> First Name:</label>
+                        <input required type="text" id="part<%= i %>fname" name="part<%= i %>fname" class="fname" value=<%= participants[i].firstName %>>
+                        
+                        <label for="part<%= i %>lname" >Participant <%= i %> Last Name:</label>
+                        <input required type="text" id="part<%= i %>lname" name="part<%= i %>lname" class="lname" value=<%= participants[i].lastName %>>
+                        
+                        <label for="part<%= i %>age" >Over 18?</label>
+                        <select required name= "part<%= i %>age">
+                            <option value="false" <% if(participants[i].isAdult == false){ %> <%= "selected" %> <% } %>>No</option>
+                            <option value="true" <% if(participants[i].isAdult == true){ %> <%= "selected" %> <% } %>>Yes</option>
+                        </select>
+                        
+                        <label for="part<%= i %>swim" >Can they swim?</label>);
+                        <select required name="part<%= i %>swim">
+                            <option value="false" <% if(participants[i].canSwim == false){ %> <%= "selected" %> <% } %>>No</option>
+                            <option value="true" <% if(participants[i].canSwim == true){ %> <%= "selected" %> <% } %>>Yes</option>
+                        </select>
+                        
+                        <label for="part<%= i %>boat" >Prior boating experience?</label>);
+                        <select required name="part<%= i %>boat">
+                            <option value="false" <% if(participants[i].boatExperience == false){ %> <%= "selected" %> <% } %>>No</option>
+                            <option value="true" <% if(participants[i].boatExperience == true){ %> <%= "selected" %> <% } %>>Yes</option>
+                        </select>
+                        
+                        <label for="part<%= i %>cpr" >Do they know CPR?</label>);
+                        <select required name="part<%= i %>cpr">
+                            <option value="false" <% if(participants[i].hasCPRCert == false){ %> <%= "selected" %> <% } %>>No</option>
+                        <option value="true" <% if(participants[i].hasCPRCert == true){ %> <%= "selected" %> <% } %>>Yes</option>
+                        </select>
+                        
+                        <label for="part<%= i %>email" >Participant <%= i %> Email:</label>
+                        <input type="text" id="part<%= i %>email" name="part<%= i %>email" class="email" value=<%= participants[i].email %>/>
+                        
+                        <label for="part<%= i %>phone" >Participant <%= i %> Phone Number:</label>
+                        <input type="text" id="part<%= i %>phone" name="part<%= i %>phone" class="phone" value=<%= participants[i].phone %>/>
+                        
+                        <label for="part<%= i %>ename" >Participant <%= i %> Emergencey Contact Name:</label>
+                        <input required type="text" id="part<%= i %>ename" name="part<%= i %>ename" class="name" value=<%= participants[i].emergencyName %>/>
+                        
+                        <label for="part<%= i %>ephone" >Participant <%= i %> Emergency Contact Phone Number:</label>
+                        <input required type="text" id="part<%= i %>ephone" name="part<%= i %>ephone" class="phone" value=<%= participants[i].emergencyPhone %>/>
+                    </div>
+                    <% } %>
+                    <% } %>
+                </div>
+
+                <br>
+                <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/>
+                <div class="discinfo">
+                    <label for="zip">Zip Code:</label>
+                    <input type="text" id="zip" name="zipcode" class ="zip" value=<%= participants[0].zip %> required>
+    
+                    <label for="eventdiscovery">Event Discovery:</label>
+                    <select name="eventdiscovery" form="publicSignupform" required>
+                        <option value="callendar" <% if(participant[0].eventDisc == "callendar"){ %> <%= "selected" %> <% } %>>LICCB Calendar</option>
+                        <option value="subscriber" <% if(participant[0].eventDisc == "subscriber"){ %> <%= "selected" %> <% } %>>LICCB subscriber Newsletter or direct email</option>
+                        <option value="blog" <% if(participant[0].eventDisc == "blog"){ %> <%= "selected" %> <% } %>>LICCB Web Site Blog</option>
+                        <option value="facebook" <% if(participant[0].eventDisc == "facebook"){ %> <%= "selected" %> <% } %>>Facebook</option>
+                        <option value="instagram" <% if(participant[0].eventDisc == "instagram"){ %> <%= "selected" %> <% } %>>Instagram</option>
+                        <option value="twitter" <% if(participant[0].eventDisc == "twitter"){ %> <%= "selected" %> <% } %>>Twitter</option>
+                        <option value="nextdoor" <% if(participant[0].eventDisc == "nextdoor"){ %> <%= "selected" %> <% } %>>Next Door</option>
+                        <option value="fam" <% if(participant[0].eventDisc == "fam"){ %> <%= "selected" %> <% } %>>Family or Friend</option>
+                        <option value="vol" <% if(participant[0].eventDisc == "vol"){ %> <%= "selected" %> <% } %>>Volunteer Referral</option>
+                        <option value="press" <% if(participant[0].eventDisc == "press"){ %> <%= "selected" %> <% } %>>Press Publication</option>
+                        <option value="web" <% if(participant[0].eventDisc == "web"){ %> <%= "selected" %> <% } %>>Web Search</option>
+                        <option value="flier" <% if(participant[0].eventDisc == "flier"){ %> <%= "selected" %> <% } %>>Printed Flier</option>
+                        <option value="partner" <% if(participant[0].eventDisc == "partner"){ %> <%= "selected" %> <% } %>>Partner Organization</option>
+                        <option value="meeting" <% if(participant[0].eventDisc == "meeting"){ %> <%= "selected" %> <% } %>>Civic Meeting</option>
+                        <option value="other" <% if(participant[0].eventDisc == "other"){ %> <%= "selected" %> <% } %>>Other</option>
+                    </select>
+    
+                    <label for="bhdiscovery">Boat House Discovery:</label>
+                    <select name="bhdiscovery" form="publicSignupform" required>
+                        <option value="facebook" <% if(participant[0].boathouseDisc == "facebook"){ %> <%= "selected" %> <% } %>>Facebook</option>
+                        <option value="instagram" <% if(participant[0].boathouseDisc == "instagram"){ %> <%= "selected" %> <% } %>>Instagram</option>
+                        <option value="twitter" <% if(participant[0].boathouseDisc == "twitter"){ %> <%= "selected" %> <% } %>>Twitter</option>
+                        <option value="nextdoor" <% if(participant[0].boathouseDisc == "nextdoor"){ %> <%= "selected" %> <% } %>>Next Door</option>
+                        <option value="fam" <% if(participant[0].boathouseDisc == "fam"){ %> <%= "selected" %> <% } %>>Family or Friend</option>
+                        <option value="vol" <% if(participant[0].boathouseDisc == "vol"){ %> <%= "selected" %> <% } %>>Volunteer Referral</option>
+                        <option value="press" <% if(participant[0].boathouseDisc == "press"){ %> <%= "selected" %> <% } %>>Press Publication</option>
+                        <option value="web" <% if(participant[0].boathouseDisc == "web"){ %> <%= "selected" %> <% } %>>Web Search</option>
+                        <option value="flier" <% if(participant[0].boathouseDisc == "flier"){ %> <%= "selected" %> <% } %>>Printed Flier</option>
+                        <option value="partner" <% if(participant[0].boathouseDisc == "partner"){ %> <%= "selected" %> <% } %>>Partner Organization</option>
+                        <option value="water" <% if(participant[0].boathouseDisc == "water"){ %> <%= "selected" %> <% } %>>Saw us on the Water</option>
+                        <option value="walk" <% if(participant[0].boathouseDisc == "walk"){ %> <%= "selected" %> <% } %>>Just walking by</option>
+                        <option value="meeting" <% if(participant[0].boathouseDisc == "meeting"){ %> <%= "selected" %> <% } %>>Civic Meeting</option>
+                        <option value="other" <% if(participant[0].boathouseDisc == "other"){ %> <%= "selected" %> <% } %>>Other</option>
+                    </select>
+
+                    <label for="notes">Additional Notes:</label>
+                    <textarea name="notes" form="publicSignupform" value=<%= participants[0].regComments %>></textarea>
+                </div>
+
+                <br>
+
+                <input type="submit" value="Submit Registration">
+            </form>
+        </fieldset>
+    </div>
+</body>
+
+<script src="/scripts/addParticipant.js"></script>
+
+</html>

@@ -117,6 +117,10 @@ input[type=text], select, input[type=time] {
   animation-duration: 1.5s;
 }
 
+form .error {
+  color: #ff0000;
+}
+
 @-webkit-keyframes fade {
   from {opacity: .4} 
   to {opacity: 1}

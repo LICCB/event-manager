@@ -46,6 +46,13 @@ async function queryParticipantsByEventID(eventID) {
   return participants;
 }
 
+async function queryParticipantsByEventAndParty(eventID, PartyID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query("SELECT * FROM LICCB.participants WHERE eventID = '" + eventID + "' AND partyID = '" + PartyID + "'");
+  conn.release();
+  return participants;
+}
+
 async function checkinParticipant(participantID, eventID) {
   let conn = await pool.getConnection();
   let participant = await conn.query("UPDATE LICCB.participants " +
@@ -227,7 +234,7 @@ async function insertParty(signup) {
   return registrantID;
 };
 
-async function insertVolunteerParty(signup) {
+async function updateParty(signup) {
   console.log(signup);
   const date = utils.getDateTime();
   const signupkeys = Object.keys(signup).length;
@@ -261,7 +268,7 @@ async function insertVolunteerParty(signup) {
     "'" + signup.notes + "', " + //regComments
     "'Awaiting Confirmation', " + //regStatus
     "'Pending', " + //checkinStatus
-    "1, " + //volunteer
+    "0, " + //volunteer
     "'" + date + "', " + //regTime
     "'', " + //userComments
     "'');"; //metadata
@@ -307,6 +314,86 @@ async function insertVolunteerParty(signup) {
   return registrantID;
 };
 
+async function insertVolunteerParty(signup) {
+  console.log(signup);
+  const date = utils.getDateTime();
+  const signupkeys = Object.keys(signup).length;
+  var partsize = 0;
+  if(signupkeys > 15) {
+    partsize = (signupkeys - 15) / 10;
+  };
+  const registrantID = uuidv4();
+  const insertStmt = "INSERT INTO LICCB.participants " +
+    "(participantID, partyID, eventID, firstName, " +
+    "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
+    "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
+    "eventDisc, regComments, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
+    "VALUES(" +
+    "'" + registrantID + "', " + //participantID
+    "'" + registrantID + "', " + //partyID
+    "'" + signup.eventID + "', " + //eventID
+    "'" + signup.regfirstname + "', " + //firstName
+    "'" + signup.reglastname + "', " + //lastName
+    "'" + signup.regphone + "', " + //phone
+    "'" + signup.regemail + "', " + //email
+    "'" + signup.regephone + "', " + //emergencyPhone
+    "'" + signup.regename + "', " + //emergencyName
+    "'" + signup.zipcode + "', " + //zipcode
+    signup.regadult + ", " + //isAdult
+    signup.regcpr + ", " + //CPR
+    signup.regswim + ", " + //swim
+    signup.regboat + ", " + //boat
+    "'" + signup.bhdiscovery + "', " + //boathouse discovery
+    "'" + signup.eventdiscovery + "', " + //event discvoery
+    "'" + signup.notes + "', " + //regComments
+    "'Awaiting Confirmation', " + //regStatus
+    "'Pending', " + //checkinStatus
+    "1, " + //volunteer
+    "'" + date + "', " + //regTime
+    "'', " + //userComments
+    "'');"; //metadata
+  let conn = await pool.getConnection();
+  let insert = await conn.query(insertStmt);
+  conn.release();
+
+  for(i = 1; i < partsize + 1; i++) {
+    var participantID = uuidv4();
+    var update1 = "INSERT INTO LICCB.participants " +
+      "(participantID, partyID, eventID, firstName, " +
+      "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
+      "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
+      "eventDisc, regComments, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
+      "VALUES(" +
+      "'" + participantID + "', " + //participantID
+      "'" + registrantID + "', " + //partyID
+      "'" + signup.eventID + "', " + //eventID
+      "'" + signup[`part${i}fname`] + "', " + //firstName
+      "'" + signup[`part${i}lname`]+ "', " + //lastName
+      "'" + signup[`part${i}phone`] + "', " + //phone
+      "'" + signup[`part${i}email`] + "', " + //email
+      "'" + signup[`part${i}ephone`] + "', " + //emergencyPhone
+      "'" + signup[`part${i}ename`] + "', " + //emergencyName
+      "'" + signup.zipcode + "', " + //zipcode
+      signup[`part${i}age`] + ", " + //isAdult
+      signup[`part${i}cpr`] + ", " + //CPR
+      signup[`part${i}swim`] + ", " + //swim
+      signup[`part${i}boat`] + ", " + //boat
+      "'" + signup.bhdiscovery + "', " + //boathouse discovery
+      "'" + signup.eventdiscovery + "', " + //event discvoery
+      "'" + signup.notes + "', " + //regComments
+      "'Awaiting Confirmation', " + //regStatus
+      "'Pending', " + //checkinStatus
+      "1, " + //volunteer
+      "'" + date + "', " + //regTime
+      "'', " + //userComments
+      "'');"; //metadata
+    let conn = await pool.getConnection();
+    let insert = await conn.query(insertStmt1);
+    conn.release();
+  };
+  return registrantID;
+};
+
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
@@ -321,3 +408,4 @@ module.exports.deleteEvent = deleteEvent;
 module.exports.publishEvent = publishEvent;
 module.exports.insertParty = insertParty;
 module.exports.insertVolunteerParty = insertVolunteerParty;
+module.exports.queryParticipantsByEventAndParty = queryParticipantsByEventAndParty;
