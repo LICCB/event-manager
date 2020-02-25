@@ -163,7 +163,8 @@ app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { /
 });
 
 app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
-  await db.confirmEmail(req.params.eventID, req.params.registrantID);
+  const email = await db.confirmEmail(req.params.eventID, req.params.registrantID);
+  mailer.sendEditRegistrationEmail(email, req.params.eventID, req.params.registrantID);
   res.render('email/confirmEmail', {title: "Email Confirmed"});
 });
 
@@ -172,8 +173,8 @@ app.get('/editRegistration/:eventID/:registrantID', async (req, res) => {
 });
 
 app.post('/editRegistration/:eventID/:registrantID', async (req, res) => {
-  await db.updateRegistration(req.body)
-  res.render('registration/editRegistration', {title: "Edit Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
+  // TODO add updateRegistration database method
+  res.redirect('registration/updatedRegistration', {title: "Updated Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
 });
 
 app.listen(3000, function () {

@@ -22,5 +22,16 @@ async function sendConfirmationEmail(email, eventID, registrantID) {
   console.log(`Successfully sent email confirmation to ${email}`);
 }
 
+async function sendEditRegistrationEmail(email, eventID, registrantID) {
+  const link = `http://localhost:3000/editRegistration/${eventID}/${registrantID}`;
+  let info = await transporter.sendMail({
+    from: '"LICCB Mailer 🚣" <liccb.mailer@gmail.com>', // sender address
+    to: email, // list of receivers
+    subject: "Edit Registration", // Subject line
+    html: eval('`'+ config.email.body +'`')
+  });
+  console.log(`Successfully sent edit registration email to ${email}`);
+}
+
 module.exports.sendConfirmationEmail = sendConfirmationEmail;
 // sendConfirmationEmail("jhandwer@stevens.edu", 666, 666);
