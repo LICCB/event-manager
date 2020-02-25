@@ -8,12 +8,12 @@
 <body class="bg-gray">
   <%- include('../partials/header', {title: title}) %>
   <div class="content">
-    <button class="button-left btn btn-dark"><a href="createEvent">New Event</a></button>
-    <label for="archived" >Archived</label>
+    <button class="button-left"><a href="createEvent">Create New Event</a></button>
+    <label for="archived">Archived</label>
     <input type="checkbox" id="archived" checked=checked>
     <label for="cancelled">Cancelled</label>
     <input type="checkbox" id="cancelled" checked=checked>
-    <table class="table table-striped table-dark table-bordered table-hover table-sm" id="eventsTable">
+    <table class="table" id="eventsTable">
       <thead>
         <% var keys = Object.keys(events[0]) %>
         <tr>
@@ -28,7 +28,7 @@
         <tr <%= `class=${events[i].eventStatus.replace(/\s/g, '')}` %>>
           <td>
             <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> |
-            <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> | 
+            <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> |
             <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> |
             <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> |
             <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a> |

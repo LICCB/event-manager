@@ -10,6 +10,17 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+/*
+  Cookies Implementation
+*/
+/*const cookieParser = require('cookie-parser');
+app.use(cookieParser);
+
+const cookieSession = require('cookie-session');
+app.use(cookieSession);*/
+
+
+
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
