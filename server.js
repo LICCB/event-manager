@@ -163,8 +163,8 @@ app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { /
 });
 
 app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
-  const email = await db.confirmEmail(req.params.eventID, req.params.registrantID);
-  mailer.sendEditRegistrationEmail(email, req.params.eventID, req.params.registrantID);
+  const {email, eventName} = await db.confirmEmail(req.params.eventID, req.params.registrantID);
+  mailer.sendEditRegistrationEmail(email, eventName, req.params.eventID, req.params.registrantID);
   res.render('email/confirmEmail', {title: "Email Confirmed"});
 });
 

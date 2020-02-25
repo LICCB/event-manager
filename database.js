@@ -151,15 +151,18 @@ async function confirmEmail(eventID, registrantID){
   const confirm = "UPDATE LICCB.participants " + 
                   "SET " +
                     "regStatus='Registered' " +                 
-                  "WHERE eventID='" + eventID + "' AND partyID='" + registrantID +"';";
-  const email = "SELECT email " + 
-                "FROM LICCB.participants " + 
-                "WHERE participantID='" + registrantID + "' AND eventID='" + eventID + "';";
+                  `WHERE eventID='${eventID}' AND partyID='${registrantID}';`;
+  const query = "SELECT email, eventName " + 
+                 "FROM " + 
+                        `(SELECT * FROM LICCB.participants WHERE participantID='${registrantID}' AND eventID='${eventID}') AS p ` + 
+                 "JOIN " + 
+                        `(SELECT * FROM LICCB.events WHERE eventID='${eventID}') AS e on ` + 
+                        "p.eventID = e.eventID;";
   let conn = await pool.getConnection();
   let update = await conn.query(confirm);
-  let email = await conn.query(email);
+  let vals = await conn.query(query);
   conn.release();
-  return email;
+  return vals[0];
 }
 
 async function insertParty(signup) {
