@@ -22,4 +22,5 @@ async function sendConfirmationEmail(email, eventID, registrantID) {
   console.log(`Successfully sent email confirmation to ${email}`);
 }
 
-sendConfirmationEmail("jhandwer@stevens.edu", 666, 666);
+module.exports.sendConfirmationEmail = sendConfirmationEmail;
+// sendConfirmationEmail("jhandwer@stevens.edu", 666, 666);

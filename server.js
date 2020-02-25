@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./database');
 const utils = require('./utils');
+const mailer = require('./email');
 const app = express();
 
 app.use(express.static(__dirname + '/public'));
@@ -55,25 +56,12 @@ app.get('/publicSignup', async (req, res) => {
   });
 });
 
-/**
- * Update to redirect to THANKS page
- */
-// app.post('/publicSignup', async (req, res) => {
-//   await db.insertParty(req.body);
-//   res.redirect('signup/signupThanks');
-// });
-
 app.get('/privateSignup', async (req, res) => {
   res.render('signup/privateSignup', {
     title: "PrivateSingup",
     events: await db.queryAllEvents()
   });
 });
-
-// app.post('/privateSignup', async (req, res) => {
-//   await db.insertParty(req.body);
-//   res.redirect('signup/signupThanks');
-// });
 
 app.get('/volunteerSignup', async (req, res) => {
   res.render('signup/volunteerSignup', {
@@ -83,7 +71,9 @@ app.get('/volunteerSignup', async (req, res) => {
 });
 
 app.post('/signup', async (req, res) => {
-  await db.insertVolunteerParty(req.body);
+  const regID = await db.insertVolunteerParty(req.body);
+  const reg = req.body;
+  mailer.sendConfirmationEmail(reg.regemail, reg.eventID, regID);
   res.redirect('/signup/signupThanks')
 });
 
