@@ -84,7 +84,11 @@ app.get('/volunteerSignup', async (req, res) => {
 
 app.post('/signup', async (req, res) => {
   await db.insertVolunteerParty(req.body);
-  res.redirect('signup/signupThanks')
+  res.redirect('/signup/signupThanks')
+});
+
+app.get('/signup/signupThanks', function(req, res) {
+  res.render('signup/signupThanks')
 });
 
 /**
