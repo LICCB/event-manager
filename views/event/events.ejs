@@ -25,7 +25,6 @@
       </thead>
       <tbody>
         <% for(i = 0; i < events.length; i++){ %>
-        <% console.log(events[i].eventStatus) %>
         <tr <%= `class=${events[i].eventStatus.replace(/\s/g, '')}` %>>
           <td>
             <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> |
