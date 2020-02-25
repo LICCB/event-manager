@@ -181,31 +181,9 @@ app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { /
   res.redirect('/participants/checkin/' + req.params.eventid);
 });
 
-app.get('/publicSignup', async (req, res) => {
-  res.render('signup/publicSignup', {title: "PublicSingup", events: await db.queryAllEvents()});
-});
-
-app.post('/publicSignup', function (req, res) {
-    console.log(req.body);
-    res.render('signup/publicSignup');
-});
-
-app.get('/privateSignup', async (req, res) => {
-  res.render('signup/privateSignup', {title: "PrivateSingup", events: await db.queryAllEvents()});
-});
-
-app.post('/privateSignup', function (req, res) {
-    console.log(req.body);
-    res.render('signup/privateSignup');
-});
-
-app.get('/volunteerSignup', async (req, res) => {
-  res.render('signup/volunteerSignup', {title: "VolunteerSingup", events: await db.queryAllEvents()});
-});
-
-app.post('/volunteerSignup', function (req, res) {
-    console.log(req.body);
-    res.render('signup/volunteerSignup');
+app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
+  await db.confirmEmail(req.params.eventID, req.params.registrantID);
+  res.render('email/confirmEmail', {title: "Email Confirmed"});
 });
 
 app.listen(3000, function () {
