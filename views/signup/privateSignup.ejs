@@ -6,6 +6,7 @@
     <title>Create Event</title>
     <link rel="stylesheet" type="text/css" href="/css/form.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
 
 <body>
@@ -18,8 +19,9 @@
 
                 <br>
 
+                <!--Most likely will not have a "general" private event signup page. Instead a link will direct to this page with eventID already known from url-->
                 <label for="ename">Event:</label>
-                    <select name="eventname" form="publicSignupform" required>
+                    <select name="eventID" form="publicSignupform" required>
                         <option selected disabled hidden style='display: none' value=''>Select an event</option>
                         <% for(i = 0; i < events.length; i++) { %>
                             <option value=<%= events[i].eventID %>> <%= events[i].eventName%> </option>
@@ -27,157 +29,66 @@
                     </select>
 
                 <div class="reginfo">
-                    <label for="regname">Registrant Full Name:</label>
-                    <input type="text" id="regname" name="regname" placeholder="Your Full Name Here" required>
+                    <label for="regfirstname">Registrant First Name:</label>
+                    <input type="text" id="regfirstname" name="regfirstname" class = "fname" placeholder="Your First Name Here" required>
+                    
+                    <label for="reglastname">Registrant Last Name:</label>
+                    <input type="text" id="reglastname" name="reglastname" class = "lname" placeholder="Your Last Name Here" required>
 
                     <label for="regadult">Over 18?</label>
                     <select name="regadult" form="privateSignupform" required>
                         <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
                     </select>
 
                     <label for="regswim">Swimmer</label>
                     <select name="regswim" form="privateSignupform" required>
                         <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
                     </select>
 
                     <label for="regboat">Boating Experience</label>
                     <select name="regboat" form="privateSignupform" required>
                         <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
                     </select>
 
                     <label for="regcpr">CPR Certification</label>
                     <select name="regcpr" form="privateSignupform" required>
                         <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
                     </select>
 
                     <label for="regemail">Registrant Email:</label>
-                    <input type="text" id="regemail" name="regemail" placeholder="Your Email Here" required>
+                    <input type="text" id="regemail" name="regemail" class = "email" placeholder="Your Email Here" required>
 
                     <label for="regphone">Registrant Phone Number:</label>
-                    <input type="text" id="regphone" name="regphone" placeholder="Your Phone Number Here" required>
+                    <input type="text" id="regphone" name="regphone" class = "phone" placeholder="Your Phone Number Here" required>
 
                     <label for="regename">Registrant Emergency Contact Name:</label>
-                    <input type="text" id="regename" name="regename" placeholder="Emergency Contact Name" required>
+                    <input type="text" id="regename" name="regename" class = "name" placeholder="Emergency Contact Name" required>
 
                     <label for="regephone">Registrant Emergency Contact Phone Number:</label>
-                    <input type="text" id="regephone" name="regephone" placeholder="Emergency Contact Phone Number" required>
+                    <input type="text" id="regephone" name="regephone" class = "phone" placeholder="Emergency Contact Phone Number" required>
 
-                    <label for="partysize">Party Size</label>
-                    <select name="partysize" form="privateSignupform">
-                        <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>
+                    <label for="partysize">Add Party Member</label>
+                    <input type="button" value="Add a Party Member" class="addpart" id="addpart" />
+                </div>
+
+                <div id="partymembers" form="privateSignup">
+
                 </div>
 
                 <br>
 
-                <div class="part1">
-                    <label for="part1name">Party Memeber 1 Full Name:</label>
-                    <input type="text" id="part1name" name="part1name" placeholder="Party Member 1 Full Name Here">
-
-                    <label for="part1adult">Over 18?</label>
-                    <select name="part1adult" form="privateSignupform">
-                        <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-
-                    <label for="part1swim">Swimmer</label>
-                    <select name="part1swim" form="privateSignupform">
-                        <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-
-                    <label for="part1boat">Boating Experience</label>
-                    <select name="part1boat" form="privateSignupform">
-                        <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-
-                    <label for="part1cpr">CPR Certification</label>
-                    <select name="part1cpr" form="privateSignupform">
-                        <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-
-                    <label for="part1email">Participant 1 Email:</label>
-                    <input type="text" id="part1email" name="part1email" placeholder="Your Email Here">
-
-                    <label for="part1phone">Participant 1 Number:</label>
-                    <input type="text" id="part1phone" name="part1phone" placeholder="Your Phone Number Here">
-
-                    <label for="part1ename">Participant 1 Emergency Contact Name:</label>
-                    <input type="text" id="part1ename" name="part1ename" placeholder="Emergency Contact Name">
-
-                    <label for="part1ephone">Participant 1 Emergency Contact Phone Number:</label>
-                    <input type="text" id="part1ephone" name="part1ephone" placeholder="Emergency Contact Phone Number">
-                </div>
-
-                <br>
-
-                <div class="part2">
-                    <label for="part2name">Party Memeber 2 Full Name:</label>
-                    <input type="text" id="part2name" name="part2name" placeholder="Party Member 2 Full Name Here">
-
-                    <label for="part2adult">Over 18?</label>
-                    <select name="part2adult" form="privateSignupform">
-                        <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-
-                    <label for="part2swim">Swimmer</label>
-                    <select name="part2swim" form="privateSignupform">
-                        <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-
-                    <label for="part2boat">Boating Experience</label>
-                    <select name="part2boat" form="privateSignupform">
-                        <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-
-                    <label for="part2cpr">CPR Certification</label>
-                    <select name="part2cpr" form="privateSignupform">
-                        <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="no">No</option>
-                        <option value="yes">Yes</option>
-                    </select>
-
-                    <label for="part2email">Participant 2 Email:</label>
-                    <input type="text" id="part2email" name="part2email" placeholder="Your Email Here">
-
-                    <label for="part2phone">Participant 2 Number:</label>
-                    <input type="text" id="part1phone" name="part2phone" placeholder="Your Phone Number Here">
-
-                    <label for="part2ename">Participant 2 Emergency Contact Name:</label>
-                    <input type="text" id="part2ename" name="part2ename" placeholder="Emergency Contact Name">
-
-                    <label for="part2ephone">Participant 2 Emergency Contact Phone Number:</label>
-                    <input type="text" id="part2ephone" name="part2ephone" placeholder="Emergency Contact Phone Number">
-                </div>
-
-                <br>
-
+                <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/>
                 <div class="discinfo">
                     <label for="zip">Zip Code:</label>
-                    <input type="text" id="zip" name="zipcode" placeholder="Zip Code" required>
+                    <input type="text" id="zip" name="zipcode" class = "zip" placeholder="Zip Code" required>
 
                     <label for="ediscovery">Event Discovery:</label>
                     <select name="eventdiscovery" form="privateSignupform" required>
@@ -219,9 +130,7 @@
                     </select>
 
                     <label for="notes">Additional Notes:</label>
-                    <textarea name="notes" form="publicSignupform">
-                        Add any additional notes here.
-                    </textarea>
+                    <textarea name="notes" form="publicSignupform"></textarea>
 
                 </div>
 
@@ -232,5 +141,7 @@
         </fieldset>
     </div>
 </body>
+
+<script src="/scripts/addParticipant.js"></script>
 
 </html>
