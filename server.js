@@ -170,6 +170,11 @@ app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { /
   res.redirect('/participants/checkin/' + req.params.eventid);
 });
 
+app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
+  await db.confirmEmail(req.params.eventID, req.params.registrantID);
+  res.render('email/confirmEmail', {title: "Email Confirmed"});
+});
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });
