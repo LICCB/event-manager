@@ -11,6 +11,13 @@ const pool = mariadb.createPool({
 
 const uuidv4 = require('uuid/v4');
 
+async function queryAllCols(tableName) {
+  let conn = await pool.getConnection();
+  let cols = await conn.query(`SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='${tableName}'`);
+  conn.release();
+  return cols;
+}
+
 async function queryAllUsers() {
   let conn = await pool.getConnection();
   let users = await conn.query("SELECT * FROM LICCB.users");
@@ -33,6 +40,20 @@ async function queryEventsTableData(){
   let events = await conn.query(query);
   conn.release();
   return events;
+}
+
+async function queryAllParticipants() {
+    let conn = await pool.getConnection();
+    let participants = await conn.query("SELECT * FROM LICCB.participants");
+    conn.release();
+    return participants;
+  }
+
+async function queryParticipantsByEventID(eventID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}'`)
+  conn.release();
+  return participants;
 }
 
 async function queryEventByID(eventID) {
@@ -382,6 +403,7 @@ async function queryRegistrantEmailsByEventID(eventID){
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
+module.exports.queryAllParticipants = queryAllParticipants;
 module.exports.queryEventByID = queryEventByID;
 module.exports.queryParticipants = queryParticipants;
 module.exports.queryParticipantByID = queryParticipantByID;
@@ -390,6 +412,8 @@ module.exports.checkinParticipant = checkinParticipant;
 module.exports.editUserComments = editUserComments;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
+module.exports.queryAllCols = queryAllCols;
+module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
 module.exports.archiveEvent = archiveEvent;
 module.exports.cancelEvent = cancelEvent;
 module.exports.deleteEvent = deleteEvent;

@@ -5,6 +5,9 @@ const utils = require('./utils');
 const mailer = require('./email');
 const app = express();
 
+const fs = require('fs');
+const { Parser } = require('json2csv');
+
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/views'));
 app.use(bodyParser.urlencoded({
@@ -206,6 +209,45 @@ app.get('/editRegistration/:eventID/:registrantID', async (req, res) => {
 app.post('/editRegistration/:eventID/:registrantID', async (req, res) => {
   // TODO add updateRegistration database method
   res.redirect('registration/updatedRegistration', {title: "Updated Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
+});
+
+/**
+ * Redirects to the export page where the user can export participant data based on certain attributes
+ */
+app.get('/export', async (req, res) => {
+  res.render("export/export", {
+    title: "Export",
+  });
+});
+
+/**
+ * Export participants from a certain list of eventId's
+ * EventId lists would be built later on based on certain attributes
+ * For now, only one ID is received explicitly from the form
+ */
+app.post('/export/exportData', async (req, res) => {
+  let fileName = `${req.body.fileName}.${req.body.fileType}`;
+
+  // Will eventually be an additional database query to get a list of eventIDs from a certain attribute
+  let eventID = req.body.eventID;
+  participants = await db.queryParticipantsByEventID(eventID);
+  delete participants.meta;
+
+  // Grabs the names of all the columns from database table for use in creating the csv file header
+  let cols = await db.queryAllCols('participants');
+  delete cols.meta;
+  let fields = [];
+  for (let i = 0; i < cols.length; i++) {
+    fields.push(cols[i]['COLUMN_NAME'])
+  }
+  // Converts participants list into csv file using json2csv module: https://www.npmjs.com/package/json2csv
+  const csvParser = new Parser({fields});
+  const csv = csvParser.parse(participants);
+  
+  // Send file to the browser to start download
+  res.setHeader('Content-disposition', `attachment; filename=${fileName}`);
+  res.set('Content-Type', 'text/csv');
+  res.status(200).send(csv);
 });
 
 app.listen(3000, function () {
