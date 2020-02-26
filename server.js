@@ -60,6 +60,18 @@ app.get('/events', async (req, res) => {
   });
 });
 
+app.get('/event/:id', async (req, res) => {
+  const e = await db.queryEventByID(req.params.id);
+  console.log(e);
+  console.log(e.startTime);
+  res.render('event/event', {
+    title: "Event Detail",
+    event: e[0],
+    participants: await db.queryParticipantsByEventID(req.params.id),
+    utils: utils
+  });
+});
+
 app.get('/publicSignup', async (req, res) => {
   res.render('signup/publicSignup', {
     title: "PublicSingup",
