@@ -126,6 +126,12 @@ async function publishEvent(id) {
 
 async function updateEvent(event, id) {
   const eventMetadata = utils.getEventMetadata(event);
+  const dateTimeQuery = "Select startTime, endTime " + 
+                        "From LICCB.events " + 
+                        `WHERE eventID='${id}';`;
+  console.log(dateTimeQuery);
+  const startTime = event.startDate + " " + event.startTime + ":00";
+  const endTime = event.endDate + " " + event.endTime + ":00";
   const update = "UPDATE LICCB.events " + 
                 "SET " +
                   "managerID='" + event.managerID + "', " + 
@@ -133,8 +139,8 @@ async function updateEvent(event, id) {
                   "eventName='" + event.eventName + "', " + 
                   "maxPartySize=" + event.maxPartySize + ", " + 
                   "privateEvent=" + event.privateEvent + ", " +
-                  "startTime='" + event.startDate + " " + event.startTime + ":00', " +  
-                  "endTime='" + event.endDate + " " + event.endTime + ":00', " +
+                  "startTime='" + startTime + "', " +  
+                  "endTime='" + endTime + "', " +
                   "capacity=" + event.capacity + ", " +
                   "staffRatio=" + event.staffRatio + ", " + 
                   "eventDesc='" + event.eventDesc + "', " +
@@ -142,20 +148,33 @@ async function updateEvent(event, id) {
                   "eventMetadata='" + eventMetadata + "' " +                  
                 "WHERE eventID='" + id + "';"
   let conn = await pool.getConnection();
+  let oldDateTimes = await conn.query(dateTimeQuery);
   let upd = await conn.query(update);
   conn.release();
-  return upd;
+  return {
+          oldStart : oldDateTimes[0].startTime,
+          oldEnd : oldDateTimes[0].endTime,
+          newStart : new Date(startTime),
+          newEnd : new Date(endTime)
+         };
 }
 
 async function confirmEmail(eventID, registrantID){
   const confirm = "UPDATE LICCB.participants " + 
                   "SET " +
                     "regStatus='Registered' " +                 
-                  "WHERE eventID='" + eventID + "' AND partyID='" + registrantID +"';";
+                  `WHERE eventID='${eventID}' AND partyID='${registrantID}';`;
+  const query = "SELECT email, eventName " + 
+                 "FROM " + 
+                        `(SELECT * FROM LICCB.participants WHERE participantID='${registrantID}' AND eventID='${eventID}') AS p ` + 
+                 "JOIN " + 
+                        `(SELECT * FROM LICCB.events WHERE eventID='${eventID}') AS e on ` + 
+                        "p.eventID = e.eventID;";
   let conn = await pool.getConnection();
-  let con = await conn.query(confirm);
+  let update = await conn.query(confirm);
+  let vals = await conn.query(query);
   conn.release();
-  return con;
+  return vals[0];
 }
 
 async function insertParty(signup) {
@@ -318,6 +337,19 @@ async function insertVolunteerParty(signup) {
   return registrantID;
 };
 
+async function queryRegistrantEmailsByEventID(eventID){
+  const query = "SELECT email " + 
+                "FROM LICCB.participants " +
+                `WHERE eventID='${eventID}' and email !='';`; 
+  let conn = await pool.getConnection();
+  let emails = await conn.query(query);
+  conn.release();
+  return emails.map(function (x) {
+    return Object.values(x);
+    },
+    emails.slice(0, emails.length - 1)).flat()
+}
+
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
@@ -333,3 +365,4 @@ module.exports.publishEvent = publishEvent;
 module.exports.confirmEmail = confirmEmail;
 module.exports.insertParty = insertParty;
 module.exports.insertVolunteerParty = insertVolunteerParty;
+module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;
