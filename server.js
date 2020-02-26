@@ -156,6 +156,13 @@ app.get('/participants/:id', async (req, res) => {
 });
 
 /**
+ * Renders the participant list for the specified participant
+ */
+app.get('/participant/:id', async (req, res) => {
+  res.render('participants/singleParticipant', {participants: await db.queryParticipantByID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
+
+/**
  * Renders the participant check in list for the specified event
  */
 app.get('/participants/checkin/:id', async (req, res) => {
