@@ -13,6 +13,7 @@ $('#cancelled').click(function(){
     }
 });
 
+// Directory of customizations: https://datatables.net/reference/option/
 $(document).ready( function() {
   $('#eventsTable').DataTable({
     'order': [7, 'asc'],
