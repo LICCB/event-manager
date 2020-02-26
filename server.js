@@ -112,13 +112,10 @@ app.post('/export/exportData', async (req, res) => {
   const csvParser = new Parser({fields});
   const csv = csvParser.parse(participants);
   
-  // Create file in temporary directory for download
-  fs.appendFile(`./tmpDir/${fileName}`, csv, function(err) {
-    if (err) {
-      console.log(`Error creating file --- ${err}`);
-    }
-  });
-  res.download(`./tmpDir/${fileName}`, `${fileName}`);
+  // Send file to the browser to start download
+  res.setHeader('Content-disposition', `attachment; filename=${fileName}`);
+  res.set('Content-Type', 'text/csv');
+  res.status(200).send(csv);
 });
 
 app.listen(3000, function () {
