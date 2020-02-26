@@ -13,17 +13,19 @@ input[type=text], select, input[type=time] {
 
   input[type=submit] {
     width: 50%;
-    background-color: #4CAF50;
-    color: white;
+    background-color: #082b47;
+    color: #fffcea;
     padding: 14px 20px;
     margin: 8px 0;
-    border: none;
-    border-radius: 4px;
+    border-color: #fffcea;
+    border-radius: 5px;
     cursor: pointer;
+    font-style: bold;
+    font-family: Verdana, Arial, sans-serif;
   }
 
   input[type=submit]:hover {
-    background-color: #45a049;
+    background-color: #0e387c;
   }
 
   div {
@@ -32,7 +34,26 @@ input[type=text], select, input[type=time] {
     padding: 20px;
   }
 
+  div2 {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+  }
+
   * {box-sizing:border-box}
+
+/*Add/Remove participants button*/
+.button {
+  color: #082b47;
+  padding: 5px;
+  margin: 10px;
+  background-color: #fff6c3;
+  border-color: #082b47;
+  border-radius: 4px;
+}
+
+.button:hover {
+  background-color: #fff9d7;
+}
 
 /* Slideshow container */
 .slideshow-container {
@@ -117,42 +138,32 @@ input[type=text], select, input[type=time] {
   animation-duration: 1.5s;
 }
 
-/*.labelicon {
-  background-image: url("/images/qmark.png");
-  background-repeat: no-repeat;
-  background-position: right;
-}*/
-
-.icon {
-  /*background-image: url("/images/qmark.png");
-  background-repeat: no-repeat;
-  background-position: right;*/
-  background-size: 15px 15px;
-  position: absolute;
-  vertical-align: middle;
+/*Tooltips formatting*/
+.tooltip {
+  position: relative;
   display: inline-block;
-  width: 15px;
-  height: 15px;
 }
 
-.icon .tooltiptext {
+.tooltip .tooltiptext {
   visibility: hidden;
-  width: 150px;
-  background-color: #84a5f1;
+  width: 120px;
+  background-color: #b9d1f7;
   color: #000;
   text-align: center;
-  border-radius: 9px;
-  padding: 5px; /*5px 0*/
+  border-radius: 6px;
+  padding: 5px;
   position: absolute;
-  /*z-index: 1;*/
-  top: 100%; /*150*/
-  /*left: 50%;*/
+  z-index: 1;
+  top: 150%;
+  left: 50%;
   margin-left: -60px;
+  /*Tooltip animation fade*/
   opacity: 0;
   transition: opacity 1s;
 }
 
-.icon .tooltiptext::after {
+/*Tooltip top arrow*/
+.tooltip .tooltiptext::after {
   content: "";
   position: absolute;
   bottom: 100%;
@@ -160,10 +171,11 @@ input[type=text], select, input[type=time] {
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: transparent transparent #84a5f1 transparent;
+  border-color: transparent transparent #b9d1f7 transparent;
 }
 
-.icon:hover .tooltiptext {
+/*Tooltip Fade*/
+.tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
 }

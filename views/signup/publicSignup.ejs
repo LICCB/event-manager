@@ -38,7 +38,7 @@
                 <div class="reginfo">
                     <label for="regfirstname">Registrant First Name:</label>
                     <input type="text" id="regfirstname" name="regfirstname" class = "fname "placeholder="Your First Name Here" required>
-                    
+
                     <label for="reglastname">Registrant Last Name:</label>
                     <input type="text" id="reglastname" name="reglastname" class = "lname" placeholder="Your Last Name Here" required>
 
@@ -50,6 +50,9 @@
                     </select>
 
                     <label for="regswim">Swimmer</label>
+                    <div2 class = "tooltip"><img src="/images/qmark.png" height="15px" width="15px">
+                      <span class="tooltiptext">If you fall into water, will you be able to swim to the shore by yourself?</span>
+                    </div2>
                     <select name="regswim" form="publicSignupform" required>
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
@@ -57,6 +60,9 @@
                     </select>
 
                     <label for="regboat">Boating Experience</label>
+                    <div2 class = "tooltip"><img src="/images/qmark.png" height="15px" width="15px">
+                      <span class="tooltiptext">Have you ever been on a boat before?</span>
+                    </div2>
                     <select name="regboat" form="publicSignupform" required>
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
@@ -64,6 +70,9 @@
                     </select>
 
                     <label for="regcpr">CPR Certification</label>
+                    <div2 class = "tooltip"><img src="/images/qmark.png" height="15px" width="15px">
+                      <span class="tooltiptext">Are you certified to perform CPR? Note: This will not affect your chances of being selected for a trip.</span>
+                    </div2>
                     <select name="regcpr" form="publicSignupform" required>
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
@@ -88,7 +97,7 @@
                 </div>
 
                 <div id="partymembers" form="PublicSignup">
-                
+
                 </div>
 
                 <br>
@@ -96,7 +105,7 @@
                 <div class="discinfo">
                     <label for="zip">Zip Code:</label>
                     <input type="text" id="zip" name="zipcode" class ="zip" placeholder="Zip Code" required>
-    
+
                     <label for="eventdiscovery">Event Discovery:</label>
                     <select name="eventdiscovery" form="publicSignupform" required>
                         <option selected disabled hidden style='display: none' value=''></option>
@@ -116,7 +125,7 @@
                         <option value="meeting">Civic Meeting</option>
                         <option value="other">Other</option>
                     </select>
-    
+
                     <label for="bhdiscovery">Boat House Discovery:</label>
                     <select name="bhdiscovery" form="publicSignupform" required>
                         <option selected disabled hidden style='display: none' value=''></option>
