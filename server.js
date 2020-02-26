@@ -242,7 +242,7 @@ app.post('/export/exportData', async (req, res) => {
 
   // Will eventually be an additional database query to get a list of eventIDs from a certain attribute
   let eventID = req.body.eventID;
-  participants = await db.queryParticipantsByEventID(eventID);
+  let participants = await db.queryParticipantsByEventID(eventID);
   delete participants.meta;
 
   // Grabs the names of all the columns from database table for use in creating the csv file header
