@@ -163,6 +163,14 @@ app.get('/participant/:id', async (req, res) => {
 });
 
 /**
+ * Updates the userCommets for the participant
+ */
+app.post('/participant/comment/:eventID/:participantID', async (req, res) => {
+  await db.editUserComments(req.params.participantID, req.params.eventID, req.body.comment)
+  res.redirect('/participants/' + req.params.eventID)
+});
+
+/**
  * Renders the participant check in list for the specified event
  */
 app.get('/participants/checkin/:id', async (req, res) => {
