@@ -5,21 +5,18 @@
     <%- include('../partials/head', {title: title}) %>
 </head>
 
-<body class="bg-gray" onload="checkDownload()">
+<body class="bg-gray">
     <%- include('../partials/header', {title: title}) %>
     <div class="container content">
 
         <fieldset>
             <form action="exportData" method="POST" id="exportForm">
-                <label for="toExport">Choose data to Export:</label>
-                <select id="toExport" name="toExport">
-                    <option value="exportParticipants">Export Participants</option>
-                    <option value="exportEvents">Export Events</option>
-                </select>
+                <label for="eventID">Enter EventID:</label>
+                <input type="text" id="eventID" name="eventID" placeholder="eventID">
                 <label for="fileName"></label>
                 <input type="text" id="fileName" name="fileName" placeholder="fileName">
                 <select id="fileType" name="fileType">
-                    <option value="json">.JSON</option>
+                    <option value="csv">.csv</option>
                 </select>
                 <button class="btn btn-dark" id="export" type="submit" value="Export">Export</button>
             </form>
@@ -28,11 +25,10 @@
         <footer>
             <%- include('../partials/footer') %>
         </footer>
-        <div style="display:none;" id="downloadInfo" fileName="<%= download.fileName %>" fileData="<%= download.fileData %>"></div>
+        
     </div>
 
     <%- include('../partials/scripts') %>
-    <script src="/scripts/export.js"></script>
 </body>
 
 </html>

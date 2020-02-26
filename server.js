@@ -4,6 +4,9 @@ const db = require('./database');
 const utils = require('./utils');
 const app = express();
 
+const fs = require('fs');
+const { Parser } = require('json2csv');
+
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/views'));
 app.use(bodyParser.urlencoded({
@@ -77,41 +80,45 @@ app.get('/deleteEvent/:id', async (req, res) => {
 })
 
 /**
- * Redirects to the export page where the user can export event or participant data
+ * Redirects to the export page where the user can export participant data based on certain attributes
  */
 app.get('/export', async (req, res) => {
   res.render("export/export", {
     title: "Export",
-    download: req.body.download,
   });
 });
 
 /**
- * Redirects back to export page after starting a download for the information requested
+ * Export participants from a certain list of eventId's
+ * EventId lists would be built later on based on certain attributes
+ * For now, only one ID is received explicitly from the form
  */
 app.post('/export/exportData', async (req, res) => {
-  download = {};
-  download.fileName = `${req.body.fileName}.${req.body.fileType}`;
-  toExport = req.body.toExport;
-  if (toExport == 'exportParticipants') {
-    participants = await db.queryAllParticipants();
-    delete participants.meta;
-    console.log(participants);
-    download.fileData = participants;
-  }
-  if (toExport == 'exportEvents') {
-    events = await db.queryAllEvents();
-    delete events.meta;
-    console.log(events);
-    download.fileData = events;
-  }
-  // Find a way to pass the fileData through to javascript for download
-  console.log(download);
+  let fileName = `${req.body.fileName}.${req.body.fileType}`;
 
-  res.render("export/export", {
-    title: "Export",
-    download: download
+  // Will eventually be an additional database query to get a list of eventIDs from a certain attribute
+  let eventID = req.body.eventID;
+  participants = await db.queryParticipantsByEventID(eventID);
+  delete participants.meta;
+
+  // Grabs the names of all the columns from database table for use in creating the csv file header
+  let cols = await db.queryAllCols('participants');
+  delete cols.meta;
+  let fields = [];
+  for (let i = 0; i < cols.length; i++) {
+    fields.push(cols[i]['COLUMN_NAME'])
+  }
+  // Converts participants list into csv file using json2csv module: https://www.npmjs.com/package/json2csv
+  const csvParser = new Parser({fields});
+  const csv = csvParser.parse(participants);
+  
+  // Create file in temporary directory for download
+  fs.appendFile(`./tmpDir/${fileName}`, csv, function(err) {
+    if (err) {
+      console.log(`Error creating file --- ${err}`);
+    }
   });
+  res.download(`./tmpDir/${fileName}`, `${fileName}`);
 });
 
 app.listen(3000, function () {

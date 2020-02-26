@@ -11,6 +11,13 @@ const pool = mariadb.createPool({
 
 const uuidv4 = require('uuid/v4');
 
+async function queryAllCols(tableName) {
+  let conn = await pool.getConnection();
+  let cols = await conn.query(`SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='${tableName}'`);
+  conn.release();
+  return cols;
+}
+
 async function queryAllUsers() {
   let conn = await pool.getConnection();
   let users = await conn.query("SELECT * FROM LICCB.users");
@@ -31,6 +38,13 @@ async function queryAllParticipants() {
     conn.release();
     return participants;
   }
+
+async function queryParticipantsByEventID(eventID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}'`)
+  conn.release();
+  return participants;
+}
 
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
@@ -108,3 +122,5 @@ module.exports.queryEventByID = queryEventByID;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
 module.exports.deleteEvent = deleteEvent;
+module.exports.queryAllCols = queryAllCols;
+module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
