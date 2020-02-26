@@ -30,6 +30,7 @@
         <% for(i = 0; i < events.length; i++){ %>
         <tr <%= `class=${events[i].eventStatus}` %>>
           <td>
+            <a href=<%= "event/" + events[i].eventID %>>Detail</a> |
             <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> |
             <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> |
             <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> |
