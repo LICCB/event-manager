@@ -25,6 +25,16 @@ async function queryAllEvents() {
   return events;
 };
 
+async function queryEventsTableData(){
+  let conn = await pool.getConnection();
+  const query = "SELECT eventID, eventName, firstName, lastName, eventStatus, privateEvent, startTime, endTime " +
+                "FROM (LICCB.events AS e) JOIN (LICCB.users AS u) on " +
+                      "e.managerID=u.userID;"
+  let events = await conn.query(query);
+  conn.release();
+  return events;
+}
+
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
   let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'")
@@ -370,6 +380,7 @@ async function queryRegistrantEmailsByEventID(eventID){
 }
 
 module.exports.queryAllUsers = queryAllUsers;
+module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
 module.exports.queryParticipants = queryParticipants;
