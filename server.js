@@ -66,8 +66,11 @@ app.get('/deleteEvent/:id', async (req, res) => {
  * Redirects to the lottery run selection pages
  */
 app.get('/lottery/', async (req, res) => {
-  res.render('event/lotteryLanding', {title:"Lottery Landing Page", event: (await db.queryAllEvents())[0]})
+  res.render('event/lotteryLanding', {title:"Lottery Landing Page", events: (await db.queryAllEvents())});
 });
+// app.post('/lottery', function (req, res) {
+//   res.render(`/lottery/${req.body.runSelection}`, {participants: await db.runSelectionDefault(req.body.runSelection), event: (await db.queryEventByID(req.body.runSelection))[0]})
+// });
 app.get('/lottery/:id', async (req, res) => {
   res.render('event/lottery', {participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });

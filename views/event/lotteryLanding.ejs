@@ -2,38 +2,31 @@
 <html lang="en">
 
 <head>
-    <%- include('../partials/head', {title: title}) %>
+    <%- include('../partials/head', {title: title, events: events}) %>
 </head>
 
 <body class="bg-gray">
     <%- include('../partials/header', {title: title}) %>
     <div class="container content">
-
         <fieldset>
             <form action="lottery/123e4567-e89b-12d3-a456-556642440000/" method="GET" id="runSelection">
                 <label for="runSelection">Choose Event for Lottery:</label>
                 <select id="runSelection" name="runSelection">
-                    <optgroup>
-                        <% for(i = 0; i < event.length; i++){ %>
+                    <!-- <optgroup> -->
+                        <% for(i = 0; i < events.length; i++){ %>
                             <tr>
-                              <% var vals = Object.values(event[i]) %> 
+                              <% var vals = Object.values(events[i]) %> 
                               <% for(j = 0; j < vals.length; j++){ %>
-                                 
-                                <option value= "<%=  vals[j] %>" <%=  vals[j] %>   </option>
+                                <option value="<%= vals[j] %>"><%= vals[j] %></option>
                               <% } %>
                             </tr>
-                          <% } %>
-                    </optgroup>
+                        <% } %>
+                    <!-- </optgroup> -->
                 </select>
-                <button class="btn btn-dark" id="runSelection" type="submit" value="Export">Run Lottery</button>
+
+                <button class="btn btn-dark" id="runSelection" type="submit" value="runSelection">Run Lottery</button>
             </form>
         </fieldset>
     </div>
-
-
-
-
-
-</body>
 
 </html>
