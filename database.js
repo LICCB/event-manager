@@ -34,7 +34,7 @@ async function queryEventByID(eventID) {
 
 async function queryParticipants() {
   let conn = await pool.getConnection();
-  let participants = await conn.query("SELECT * FROM LICCB.participants");
+  let participants = await conn.query("SELECT * FROM LICCB.participants JOIN LICCB.events ON LICCB.participants.eventID=LICCB.events.eventID");
   conn.release();
   return participants;
 }
@@ -46,10 +46,29 @@ async function queryParticipantsByEventID(eventID) {
   return participants;
 }
 
+async function queryParticipantByID(participantID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query("SELECT * FROM " +
+                                      "(SELECT * FROM LICCB.participants WHERE participantID = '" + participantID + "') AS p " +
+                                      "JOIN LICCB.events ON p.eventID=LICCB.events.eventID");
+  conn.release();
+  return participants;
+}
+
 async function checkinParticipant(participantID, eventID) {
   let conn = await pool.getConnection();
   let participant = await conn.query("UPDATE LICCB.participants " +
                                      "SET checkinStatus = 'Checked In' " +
+                                     "WHERE LICCB.participants.participantID = '" + participantID + "' " +
+                                           "AND LICCB.participants.eventID = '" + eventID + "'");
+  conn.release();
+  return participant;
+}
+
+async function editUserComments(participantID, eventID, comment) {
+  let conn = await pool.getConnection();
+  let participant = await conn.query("UPDATE LICCB.participants " +
+                                     "SET userComments = '" + comment + "' " +
                                      "WHERE LICCB.participants.participantID = '" + participantID + "' " +
                                            "AND LICCB.participants.eventID = '" + eventID + "'");
   conn.release();
@@ -354,8 +373,10 @@ module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
 module.exports.queryParticipants = queryParticipants;
+module.exports.queryParticipantByID = queryParticipantByID;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
 module.exports.checkinParticipant = checkinParticipant;
+module.exports.editUserComments = editUserComments;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
 module.exports.archiveEvent = archiveEvent;

@@ -1,15 +1,14 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <%- include('../partials/head', {title: "All Participants"}) %>
+    <%- include('../partials/head', {title: participants[0].firstName + ' ' + participants[0].lastName}) %>
   </head>
   <body class="bg-gray">
     <%- include('../partials/header', {title: "All Participants"}) %>
     <div class="container content">
-      <table class="table">
+      <table class="table table-striped table-dark table-bordered table-hover">
         <thead>
           <tr>
-            <th scope="col"> History </th>
             <th scope="col"> Event </th>
             <th scope="col"> First Name </th>
             <th scope="col"> Last Name </th>
@@ -33,11 +32,6 @@
         <tbody>
           <% for(i = 0; i < participants.length; i++){ %>
             <tr>
-              <td>
-                <a class="btn btn-primary" href="/participant/<%= participants[i].participantID %>" role="button">
-                  View
-                </a>
-              </td>
               <td> <%= participants[i].eventName %> </td>
               <td> <%= participants[i].firstName %> </td>
               <td> <%= participants[i].lastName %> </td>
@@ -58,7 +52,6 @@
               <td> <%= participants[i].userComments %> </td>
             </tr>
           <% } %>
-
         </tbody>
       </table>
       <footer class="footer">
