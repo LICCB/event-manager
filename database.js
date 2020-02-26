@@ -46,6 +46,15 @@ async function queryParticipantsByEventID(eventID) {
   return participants;
 }
 
+async function queryParticipantByID(participantID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query("SELECT * FROM " +
+                                      "(SELECT * FROM LICCB.participants WHERE participantID = '" + participantID + "') AS p " +
+                                      "JOIN LICCB.events ON p.eventID=LICCB.events.eventID");
+  conn.release();
+  return participants;
+}
+
 async function checkinParticipant(participantID, eventID) {
   let conn = await pool.getConnection();
   let participant = await conn.query("UPDATE LICCB.participants " +
@@ -322,6 +331,7 @@ module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
 module.exports.queryParticipants = queryParticipants;
+module.exports.queryParticipantByID = queryParticipantByID;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
 module.exports.checkinParticipant = checkinParticipant;
 module.exports.insertEvent = insertEvent;
