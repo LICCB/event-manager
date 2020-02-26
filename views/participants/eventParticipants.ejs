@@ -32,7 +32,7 @@
         </thead>
         <tbody>
           <% for(i = 0; i < participants.length; i++){ %>
-            <tr>
+            <tr onclick="window.location='/participant/<%= participants[i].participantID %>';">
               <td> <%=  participants[i].firstName %> </td>
               <td> <%=  participants[i].lastName %> </td>
               <td> <%=  participants[i].phone %> </td>
