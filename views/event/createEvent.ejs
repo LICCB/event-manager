@@ -3,9 +3,10 @@
 
 <head>
   <%- include('../partials/head', {title: title}) %>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 
-<body class="bg-gray">
+<body>
   <%- include('../partials/header', {title: title}) %>
   <div class="container content">
     <fieldset>
@@ -20,6 +21,7 @@
             <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
             <% } %>
           </select>
+
           <br>
           <label for="cap">Capacity:</label>
           <input type="text" id="cap" name="capacity" placeholder="Capacity" required>
@@ -32,6 +34,7 @@
             <option value="false">Public</option>
             <option value="true">Private</option>
           </select>
+
           <br>
           <label for="notes">Notes:</label>
           <input type="text" id="notes" name="eventNotes" placeholder="Notes">
@@ -55,6 +58,7 @@
           <label for="desc">Description:</label>
           <input type="text" id="desc" name="eventDesc" placeholder="Notes">
           <br>
+
           <input type="button" value="Add a field" class="addfield" id="addfield" />
           <div id="newfields" form="eventform"></div>
         </div>

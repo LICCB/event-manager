@@ -35,19 +35,40 @@
 
                 <br>
 
-                <div class="reginfo">
+                <div-left class="reginfo">
                     <label for="regfirstname">Registrant First Name:</label>
                     <input type="text" id="regfirstname" name="regfirstname" class = "fname "placeholder="Your First Name Here" required>
+                    <br>
 
                     <label for="reglastname">Registrant Last Name:</label>
                     <input type="text" id="reglastname" name="reglastname" class = "lname" placeholder="Your Last Name Here" required>
+                    <br>
 
+                    <!--All of this must be validated to be correct email and phone #-->
+                    <label for="regemail">Registrant Email:</label>
+                    <input type="text" id="regemail" name="regemail" class = "email" placeholder="Your Email Here" required>
+                    <br>
+
+                    <label for="regphone">Registrant Phone Number:</label>
+                    <input type="text" id="regphone" name="regphone" class = "phone" placeholder="Your Phone Number Here" required>
+                    <br>
+
+                    <label for="regename">Registrant Emergency Contact Name:</label>
+                    <input type="text" id="regename" name="regename" class = "name" placeholder="Emergency Contact Name" required>
+                    <br>
+
+                    <label for="regephone">Registrant Emergency Contact Phone Number:</label>
+                    <input type="text" id="regephone" name="regephone" class = "phone "placeholder="Emergency Contact Phone Number" required>
+                  </div-left>
+
+                  <div-right class="reginfo">
                     <label for="regadult">Over 18?</label>
                     <select name="regadult" form="publicSignupform" required>
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
                         <option value="true">Yes</option>
                     </select>
+                    <br>
 
                     <label for="regswim">Swimmer</label>
                     <div2 class = "tooltip"><img src="/images/qmark.png" height="15px" width="15px">
@@ -58,6 +79,7 @@
                         <option value="false">No</option>
                         <option value="true">Yes</option>
                     </select>
+                    <br>
 
                     <label for="regboat">Boating Experience</label>
                     <div2 class = "tooltip"><img src="/images/qmark.png" height="15px" width="15px">
@@ -68,6 +90,7 @@
                         <option value="false">No</option>
                         <option value="true">Yes</option>
                     </select>
+                    <br>
 
                     <label for="regcpr">CPR Certification</label>
                     <div2 class = "tooltip"><img src="/images/qmark.png" height="15px" width="15px">
@@ -78,8 +101,9 @@
                         <option value="false">No</option>
                         <option value="true">Yes</option>
                     </select>
+                    <br>
 
-                    <!--All of this must be validated to be correct email and phone #-->
+                  <!--All of this must be validated to be correct email and phone #
                     <label for="regemail">Registrant Email:</label>
                     <input type="text" id="regemail" name="regemail" class = "email" placeholder="Your Email Here" required>
 
@@ -90,21 +114,22 @@
                     <input type="text" id="regename" name="regename" class = "name" placeholder="Emergency Contact Name" required>
 
                     <label for="regephone">Registrant Emergency Contact Phone Number:</label>
-                    <input type="text" id="regephone" name="regephone" class = "phone "placeholder="Emergency Contact Phone Number" required>
+                    <input type="text" id="regephone" name="regephone" class = "phone "placeholder="Emergency Contact Phone Number" required> -->
 
-                    <label for="partysize">Add Party Member</label>
-                    <input type="button" value="Add a Party Member" class="button" id="addpart" />
-                </div>
+                  <!--  <label for="partysize">Add Party Member</label>
+                    <input type="button" value="Add a Party Member" class="button" id="addpart" /> -->
+                </div-right>
 
-                <div id="partymembers" form="PublicSignup">
+              <!--  <div id="partymembers" form="PublicSignup">
 
-                </div>
+              </div> -->
 
                 <br>
-                <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/>
-                <div class="discinfo">
+              <!--  <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/> -->
+                <div-right class="discinfo">
                     <label for="zip">Zip Code:</label>
                     <input type="text" id="zip" name="zipcode" class ="zip" placeholder="Zip Code" required>
+                    <br>
 
                     <label for="eventdiscovery">Event Discovery:</label>
                     <select name="eventdiscovery" form="publicSignupform" required>
@@ -125,6 +150,7 @@
                         <option value="meeting">Civic Meeting</option>
                         <option value="other">Other</option>
                     </select>
+                    <br>
 
                     <label for="bhdiscovery">Boat House Discovery:</label>
                     <select name="bhdiscovery" form="publicSignupform" required>
@@ -144,16 +170,28 @@
                         <option value="meeting">Civic Meeting</option>
                         <option value="other">Other</option>
                     </select>
+                    <br>
 
                     <label for="notes">Additional Notes:</label>
-                    <textarea name="notes" form="publicSignupform"></textarea>
-                </div>
-
-                <br>
-
-                <input type="submit" value="Submit Registration">
+                    <textarea style="width:100px" name="notes" form="publicSignupform"></textarea>
+                </div-right>
             </form>
         </fieldset>
+    </div>
+
+
+    <div>
+        <div-center class="reginfo">
+          <label for="partysize"></label>
+          <input type="button" value="Add a Party Member" class="button" id="addpart" />
+        </div-center>
+
+        <div id="partymembers" form="PublicSignup"> </div>
+
+        <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/>
+        <br>
+
+        <input type="submit" value="Submit Registration">
     </div>
 </body>
 

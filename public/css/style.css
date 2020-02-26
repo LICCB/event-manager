@@ -191,10 +191,9 @@ input[type=text], select, input[type=time] {
 }
 
 .table {
-  /*table-striped table-dark table-bordered table-hover table-sm*/
   width: 100%;
   padding: 2%;
-  /*margin: 0em;*/
+  position: relative;
 }
 
 .table tr {
@@ -214,24 +213,17 @@ input[type=text], select, input[type=time] {
   border: 1px solid #fff;
 }
 
-/*.table tr:nth-of-type(odd) {
-  background-color: #fff;
-}*/
-
 .table tr:hover {
   background-image: linear-gradient(#fff, #fff,  #fff6c3);
 }
 
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
-
-
 body {
-    font-family: 'Poppins', sans-serif;
-    background: #fafafa;
+    font-family: Verdana, Arial, sans-serif;
+    background: #fff;
 }
 
 p {
-    font-family: 'Poppins', sans-serif;
+    font-family: Verdana, Arial, sans-serif;
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
@@ -316,10 +308,6 @@ ul ul a {
 
 .button:hover {
   background-color: #fff9d7;
-}
-
-.bg-gray {
-  background-color: #fff; /*gainsboro*/
 }
 
 .center {
