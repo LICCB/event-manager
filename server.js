@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./database');
 const utils = require('./utils');
+const mailer = require('./email');
 const app = express();
 
 app.use(express.static(__dirname + '/public'));
@@ -55,24 +56,11 @@ app.get('/publicSignup', async (req, res) => {
   });
 });
 
-/**
- * Update to redirect to THANKS page
- */
-app.post('/publicSignup', async (req, res) => {
-  await db.insertParty(req.body);
-  res.redirect('signup/signupThanks');
-});
-
 app.get('/privateSignup', async (req, res) => {
   res.render('signup/privateSignup', {
     title: "PrivateSingup",
     events: await db.queryAllEvents()
   });
-});
-
-app.post('/privateSignup', async (req, res) => {
-  await db.insertParty(req.body);
-  res.redirect('signup/signupThanks');
 });
 
 app.get('/volunteerSignup', async (req, res) => {
@@ -82,11 +70,15 @@ app.get('/volunteerSignup', async (req, res) => {
   });
 });
 
-app.post('/volunteerSignup', async (req, res) => {
-  await db.insertVolunteerParty(req.body);
-  res.redirect('signup/signupThanks', {
-    events: utils.filterEventData(await db.queryAllEvents())
-  });
+app.post('/signup', async (req, res) => {
+  const regID = await db.insertVolunteerParty(req.body);
+  const reg = req.body;
+  mailer.sendConfirmationEmail(reg.regemail, reg.eventID, regID);
+  res.redirect('/signup/signupThanks')
+});
+
+app.get('/signup/signupThanks', function(req, res) {
+  res.render('signup/signupThanks')
 });
 
 /**
@@ -105,7 +97,12 @@ app.get('/editEvent/:id', async (req, res) => {
  * Redirects to the events page after updating the event in the database
  */
 app.post('/editEvent/:id', async (req, res) => {
-  await db.updateEvent(req.body, req.params.id);
+  const {oldStart, oldEnd, newStart, newEnd} = await db.updateEvent(req.body, req.params.id);
+  if((oldStart.getTime() !== newStart.getTime()) || (oldEnd.getTime() !== newEnd.getTime())){
+    const emails = await db.queryRegistrantEmailsByEventID(req.params.id);
+    console.log(emails);
+    mailer.sendTimeChangeEmail(emails, oldStart, oldEnd, newStart, newEnd, req.body.eventName);
+  }
   res.redirect('/events');
 });
 
@@ -171,8 +168,18 @@ app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { /
 });
 
 app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
-  await db.confirmEmail(req.params.eventID, req.params.registrantID);
+  const {email, eventName} = await db.confirmEmail(req.params.eventID, req.params.registrantID);
+  mailer.sendEditRegistrationEmail(email, eventName, req.params.eventID, req.params.registrantID);
   res.render('email/confirmEmail', {title: "Email Confirmed"});
+});
+
+app.get('/editRegistration/:eventID/:registrantID', async (req, res) => {
+  res.render('registration/editRegistration', {title: "Edit Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
+});
+
+app.post('/editRegistration/:eventID/:registrantID', async (req, res) => {
+  // TODO add updateRegistration database method
+  res.redirect('registration/updatedRegistration', {title: "Updated Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
 });
 
 app.listen(3000, function () {
