@@ -65,6 +65,16 @@ async function checkinParticipant(participantID, eventID) {
   return participant;
 }
 
+async function editUserComments(participantID, eventID, comment) {
+  let conn = await pool.getConnection();
+  let participant = await conn.query("UPDATE LICCB.participants " +
+                                     "SET userComments = '" + comment + "' " +
+                                     "WHERE LICCB.participants.participantID = '" + participantID + "' " +
+                                           "AND LICCB.participants.eventID = '" + eventID + "'");
+  conn.release();
+  return participant;
+}
+
 async function deleteEvent(id) {
   let conn = await pool.getConnection();
   let del = await conn.query("DELETE FROM LICCB.events WHERE eventID='" + id + "'");
@@ -334,6 +344,7 @@ module.exports.queryParticipants = queryParticipants;
 module.exports.queryParticipantByID = queryParticipantByID;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
 module.exports.checkinParticipant = checkinParticipant;
+module.exports.editUserComments = editUserComments;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
 module.exports.archiveEvent = archiveEvent;
