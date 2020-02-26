@@ -16,6 +16,26 @@ function getTime(time) {
 }
 
 /**
+ * Returns the datetime in YYYY-MM-DD HH:MM:SS
+ */
+function getDateTime() {
+    var now = new Date();
+    var year,month,day,hour,minute,second;
+    year = now.getFullYear().toString();
+    if(now.getMonth() + 1 < 10) {
+        month = "0" + (now.getMonth() + 1).toString();
+    } else {month = now.getMonth + 1};
+    if(now.getDay() < 10) {
+        day = "0" + now.getDay().toString();
+    } else {day = now.getDay().toString();}
+    hour = now.getHours().toString();
+    minute = now.getMinutes().toString();
+    second = now.getSeconds().toString();
+
+    return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+};
+
+/**
  * Returns the date in YYYY-MM-DD from the JS Date object
  * @param {Date} time 
  */
@@ -53,6 +73,25 @@ function getEventMetadata(event) {
     return JSON.stringify(JSON.parse(md));
 }
 
+function cleanupEventData(events){
+    for(i = 0; i < events.length; i++){
+        events[i].startTime = trimTime(events[i].startTime);
+        events[i].endTime = trimTime(events[i].endTime);
+        events[i]["Manager"] = `${events[i].firstName} ${events[i].lastName}`;
+        delete events[i].firstName;
+        delete events[i].lastName;
+    }
+    return events;
+}
+
+function trimTime(time){
+    var timeStr = time.toString();
+    const stop = timeStr.indexOf(":00 ");
+    return timeStr.slice(0, stop);
+}
+
 module.exports.getTime = getTime;
 module.exports.getDate = getDate;
 module.exports.getEventMetadata = getEventMetadata;
+module.exports.cleanupEventData = cleanupEventData;
+module.exports.getDateTime = getDateTime;

@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./database');
 const utils = require('./utils');
+const mailer = require('./email');
 const app = express();
 
 const fs = require('fs');
@@ -12,7 +13,19 @@ app.use(express.static(__dirname + '/views'));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(bodyParser.json())
+
+/*
+  Cookies Implementation
+*/
+/*const cookieParser = require('cookie-parser');
+app.use(cookieParser);
+
+const cookieSession = require('cookie-session');
+app.use(cookieSession);*/
+
+
+
+app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
 /**
@@ -20,7 +33,7 @@ app.set('view engine', 'ejs');
  */
 app.get('/', function (req, res) {
   res.render('index');
-})
+});
 
 /**
  * Renders the createEvent page with the list of possible event managers
@@ -30,7 +43,7 @@ app.get('/createEvent', async (req, res) => {
     title: "Create Event",
     users: await db.queryAllUsers()
   });
-})
+});
 
 /**
  * Redirects to the events page after inserting the new event into the database and creating its participant table
@@ -46,9 +59,41 @@ app.post('/createEvent', async (req, res) => {
 app.get('/events', async (req, res) => {
   res.render('event/events', {
     title: "Events",
+    events: utils.cleanupEventData(await db.queryEventsTableData())
+  });
+});
+
+app.get('/publicSignup', async (req, res) => {
+  res.render('signup/publicSignup', {
+    title: "PublicSingup",
     events: await db.queryAllEvents()
   });
-})
+});
+
+app.get('/privateSignup', async (req, res) => {
+  res.render('signup/privateSignup', {
+    title: "PrivateSingup",
+    events: await db.queryAllEvents()
+  });
+});
+
+app.get('/volunteerSignup', async (req, res) => {
+  res.render('signup/volunteerSignup', {
+    title: "VolunteerSingup",
+    events: await db.queryAllEvents()
+  });
+});
+
+app.post('/signup', async (req, res) => {
+  const regID = await db.insertVolunteerParty(req.body);
+  const reg = req.body;
+  mailer.sendConfirmationEmail(reg.regemail, reg.eventID, regID);
+  res.redirect('/signup/signupThanks')
+});
+
+app.get('/signup/signupThanks', function(req, res) {
+  res.render('signup/signupThanks')
+});
 
 /**
  * Renders the editEvent page with the properties of the given event
@@ -66,10 +111,14 @@ app.get('/editEvent/:id', async (req, res) => {
  * Redirects to the events page after updating the event in the database
  */
 app.post('/editEvent/:id', async (req, res) => {
-  console.log(req.body);
-  await db.updateEvent(req.body, req.params.id);
+  const {oldStart, oldEnd, newStart, newEnd} = await db.updateEvent(req.body, req.params.id);
+  if((oldStart.getTime() !== newStart.getTime()) || (oldEnd.getTime() !== newEnd.getTime())){
+    const emails = await db.queryRegistrantEmailsByEventID(req.params.id);
+    console.log(emails);
+    mailer.sendTimeChangeEmail(emails, oldStart, oldEnd, newStart, newEnd, req.body.eventName);
+  }
   res.redirect('/events');
-})
+});
 
 /**
  * Redirects to the events page after deleting a given event
@@ -77,7 +126,90 @@ app.post('/editEvent/:id', async (req, res) => {
 app.get('/deleteEvent/:id', async (req, res) => {
   await db.deleteEvent(req.params.id);
   res.redirect('/events');
-})
+});
+
+/**
+ * Redirects to the events page after archiving a given event
+ */
+app.get('/archiveEvent/:id', async (req, res) => {
+  await db.archiveEvent(req.params.id);
+  res.redirect('/events');
+});
+
+/**
+* Redirects to the events page after publishing a given event
+*/
+app.get('/publishEvent/:id', async (req, res) => {
+ await db.publishEvent(req.params.id);
+ res.redirect('/events');
+});
+
+/**
+ * Redirects to the events page after cancelling a given event
+ */
+app.get('/cancelEvent/:id', async (req, res) => {
+  await db.cancelEvent(req.params.id);
+  res.redirect('/events');
+});
+
+/**
+ * Renders the complete participant list
+ */
+app.get('/participants', async (req, res) => {
+  res.render('participants/allParticipants', {participants: await db.queryParticipants()})
+});
+
+/**
+ * Renders the participant list for the specified event
+ */
+app.get('/participants/:id', async (req, res) => {
+  res.render('participants/eventParticipants', {participants: await db.queryParticipantsByEventID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
+
+/**
+ * Renders the participant list for the specified participant
+ */
+app.get('/participant/:id', async (req, res) => {
+  res.render('participants/singleParticipant', {participants: await db.queryParticipantByID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
+
+/**
+ * Updates the userCommets for the participant
+ */
+app.post('/participant/comment/:eventID/:participantID', async (req, res) => {
+  await db.editUserComments(req.params.participantID, req.params.eventID, req.body.comment)
+  res.redirect('/participants/' + req.params.eventID)
+});
+
+/**
+ * Renders the participant check in list for the specified event
+ */
+app.get('/participants/checkin/:id', async (req, res) => {
+  res.render('participants/checkinParticipants', {participants: await db.queryParticipantsByEventID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
+
+/**
+ * Checks in a participant and redirects back to the event's check in table
+ */
+app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { // Should be changed to POST
+  await db.checkinParticipant(req.params.participantid, req.params.eventid);
+  res.redirect('/participants/checkin/' + req.params.eventid);
+});
+
+app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
+  const {email, eventName} = await db.confirmEmail(req.params.eventID, req.params.registrantID);
+  mailer.sendEditRegistrationEmail(email, eventName, req.params.eventID, req.params.registrantID);
+  res.render('email/confirmEmail', {title: "Email Confirmed"});
+});
+
+app.get('/editRegistration/:eventID/:registrantID', async (req, res) => {
+  res.render('registration/editRegistration', {title: "Edit Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
+});
+
+app.post('/editRegistration/:eventID/:registrantID', async (req, res) => {
+  // TODO add updateRegistration database method
+  res.redirect('registration/updatedRegistration', {title: "Updated Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
+});
 
 /**
  * Redirects to the export page where the user can export participant data based on certain attributes
@@ -120,4 +252,4 @@ app.post('/export/exportData', async (req, res) => {
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
-})
+});

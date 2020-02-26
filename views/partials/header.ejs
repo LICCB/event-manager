@@ -1,7 +1,9 @@
-<h1 class="text-center text-info font-weight-bold font-italic">Long Island City Community Boathouse</h1>
+<h1 class="header">
+	<header class="font-weight-bold">L.I.C. Community Boathouse </header>
+	<header>Event Manager</header>
+</h1>
 <div class="wrapper">
 	<nav id="sidebar">
-		<% console.log(title) %>
         <ul class="list-unstyled components">
 			<li
 				<% if(title == "Events" || title == "Create Event" || title == "Edit Event") { %>
@@ -9,7 +11,7 @@
 				<% } %>
 			><a href="/events">Events</a></li>
 			<li
-				<% if(title == "Participants") { %>
+				<% if(title == "All Participants" || title == "CheckIn Participants" || title == "Event Participants") { %>
 					class="active"
 				<% } %>
 			><a href="/participants">Participants</a></li>
