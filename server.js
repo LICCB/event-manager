@@ -174,17 +174,18 @@ app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { /
   res.redirect('/participants/checkin/' + req.params.eventid);
 });
 
-app.get('/editPublic/:eventid/:partyid', async (req, res) => {
-  res.render("signup/editPublic", {
+app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
+  res.render("signup/editRegistration", {
     title: "Edit Public Signup",
+    events: await db.queryAllEvents(),
     event: (await db.queryEventByID(req.params.eventid))[0],
     participants: await db.queryParticipantsByEventAndParty(req.params.eventid, req.params.partyid),
     utils: utils
   });
 });
 
-app.post('/editPublic/:eventid/:participantid', async (req, res) => {
-  await db.updateParty(req.body, req.params.eventid, req.params.participantid);
+app.post('/editRegistration/:eventid/:partyid', async (req, res) => {
+  await db.updateParty(req.body, req.params.eventid, req.params.partyid), participants;
   res.redirect('/signupThanks');
 });
 

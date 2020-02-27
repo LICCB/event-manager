@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Create Event</title>
+    <title>Edit Registration</title>
     <link rel="stylesheet" type="text/css" href="/css/form.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -13,7 +13,7 @@
 <body>
     <div class="container">
         <fieldset>
-            <form action=<%= "/editPublic/" + event.eventID + "/" + participants[0].partyID %> method="post" id="publicSignupform">
+            <form action=<%= "/editRegistration/" + event.eventID + "/" + participants[0].partyID %> method="post" id="publicSignupform">
                 <h1>Public Event</h1>
                 <p>Events displayed on the public calendars will not be available for registration until their
                     registration windows officially open (typically a few weeks ahead of the event date). If you don't
@@ -25,8 +25,7 @@
                     of selections will usually take place 3 to 2 days ahead of the trip. A final round of selections are
                     usually made the day before, along with the Declines.</p>
                 <label for="ename">Event:</label>
-                <select name="eventID" form="publicSignupform" required>
-                    <option value='' selected="selected" disabled hidden style='display: none' >Select an event</option>
+                <select name="eventID" form="publicSignupform" value = <%= participants[0].eventID %> required>
                     <% for(i = 0; i < events.length; i++) { %>
                         <% if(events[i].eventStatus == "Registration Open" && !events[i].privateEvent) {%>
                             <option value=<%= events[i].eventID %>> <%= events[i].eventName%> </option>
@@ -67,7 +66,6 @@
                         <option value="true" <% if(participants[0].hasCPRCert == true){ %> <%= "selected" %> <% } %>>Yes</option>
                     </select>
 
-                    <!--All of this must be validated to be correct email and phone #-->
                     <label for="regemail">Registrant Email:</label>
                     <input type="text" id="regemail" name="regemail" class = "email" value=<%= participants[0].email %> required>
 
@@ -85,10 +83,9 @@
                 </div>
 
                 <div id="partymembers" form="PublicSignup">
-                    <!--Help looping through each participant-->
                     <% if(participants.length > 1) { %>
                     <% for(i=1; i < participants.length; i++){ %>
-                    <div class="participantwrapper<%= i %>">
+                    <div class="partwrapper" id = "part<%= i %>">
                         <h2>Party Member <%= i %></h2>
                         <label for="part<%= i %>fname" >Participant <%= i %> First Name:</label>
                         <input required type="text" id="part<%= i %>fname" name="part<%= i %>fname" class="fname" value=<%= participants[i].firstName %>>
@@ -102,35 +99,35 @@
                             <option value="true" <% if(participants[i].isAdult == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         
-                        <label for="part<%= i %>swim" >Can they swim?</label>);
+                        <label for="part<%= i %>swim" >Can they swim?</label>
                         <select required name="part<%= i %>swim">
                             <option value="false" <% if(participants[i].canSwim == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].canSwim == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         
-                        <label for="part<%= i %>boat" >Prior boating experience?</label>);
+                        <label for="part<%= i %>boat" >Prior boating experience?</label>
                         <select required name="part<%= i %>boat">
                             <option value="false" <% if(participants[i].boatExperience == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].boatExperience == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         
-                        <label for="part<%= i %>cpr" >Do they know CPR?</label>);
+                        <label for="part<%= i %>cpr" >Do they know CPR?</label>
                         <select required name="part<%= i %>cpr">
                             <option value="false" <% if(participants[i].hasCPRCert == false){ %> <%= "selected" %> <% } %>>No</option>
-                        <option value="true" <% if(participants[i].hasCPRCert == true){ %> <%= "selected" %> <% } %>>Yes</option>
+                            <option value="true" <% if(participants[i].hasCPRCert == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         
                         <label for="part<%= i %>email" >Participant <%= i %> Email:</label>
-                        <input type="text" id="part<%= i %>email" name="part<%= i %>email" class="email" value=<%= participants[i].email %>/>
+                        <input type="text" id="part<%= i %>email" name="part<%= i %>email" class="email" value=<%= participants[i].email %>>
                         
                         <label for="part<%= i %>phone" >Participant <%= i %> Phone Number:</label>
-                        <input type="text" id="part<%= i %>phone" name="part<%= i %>phone" class="phone" value=<%= participants[i].phone %>/>
+                        <input type="text" id="part<%= i %>phone" name="part<%= i %>phone" class="phone" value=<%= participants[i].phone %>>
                         
                         <label for="part<%= i %>ename" >Participant <%= i %> Emergencey Contact Name:</label>
-                        <input required type="text" id="part<%= i %>ename" name="part<%= i %>ename" class="name" value=<%= participants[i].emergencyName %>/>
+                        <input required type="text" id="part<%= i %>ename" name="part<%= i %>ename" class="name" value=<%= participants[i].emergencyName %>>
                         
                         <label for="part<%= i %>ephone" >Participant <%= i %> Emergency Contact Phone Number:</label>
-                        <input required type="text" id="part<%= i %>ephone" name="part<%= i %>ephone" class="phone" value=<%= participants[i].emergencyPhone %>/>
+                        <input required type="text" id="part<%= i %>ephone" name="part<%= i %>ephone" class="phone" value=<%= participants[i].emergencyPhone %>>
                     </div>
                     <% } %>
                     <% } %>
@@ -144,43 +141,43 @@
     
                     <label for="eventdiscovery">Event Discovery:</label>
                     <select name="eventdiscovery" form="publicSignupform" required>
-                        <option value="callendar" <% if(participant[0].eventDisc == "callendar"){ %> <%= "selected" %> <% } %>>LICCB Calendar</option>
-                        <option value="subscriber" <% if(participant[0].eventDisc == "subscriber"){ %> <%= "selected" %> <% } %>>LICCB subscriber Newsletter or direct email</option>
-                        <option value="blog" <% if(participant[0].eventDisc == "blog"){ %> <%= "selected" %> <% } %>>LICCB Web Site Blog</option>
-                        <option value="facebook" <% if(participant[0].eventDisc == "facebook"){ %> <%= "selected" %> <% } %>>Facebook</option>
-                        <option value="instagram" <% if(participant[0].eventDisc == "instagram"){ %> <%= "selected" %> <% } %>>Instagram</option>
-                        <option value="twitter" <% if(participant[0].eventDisc == "twitter"){ %> <%= "selected" %> <% } %>>Twitter</option>
-                        <option value="nextdoor" <% if(participant[0].eventDisc == "nextdoor"){ %> <%= "selected" %> <% } %>>Next Door</option>
-                        <option value="fam" <% if(participant[0].eventDisc == "fam"){ %> <%= "selected" %> <% } %>>Family or Friend</option>
-                        <option value="vol" <% if(participant[0].eventDisc == "vol"){ %> <%= "selected" %> <% } %>>Volunteer Referral</option>
-                        <option value="press" <% if(participant[0].eventDisc == "press"){ %> <%= "selected" %> <% } %>>Press Publication</option>
-                        <option value="web" <% if(participant[0].eventDisc == "web"){ %> <%= "selected" %> <% } %>>Web Search</option>
-                        <option value="flier" <% if(participant[0].eventDisc == "flier"){ %> <%= "selected" %> <% } %>>Printed Flier</option>
-                        <option value="partner" <% if(participant[0].eventDisc == "partner"){ %> <%= "selected" %> <% } %>>Partner Organization</option>
-                        <option value="meeting" <% if(participant[0].eventDisc == "meeting"){ %> <%= "selected" %> <% } %>>Civic Meeting</option>
-                        <option value="other" <% if(participant[0].eventDisc == "other"){ %> <%= "selected" %> <% } %>>Other</option>
+                        <option value="callendar" <% if(participants[0].eventDisc == "callendar"){ %> <%= "selected" %> <% } %>>LICCB Calendar</option>
+                        <option value="subscriber" <% if(participants[0].eventDisc == "subscriber"){ %> <%= "selected" %> <% } %>>LICCB subscriber Newsletter or direct email</option>
+                        <option value="blog" <% if(participants[0].eventDisc == "blog"){ %> <%= "selected" %> <% } %>>LICCB Web Site Blog</option>
+                        <option value="facebook" <% if(participants[0].eventDisc == "facebook"){ %> <%= "selected" %> <% } %>>Facebook</option>
+                        <option value="instagram" <% if(participants[0].eventDisc == "instagram"){ %> <%= "selected" %> <% } %>>Instagram</option>
+                        <option value="twitter" <% if(participants[0].eventDisc == "twitter"){ %> <%= "selected" %> <% } %>>Twitter</option>
+                        <option value="nextdoor" <% if(participants[0].eventDisc == "nextdoor"){ %> <%= "selected" %> <% } %>>Next Door</option>
+                        <option value="fam" <% if(participants[0].eventDisc == "fam"){ %> <%= "selected" %> <% } %>>Family or Friend</option>
+                        <option value="vol" <% if(participants[0].eventDisc == "vol"){ %> <%= "selected" %> <% } %>>Volunteer Referral</option>
+                        <option value="press" <% if(participants[0].eventDisc == "press"){ %> <%= "selected" %> <% } %>>Press Publication</option>
+                        <option value="web" <% if(participants[0].eventDisc == "web"){ %> <%= "selected" %> <% } %>>Web Search</option>
+                        <option value="flier" <% if(participants[0].eventDisc == "flier"){ %> <%= "selected" %> <% } %>>Printed Flier</option>
+                        <option value="partner" <% if(participants[0].eventDisc == "partner"){ %> <%= "selected" %> <% } %>>Partner Organization</option>
+                        <option value="meeting" <% if(participants[0].eventDisc == "meeting"){ %> <%= "selected" %> <% } %>>Civic Meeting</option>
+                        <option value="other" <% if(participants[0].eventDisc == "other"){ %> <%= "selected" %> <% } %>>Other</option>
                     </select>
     
                     <label for="bhdiscovery">Boat House Discovery:</label>
                     <select name="bhdiscovery" form="publicSignupform" required>
-                        <option value="facebook" <% if(participant[0].boathouseDisc == "facebook"){ %> <%= "selected" %> <% } %>>Facebook</option>
-                        <option value="instagram" <% if(participant[0].boathouseDisc == "instagram"){ %> <%= "selected" %> <% } %>>Instagram</option>
-                        <option value="twitter" <% if(participant[0].boathouseDisc == "twitter"){ %> <%= "selected" %> <% } %>>Twitter</option>
-                        <option value="nextdoor" <% if(participant[0].boathouseDisc == "nextdoor"){ %> <%= "selected" %> <% } %>>Next Door</option>
-                        <option value="fam" <% if(participant[0].boathouseDisc == "fam"){ %> <%= "selected" %> <% } %>>Family or Friend</option>
-                        <option value="vol" <% if(participant[0].boathouseDisc == "vol"){ %> <%= "selected" %> <% } %>>Volunteer Referral</option>
-                        <option value="press" <% if(participant[0].boathouseDisc == "press"){ %> <%= "selected" %> <% } %>>Press Publication</option>
-                        <option value="web" <% if(participant[0].boathouseDisc == "web"){ %> <%= "selected" %> <% } %>>Web Search</option>
-                        <option value="flier" <% if(participant[0].boathouseDisc == "flier"){ %> <%= "selected" %> <% } %>>Printed Flier</option>
-                        <option value="partner" <% if(participant[0].boathouseDisc == "partner"){ %> <%= "selected" %> <% } %>>Partner Organization</option>
-                        <option value="water" <% if(participant[0].boathouseDisc == "water"){ %> <%= "selected" %> <% } %>>Saw us on the Water</option>
-                        <option value="walk" <% if(participant[0].boathouseDisc == "walk"){ %> <%= "selected" %> <% } %>>Just walking by</option>
-                        <option value="meeting" <% if(participant[0].boathouseDisc == "meeting"){ %> <%= "selected" %> <% } %>>Civic Meeting</option>
-                        <option value="other" <% if(participant[0].boathouseDisc == "other"){ %> <%= "selected" %> <% } %>>Other</option>
+                        <option value="facebook" <% if(participants[0].boathouseDisc == "facebook"){ %> <%= "selected" %> <% } %>>Facebook</option>
+                        <option value="instagram" <% if(participants[0].boathouseDisc == "instagram"){ %> <%= "selected" %> <% } %>>Instagram</option>
+                        <option value="twitter" <% if(participants[0].boathouseDisc == "twitter"){ %> <%= "selected" %> <% } %>>Twitter</option>
+                        <option value="nextdoor" <% if(participants[0].boathouseDisc == "nextdoor"){ %> <%= "selected" %> <% } %>>Next Door</option>
+                        <option value="fam" <% if(participants[0].boathouseDisc == "fam"){ %> <%= "selected" %> <% } %>>Family or Friend</option>
+                        <option value="vol" <% if(participants[0].boathouseDisc == "vol"){ %> <%= "selected" %> <% } %>>Volunteer Referral</option>
+                        <option value="press" <% if(participants[0].boathouseDisc == "press"){ %> <%= "selected" %> <% } %>>Press Publication</option>
+                        <option value="web" <% if(participants[0].boathouseDisc == "web"){ %> <%= "selected" %> <% } %>>Web Search</option>
+                        <option value="flier" <% if(participants[0].boathouseDisc == "flier"){ %> <%= "selected" %> <% } %>>Printed Flier</option>
+                        <option value="partner" <% if(participants[0].boathouseDisc == "partner"){ %> <%= "selected" %> <% } %>>Partner Organization</option>
+                        <option value="water" <% if(participants[0].boathouseDisc == "water"){ %> <%= "selected" %> <% } %>>Saw us on the Water</option>
+                        <option value="walk" <% if(participants[0].boathouseDisc == "walk"){ %> <%= "selected" %> <% } %>>Just walking by</option>
+                        <option value="meeting" <% if(participants[0].boathouseDisc == "meeting"){ %> <%= "selected" %> <% } %>>Civic Meeting</option>
+                        <option value="other" <% if(participants[0].boathouseDisc == "other"){ %> <%= "selected" %> <% } %>>Other</option>
                     </select>
 
                     <label for="notes">Additional Notes:</label>
-                    <textarea name="notes" form="publicSignupform" value=<%= participants[0].regComments %>></textarea>
+                    <textarea name="notes" form="publicSignupform"><%= participants[0].regComments %></textarea>
                 </div>
 
                 <br>
