@@ -24,6 +24,13 @@ async function queryAllEvents() {
     return events;
   }
 
+async function queryAllEventNames() {
+  let conn = await pool.getConnection();
+  let events = await conn.query("SELECT eventName FROM LICCB.events");
+  conn.release();
+  return events;
+}
+
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
   let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'");
@@ -196,4 +203,4 @@ module.exports.runSelectionISADULT = runSelectionISADULT;
 module.exports.runSelectionCANSWIM = runSelectionCANSWIM;
 module.exports.runSelectionHASCPRCERT = runSelectionHASCPRCERT;
 module.exports.runSelectionVOLUNTEER = runSelectionVOLUNTEER;
-
+module.exports.queryAllEventNames = queryAllEventNames;
