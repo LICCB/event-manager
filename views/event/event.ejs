@@ -29,7 +29,7 @@
       </div>
       </div>
     <div class="container content">
-        <table class="table">
+        <table id="singleEventTable" class="table">
             <thead>
               <tr>
                 <th scope="col"> History </th>
@@ -128,6 +128,7 @@
 
     <%- include('../partials/scripts') %>
     <script src="/scripts/addFields.js" metadata="<%= event.eventMetadata %>"></script>
+    <script src="/scripts/jQueryDataTables.js"></script>
 </body>
 
 </html>
