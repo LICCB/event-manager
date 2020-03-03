@@ -58,12 +58,14 @@ CREATE TABLE LICCB.participants(
     boathouseDisc   VARCHAR(100),
     eventDisc       VARCHAR(100),
     regComments     TEXT,
+    priorVolunteer  BOOLEAN NOT NULL,
+    roleFamiliarity BOOLEAN NOT NULL,
 
     -- Backend (Not filled by participant)
     regStatus       ENUM('Awaiting Confirmation', 'Registered', 'Not Confirmed', 'Not Selected', 'Standby', 'Selected', 'Cancelled', 'Same Day Cancel'),
     checkinStatus   ENUM('Pending', 'Checked In', 'No Show'),
     volunteer       BOOLEAN DEFAULT 0,
-    regTime         DATETIME NOT NULL,
+    regTime         DATETIME(4) NOT NULL,
     userComments    TEXT,
 
     -- Storage Dynamic Fields
