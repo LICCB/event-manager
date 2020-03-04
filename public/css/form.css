@@ -1,7 +1,7 @@
 div {
     text-align: center;
 }
-input[type=text], select, input[type=time], input[type=email] {
+input[type=text], select, input[type=time] {
     width: 10%;
     padding: 12px 20px;
     margin: 8px 0;
