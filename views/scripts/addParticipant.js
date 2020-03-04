@@ -1,6 +1,5 @@
 $("#addpart").click(function () {
-    var lastMemeber = $("#partymembers div:last");
-    var intId = (lastMemeber && lastMemeber.length && lastMemeber.data("idx") + 1) || 1;
+    var intId = $("#partymembers div").length + 1;
     var partWrapper = $(`<div class="partwrapper" id="part${intId}"/>`);
     partWrapper.data("idx", intId);
 

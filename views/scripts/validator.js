@@ -1,53 +1,33 @@
-$(document).ready(function () {
-    $(".name").on('input', function() {
-        var input = $(this);
-        nameReg = /^([A-Za-z ])+$/;
-        if(!nameReg.test(input)){
-            alert("Names must contain only letters");
-            console.log("bad");
-            return false;
-        };
-    });
-
-    $(".fname").on('input', function() {
-        var input = $(this);
-        nameReg = /([A-Za-z])/;
-        if(!nameReg.test(input)){
-            alert("Names must contain only letters");
-            console.log('bad');
-            return false;
-        };
-    });
-
-    $(".lname").on('input', function() {
-        var input = $(this);
-        nameReg = /^([A-Za-z])+$/;
-        if(!nameReg.test(input)){
-            //error
-        };
-    });
-
-    $(".email").on('input', function() {
-        var input = $(this);
-        emailReg = /^([w-.]+@([w-]+.)+[w-]{2,4})?$/;
-        if(!emailReg.test(input)){
-            //error
-        };
-    });
-
-    $(".phone").on('input', function() {
-        var input = $(this);
-        intRegex = /[0-9 -()+]+$/;
-        if((phone.length < 6) || (!intRegex.test(input))) {
-            //error
-        };
-    });
-
-    $(".zip").on('input', function() {
-        var input = $(this);
-        zipRegex = /^[0-9]+$/;
-        if(zipRegex.test(input)) {
-            //error
-        };
-    });
-});
+$(function() {
+    $("form[id = 'publicSignupform'").validate({
+        rules: {
+            fname: {
+                required: true,
+            },
+            lname: {
+                required: true,
+            },
+            email: {
+                email: true
+            },
+            phone: {
+                phone: true
+            },
+            zip: {
+                required: true,
+                length: 5
+            }
+        },
+        messages: {
+            email: "Please enter a valid email address",
+            phone: "Please enter a valid phone number",
+            zip: {
+                required: "Please enter your zip code",
+                length:"Please enter a valid 5 digit zip code"
+            }
+        },
+        submitHandler: function(form) {
+            form.submit();
+        }
+    })
+})

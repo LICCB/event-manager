@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/css/form.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="node_modules/jquery-validation/dist/jquery.validate.js"></script>
 </head>
 
 <body>
@@ -147,6 +148,39 @@
         </fieldset>
     </div>
 </body>
+<script>
+    $("form[id = 'publicSignupform'").validate({
+        rules: {
+            fname: {
+                required: true,
+            },
+            lname: {
+                required: true,
+            },
+            email: {
+                email: true
+            },
+            phone: {
+                phone: true
+            },
+            zip: {
+                required: true,
+                length: 5
+            }
+        },
+        messages: {
+            email: "Please enter a valid email address",
+            phone: "Please enter a valid phone number",
+            zip: {
+                required: "Please enter your zip code",
+                length:"Please enter a valid 5 digit zip code"
+            }
+        },
+        submitHandler: function(form) {
+            form.submit();
+        }
+    })
+</script>
 
 <script src="/scripts/addParticipant.js"></script>
 <script src="/scripts/validator.js"></script>
