@@ -264,6 +264,12 @@ app.post('/export/exportData', async (req, res) => {
   res.status(200).send(csv);
 });
 
+app.get('/settings', async (req, res) => {
+  res.render("settings/settings", {
+    title: "Settings"
+  });
+});
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });
