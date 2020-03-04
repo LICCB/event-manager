@@ -15,7 +15,6 @@
     "dc-tableview": "^2.0.1",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
-    "grunt": "^1.0.4",
     "jquery": "^3.4.1",
     "json2csv": "^4.5.4",
     "mariadb": "^2.2.0",
