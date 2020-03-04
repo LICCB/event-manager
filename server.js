@@ -241,10 +241,14 @@ app.get('/lottery/', async (req, res) => {
   res.render('lottery/lotteryLanding', {title:"Lottery Landing Page", events: (await db.queryAllEventNames())});
 });
 app.get('/lottery/:id', async (req, res) => {
+  test = (await db.queryEventByID(req.params.id))[0];
+  // if (test == null){
+  //   res.redirect('lottery/lotteryLanding', {title:"Lottery Landing Page", events: (await db.queryAllEventNames())});
+  // }
   res.render('lottery/lotteryEvent', {participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });
-app.get('/lottery/random20/:id', async (req, res) => {
-  res.render('lottery/lotteryEventLocked', {participants: await db.runSelectionRandom20(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+app.get('/lottery/random/:id', async (req, res) => {
+  res.render('lottery/lotteryEventLocked', {participants: await db.runSelectionRandom(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });
 
 

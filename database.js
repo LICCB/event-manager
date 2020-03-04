@@ -128,7 +128,7 @@ async function runSelectionDefault(eventID) {
   return returnSelectedRegistrants;
 }
 // initializes run selection process
-async function runSelectionRandom20(eventID) {
+async function runSelectionRandom(eventID) {
   let conn = await pool.getConnection();
   // populate all contenders into new table
   let returnSelectedRegistrants = await conn.query("SELECT *" +  
@@ -461,4 +461,4 @@ module.exports.insertVolunteerParty = insertVolunteerParty;
 module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;
 module.exports.queryAllEventNames = queryAllEventNames;
 module.exports.runSelectionDefault = runSelectionDefault;
-module.exports.runSelectionRandom20 = runSelectionRandom20;
+module.exports.runSelectionRandom = runSelectionRandom;
