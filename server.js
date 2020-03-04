@@ -243,6 +243,9 @@ app.get('/lottery/', async (req, res) => {
 app.get('/lottery/:id', async (req, res) => {
   res.render('lottery/lotteryEvent', {participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });
+app.get('/lottery/random20/:id', async (req, res) => {
+  res.render('lottery/lotteryEventLocked', {participants: await db.runSelectionRandom20(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
 
 
 /**

@@ -116,15 +116,29 @@ async function editUserComments(participantID, eventID, comment) {
 }
 
 // initializes run selection process
-async function runSelectionDefault(eventID/*, canSwimFilter, CPRFilter, hasCPRCertFilter, isAdultFilter, */) {
+async function runSelectionDefault(eventID) {
   let conn = await pool.getConnection();
   // populate all contenders into new table
   let returnSelectedRegistrants = await conn.query("SELECT *" +  
                                                     "FROM LICCB.participants " +  
                                                     "WHERE eventID = '" + eventID + "'" +
-                                                    // "AND regStatus = 'Registered' " + 
-                                                    // "AND isAdult='true'" + 
                                                     "ORDER BY regTime");
+
+  conn.release();
+  return returnSelectedRegistrants;
+}
+// initializes run selection process
+async function runSelectionRandom20(eventID) {
+  let conn = await pool.getConnection();
+  // populate all contenders into new table
+  let returnSelectedRegistrants = await conn.query("SELECT *" +  
+                                                    "FROM LICCB.participants " +  
+                                                    "WHERE eventID = '" + eventID + "'" +
+                                                    " AND regStatus='Registered'" +
+                                                    " AND isAdult='1'" +
+                                                    " ORDER BY RAND()" + 
+                                                    " LIMIT 20"
+                                                    );
 
   conn.release();
   return returnSelectedRegistrants;
@@ -447,3 +461,4 @@ module.exports.insertVolunteerParty = insertVolunteerParty;
 module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;
 module.exports.queryAllEventNames = queryAllEventNames;
 module.exports.runSelectionDefault = runSelectionDefault;
+module.exports.runSelectionRandom20 = runSelectionRandom20;
