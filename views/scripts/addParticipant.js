@@ -6,9 +6,9 @@ $("#addpart").click(function () {
 
     var pLabel = $(`<h2>Party Member ${intId}</h2>`);
     var pFNameLabel = $(`<label for="part${intId}fname" >Participant ${intId} First Name:</label>`);
-    var pFName = $(`<input required type="text" id="part${intId}fname" name="part${intId}fname" class="fname" placeholder="Party Member First Name Here">`);
+    var pFName = $(`<input required type="text" id="part${intId}fname" name="part${intId}fname" class="name" placeholder="Party Member First Name Here">`);
     var pLNameLabel = $(`<label for="part${intId}lname" >Participant ${intId} Last Name:</label>`);
-    var pLName = $(`<input required type="text" id="part${intId}lname" name="part${intId}lname" class="lname" placeholder="Party Member Last Name Here">`);
+    var pLName = $(`<input required type="text" id="part${intId}lname" name="part${intId}lname" class="name" placeholder="Party Member Last Name Here">`);
     var pAgeLabel = $(`<label for="part${intId}age" >Over 18?</label>`);
     var pAge = $(`<select required name= "part${intId}age"><option selected disabled hidden style="display: none" value=""></option><option value="false">No</option><option value="true">Yes</option></select>`);
     var pSwimLabel = $(`<label for="part${intId}swim" >Can they swim?</label>`);

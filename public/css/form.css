@@ -1,7 +1,7 @@
 div {
     text-align: center;
 }
-input[type=text], select, input[type=time] {
+input[type=text], select, input[type=time], input[type=email] {
     width: 10%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -11,7 +11,7 @@ input[type=text], select, input[type=time] {
     box-sizing: border-box;
   }
 
-  input[type=submit] {
+  #validateButton {
     width: 50%;
     background-color: #4CAF50;
     color: white;
@@ -22,7 +22,7 @@ input[type=text], select, input[type=time] {
     cursor: pointer;
   }
 
-  input[type=submit]:hover {
+  #validateButton:hover {
     background-color: #45a049;
   }
 
