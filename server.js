@@ -84,9 +84,7 @@ app.get('/volunteerSignup', async (req, res) => {
 
 app.post('/volunteerSignup', async (req, res) => {
   await db.insertVolunteerParty(req.body);
-  res.redirect('signup/signupThanks', {
-    events: utils.filterEventData(await db.queryAllEvents())
-  });
+  res.redirect('/signupThanks');
 });
 
 app.get('/signupThanks', function(req, res) {
@@ -185,7 +183,7 @@ app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
 });
 
 app.post('/editRegistration/:eventid/:partyid', async (req, res) => {
-  await db.updateParty(req.body, req.params.eventid, req.params.partyid), participants;
+  await db.updateParty(req.body, req.params.eventid, req.params.partyid);
   res.redirect('/signupThanks');
 });
 

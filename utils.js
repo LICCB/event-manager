@@ -31,8 +31,9 @@ function getDateTime() {
     hour = now.getHours().toString();
     minute = now.getMinutes().toString();
     second = now.getSeconds().toString();
+    miliseconds = now.getMilliseconds().toString();
 
-    return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+    return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + miliseconds;
 };
 
 /**

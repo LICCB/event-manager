@@ -83,6 +83,7 @@
                 </div>
 
                 <div id="partymembers" form="PublicSignup">
+                    <% var partIDs = new Array(); %>
                     <% if(participants.length > 1) { %>
                     <% for(i=1; i < participants.length; i++){ %>
                     <div class="partwrapper" id = "part<%= i %>">
@@ -128,12 +129,15 @@
                         
                         <label for="part<%= i %>ephone" >Participant <%= i %> Emergency Contact Phone Number:</label>
                         <input required type="text" id="part<%= i %>ephone" name="part<%= i %>ephone" class="phone" value=<%= participants[i].emergencyPhone %>>
+                        <% partIDs.push(participants[i].participantID); %>
+                        <input type="hidden" id="part<%=i%>ID" name="part<%=i%>ID" value=<%= participants[i].participantID%>>
                     </div>
                     <% } %>
                     <% } %>
-                </div>
+                </div> 
 
                 <br>
+                <input type="hidden" id="partIDs" name="partIDs" value=<%= partIDs%>>
                 <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/>
                 <div class="discinfo">
                     <label for="zip">Zip Code:</label>
