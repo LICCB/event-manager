@@ -32,6 +32,13 @@ async function queryAllEvents() {
   return events;
 };
 
+async function queryAllEventNames() {
+  let conn = await pool.getConnection();
+  let events = await conn.query("SELECT eventID FROM LICCB.events");
+  conn.release();
+  return events;
+}
+
 async function queryEventsTableData(){
   let conn = await pool.getConnection();
   const query = "SELECT eventID, eventName, firstName, lastName, eventStatus, privateEvent, startTime, endTime " +
@@ -106,6 +113,21 @@ async function editUserComments(participantID, eventID, comment) {
                                            "AND LICCB.participants.eventID = '" + eventID + "'");
   conn.release();
   return participant;
+}
+
+// initializes run selection process
+async function runSelectionDefault(eventID/*, canSwimFilter, CPRFilter, hasCPRCertFilter, isAdultFilter, */) {
+  let conn = await pool.getConnection();
+  // populate all contenders into new table
+  let returnSelectedRegistrants = await conn.query("SELECT *" +  
+                                                    "FROM LICCB.participants " +  
+                                                    "WHERE eventID = '" + eventID + "'" +
+                                                    // "AND regStatus = 'Registered' " + 
+                                                    // "AND isAdult='true'" + 
+                                                    "ORDER BY regTime");
+
+  conn.release();
+  return returnSelectedRegistrants;
 }
 
 async function deleteEvent(id) {
@@ -423,3 +445,5 @@ module.exports.confirmEmail = confirmEmail;
 module.exports.insertParty = insertParty;
 module.exports.insertVolunteerParty = insertVolunteerParty;
 module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;
+module.exports.queryAllEventNames = queryAllEventNames;
+module.exports.runSelectionDefault = runSelectionDefault;

@@ -232,6 +232,19 @@ app.get('/export', async (req, res) => {
   });
 });
 
+
+
+/**
+ * Redirects to the lottery run selection pages
+ */
+app.get('/lottery/', async (req, res) => {
+  res.render('lottery/lotteryLanding', {title:"Lottery Landing Page", events: (await db.queryAllEventNames())});
+});
+app.get('/lottery/:id', async (req, res) => {
+  res.render('lottery/lotteryEvent', {participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
+
+
 /**
  * Export participants from a certain list of eventId's
  * EventId lists would be built later on based on certain attributes
