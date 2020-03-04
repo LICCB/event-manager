@@ -3,7 +3,7 @@
   <head>
     <%- include('../partials/head', {title: "All Participants"}) %>
   </head>
-  <body class="bg-gray">
+  <body>
     <%- include('../partials/header', {title: "All Participants"}) %>
     <div class="container content">
       <table id="participantsTable" class="table">
@@ -34,7 +34,7 @@
           <% for(i = 0; i < participants.length; i++){ %>
             <tr>
               <td>
-                <a class="btn btn-primary" href="/participant/<%= participants[i].participantID %>" role="button">
+                <a class="tb-button" href="/participant/<%= participants[i].participantID %>" role="button">
                   View
                 </a>
               </td>
