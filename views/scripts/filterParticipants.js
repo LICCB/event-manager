@@ -1,32 +1,78 @@
 $('#regStatus').click(function(){
     if($(this).prop("checked") == true){
-      $('.Registered').show();
+      // $('.Registered').hide();
+      $('.Awaiting').hide();
+      $('.Not').hide();
+      $('.Standby').hide();
+      $('.Canceled').hide();
+      $('.Same').hide();
     } else if($(this).prop("checked") == false){
-      $('.Registered').hide();
+      // $('.Registered').show();
+      $('.Awaiting').show();
+      $('.Not').show();
+      $('.Standby').show();
+      $('.Canceled').show();
+      $('.Same').hshowide();
     }
 });
 
+$('#regStatus').click(function(){
+  // if($(this).prop("checked") == true){
+  //   // $('.Registered').hide();
+  //   $('.Awaiting').hide();
+  //   $('.Not').hide();
+  //   $('.Standby').hide();
+  //   $('.Canceled').hide();
+  //   $('.Same').hide();
+  // } else if($(this).prop("checked") == false){
+  //   // $('.Registered').show();
+  //   $('.Awaiting').show();
+  //   $('.Not').show();
+  //   $('.Standby').show();
+  //   $('.Canceled').show();
+  //   $('.Same').hshowide();
+  // }
+});
 $('#isAdult').click(function(){
   if($(this).prop("checked") == true){
-    $('.adult').show();
+    $('.child').hide();
   } else if($(this).prop("checked") == false){
-    $('.adult').hide();
+    $('.child').show();
   }
 });
 
 
 $('#canSwim').click(function(){
   if($(this).prop("checked") == true){
-    $('.canSwim').show();
+    $('.cantSwim').hide();
   } else if($(this).prop("checked") == false){
-    $('.canSwim').hide();
+    $('.cantSwim').show();
   }
 });
 
-// $('#hasCPRCert').click(function(){
-//   if($(this).prop("checked") == true){
-//     $('.hasCPRCert').show();
-//   } else if($(this).prop("checked") == false){
-//     $('.hasCPRCert').hide();
+$('#hasCPRCert').click(function(){
+  if($(this).prop("checked") == true){
+    $('.noCPR').hide();
+  } else if($(this).prop("checked") == false){
+    $('.noCPR').show();
+  }
+});
+
+// function updateCheckbox(checkbox) {
+//   console.log("UPDATING SOMETHING");
+//   if($(checkbox).prop("checked") == true){
+//     // $('.Registered').hide();
+//     $('.Awaiting').hide();
+//     $('.Not').hide();
+//     $('.Standby').hide();
+//     $('.Canceled').hide();
+//     $('.Same').hide();
+//   } else if($(checkbox).prop("checked") == false){
+//     // $('.Registered').show();
+//     $('.Awaiting').show();
+//     $('.Not').show();
+//     $('.Standby').show();
+//     $('.Canceled').show();
+//     $('.Same').hshowide();
 //   }
-// });
+}

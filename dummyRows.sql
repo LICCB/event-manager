@@ -21,7 +21,10 @@ INSERT INTO LICCB.participants (participantID, partyID, eventID, firstName, last
     'Pending', 0, '2020-7-6 7:35:12', NULL, NULL),
     ('6cd3092f-72cb-4b53-b469-706e163917c9', NULL, '123e4567-e89b-12d3-a456-556642440000', 'Leslie', 'Knope', 
     '429-482-9532', 'leslieforpresident@aol.com', '930-392-4920', 'Ben Wyatt', '74292', 1, 1, 1, 1, 'Ad', 'Facebook', NULL, 0, 0, 'Registered',
-    'Pending', 0, '2020-7-2 5:00:00', NULL, NULL);
+    'Pending', 0, '2020-7-2 5:00:00', NULL, NULL),
+    ('9f7617a3-779a-4c21-b6be-b37f92a3d52f', NULL, '123e4567-e89b-12d3-a456-556642440000', 'Kevin', 'Hart', 
+    '202-555-0109', 'martink@icloud.com', '922-555-0109', 'Benjamin Smith', '08810', 1, 1, 0, 1, 'Ad', 'Facebook', NULL, 0, 0, 'Registered',
+    'Pending', 0, '2020-7-3 5:00:00', NULL, NULL);
 
 INSERT INTO LICCB.events (eventID, managerID, creatorID, eventName, maxPartySize, privateEvent, startTime, endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata)
     VALUES('db21ff8e-cf41-4261-9bbe-591eb5dbd862', '858603fb-4980-430b-970c-c80159666dae', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'January Outting', 2, 0, '2020-1-11 12:00:00', '2020-1-11 18:00:00', 'Selection Finished', 20, 0.2, 'Join us for a fun trip down the Hudson!', NULL, NULL);

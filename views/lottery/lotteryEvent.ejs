@@ -43,7 +43,7 @@
         
 
         <% for(i = 0; i < participants.length; i++){ %>
-          <tr  class="<%=`${participants[i].regStatus} ${participants[i].isAdult ? 'adult' : ''} ${participants[i].canSwim ? 'canSwim' : ''} ` %>">
+          <tr  class="<%=`${participants[i].regStatus} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ` %>">
             <% var vals = Object.values(participants[i]) %> 
             <% for(j = 0; j < vals.length; j++){ %>
             <td> <%=  vals[j] %> </td>
