@@ -116,6 +116,7 @@ app.get('/editEvent/:id', async (req, res) => {
     title: "Edit Event",
     event: (await db.queryEventByID(req.params.id))[0],
     users: await db.queryAllUsers(),
+    eventTypes: await db.queryEventTypes(),
     utils: utils
   });
 });
