@@ -73,6 +73,18 @@ async function queryEventTypes(){
   return types;
 }
 
+async function insertEventType(type){
+  const metadata = utils.getEventMetadata(type);
+  const typeID = uuidv4();
+  const insertStmt = "INSERT INTO LICCB.eventTypes " +
+                        "(typeID, typeMetadata, typeName) " + 
+                     `VALUES("${typeID}", "${metadata}", "${type.typeName}");`;
+  let conn = await pool.getConnection();
+  let insert = await conn.query(insertStmt);
+  conn.release();
+  return typeID;
+}
+
 async function queryParticipants() {
   let conn = await pool.getConnection();
   let participants = await conn.query("SELECT * FROM LICCB.participants JOIN LICCB.events ON LICCB.participants.eventID=LICCB.events.eventID");
@@ -428,6 +440,7 @@ module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
 module.exports.checkinParticipant = checkinParticipant;
 module.exports.editUserComments = editUserComments;
 module.exports.insertEvent = insertEvent;
+module.exports.insertEventType = insertEventType;
 module.exports.updateEvent = updateEvent;
 module.exports.queryAllCols = queryAllCols;
 module.exports.archiveEvent = archiveEvent;

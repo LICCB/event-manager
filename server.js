@@ -270,6 +270,24 @@ app.get('/settings', async (req, res) => {
   });
 });
 
+app.get('/settings/createEventType', async (req, res) => {
+  res.render("settings/createEventType", {
+    title: "Creat Event Type"
+  });
+});
+
+app.post('/settings/createEventType', async (req, res) => {
+  await db.insertEventType(req.body);
+  res.redirect("/settings/eventTypes");
+});
+
+app.get('/settings/eventTypes', async (req, res) => {
+  res.render("settings/eventTypes", {
+    title: "Event Types",
+    types: await db.queryEventTypes()
+  });
+});
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });
