@@ -65,6 +65,14 @@ async function queryEventDetailsByID(eventID) {
   return event;
 }
 
+async function queryEventTypes(){
+  let conn = await pool.getConnection();
+  const query = "SELECT * FROM LICCB.eventTypes;";
+  let types = await conn.query(query)
+  conn.release();
+  return types;
+}
+
 async function queryParticipants() {
   let conn = await pool.getConnection();
   let participants = await conn.query("SELECT * FROM LICCB.participants JOIN LICCB.events ON LICCB.participants.eventID=LICCB.events.eventID");
@@ -117,11 +125,12 @@ async function deleteEvent(id) {
 
 async function insertEvent(event) {
   const eventMetadata = utils.getEventMetadata(event);
+  const eventTypeMetadata = "";
   const eventID = uuidv4();
   const insertStmt = "INSERT INTO LICCB.events " +
                     "(eventID, managerID, creatorID, eventName, " +
                     "maxPartySize, privateEvent, startTime, " + 
-                    "endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata) " + 
+                    "endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata, eventTypeMetadata, eventType) " + 
                 "VALUES(" +
                     "'" + eventID + "', " + 
                     "'" + event.managerID + "', " +
@@ -136,7 +145,9 @@ async function insertEvent(event) {
                     event.staffRatio + ", " + 
                     "'" + event.eventDesc + "', " +
                     "'" + event.eventNotes + "', " +
-                    "'" + eventMetadata + "');";
+                    "'" + eventMetadata + "'," + 
+                    "'" + eventTypeMetadata + "'," + 
+                    "'" + event.typeID + "');";
   let conn = await pool.getConnection();
   let insert = await conn.query(insertStmt);
   conn.release();
@@ -407,6 +418,7 @@ module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
 module.exports.queryEventDetailsByID = queryEventDetailsByID;
+module.exports.queryEventTypes = queryEventTypes;
 module.exports.queryParticipants = queryParticipants;
 module.exports.queryParticipantByID = queryParticipantByID;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;

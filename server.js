@@ -41,7 +41,8 @@ app.get('/', function (req, res) {
 app.get('/createEvent', async (req, res) => {
   res.render('event/createEvent', {
     title: "Create Event",
-    users: await db.queryAllUsers()
+    users: await db.queryAllUsers(),
+    eventTypes: await db.queryEventTypes()
   });
 });
 

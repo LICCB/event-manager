@@ -21,6 +21,13 @@
             <% } %>
           </select>
           <br>
+          <label for="type">Event Type:</label>
+          <select name="typeID" form="eventform">
+            <% for(i = 0; i < eventTypes.length; i++) { %>
+            <option value=<%= eventTypes[i].typeID %>> <%= eventTypes[i].typeName %> </option>
+            <% } %>
+          </select>
+          <br>
           <label for="cap">Capacity:</label>
           <input type="text" id="cap" name="capacity" placeholder="Capacity" required>
           <br>
