@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS LICCB.participants, LICCB.events, LICCB.users;
+DROP TABLE IF EXISTS LICCB.participants, LICCB.events, LICCB.eventTypes, LICCB.users;
 
 CREATE TABLE LICCB.users(
     userID      CHAR(36) NOT NULL PRIMARY KEY,
@@ -7,24 +7,32 @@ CREATE TABLE LICCB.users(
     userEnabled BOOLEAN NOT NULL
 );
 
+CREATE TABLE LICCB.eventTypes(
+    typeID          CHAR(36) NOT NULL PRIMARY KEY,
+    typeMetadata    TEXT NOT NULL,
+    typeName        VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE LICCB.events(
     -- IDs
-    eventID         CHAR(36) NOT NULL PRIMARY KEY,
-    managerID       CHAR(36) NOT NULL,              -- 'userID' of the user assigned to the event
-    creatorID       CHAR(36) NOT NULL,              -- 'userID' of the user who created the event
+    eventID             CHAR(36) NOT NULL PRIMARY KEY,
+    managerID           CHAR(36) NOT NULL,              -- 'userID' of the user assigned to the event
+    creatorID           CHAR(36) NOT NULL,              -- 'userID' of the user who created the event
 
     -- Event Details
-    eventName       VARCHAR(100) NOT NULL,
-    maxPartySize    INT NOT NULL,
-    privateEvent    BOOLEAN NOT NULL,
-    startTime       DATETIME NOT NULL,
-    endTime         DATETIME NOT NULL,
-    eventStatus     ENUM('Unpublished', 'Registration Open', 'Registration Closed', 'Cancelled', 'Selection Finished', 'Archived'),
-    capacity        INT,
-    staffRatio      FLOAT,
-    eventDesc       TEXT,
-    eventNotes      TEXT,
-    eventMetadata   TEXT,
+    eventName           VARCHAR(100) NOT NULL,
+    maxPartySize        INT NOT NULL,
+    privateEvent        BOOLEAN NOT NULL,
+    startTime           DATETIME NOT NULL,
+    endTime             DATETIME NOT NULL,
+    eventStatus         ENUM('Unpublished', 'Registration Open', 'Registration Closed', 'Cancelled', 'Selection Finished', 'Archived'),
+    capacity            INT,
+    staffRatio          FLOAT,
+    eventDesc           TEXT,
+    eventNotes          TEXT,
+    eventMetadata       TEXT,
+    eventTypeMetadata   TEXT,
+    eventType           CHAR(36) NOT NULL,
 
     -- Foreign key for manager to ensure it is a real user
     FOREIGN KEY (managerID)
@@ -32,7 +40,11 @@ CREATE TABLE LICCB.events(
 
     -- Foreign key for the creator to ensure it is a real user
     FOREIGN KEY (creatorID)
-        REFERENCES users(userID)
+        REFERENCES users(userID),
+
+    -- Foreign key for the creator to ensure it is a real user
+    FOREIGN KEY (eventType)
+        REFERENCES eventTypes(typeID)
 );
 
 CREATE TABLE LICCB.participants(
