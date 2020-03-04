@@ -1,7 +1,7 @@
 $("#addpart").click(function () {
     var lastMemeber = $("#partymembers div:last");
     var intId = (lastMemeber && lastMemeber.length && lastMemeber.data("idx") + 1) || 1;
-    var partWrapper = $(`<div style="width:50%;height:40%;text-align:right;float:left;padding-right:50px;" class="partwrapper" id="part${intId}"/>`);
+    var partWrapper = $(`<div class="partwrapper" id="part${intId}"/>`);
     partWrapper.data("idx", intId);
 
     var pLabel = $(`<h2>Party Member ${intId}</h2>`);
@@ -25,7 +25,7 @@ $("#addpart").click(function () {
     var pEName = $(`<input required type="text" id="part${intId}ename" name="part${intId}ename" class="name" placeholder="Party Member Emergency Contact Name Here"/><br>`);
     var pEPhoneLabel = $(`<label for="part${intId}ephone" >Participant ${intId} Emergency Contact Phone Number: </label>`);
     var pEPhone = $(`<input required type="text" id="part${intId}ephone" name="part${intId}ephone" class="phone" placeholder="Party Member Emergency Contact Phone Number Here"/><br>`);
-    var pAgeLabel = $(`<div-right><label for="part${intId}age" >Over 18? </label></div>`);
+    var pAgeLabel = $(`<label for="part${intId}age" >Over 18? </label>`);
     var pAge = $(`<select required name= "part${intId}age"><option selected disabled hidden style="display: none" value=""></option><option value="false">No</option><option value="true">Yes</option></select><br>`);
     var pSwimLabel = $(`<label for="part${intId}swim" >Can they swim? </label>`);
     var pSwim = $(`<select required name="part${intId}swim"><option selected disabled hidden style="display: none" value=""></option><option value="false">No</option><option value="true">Yes</option></select><br>`);

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head', {title: title}) %>
+</head>
+
+<body class="bg-gray">
+    <%- include('../partials/header', {title: title}) %>
+    <div class="container content">
+
+        <fieldset>
+            <form action="exportData" method="POST" id="exportForm">
+                <label for="eventID">Enter EventID:</label>
+                <input type="text" id="eventID" name="eventID" placeholder="eventID">
+                <label for="fileName"></label>
+                <input type="text" id="fileName" name="fileName" placeholder="fileName">
+                <select id="fileType" name="fileType">
+                    <option value="csv">.csv</option>
+                </select>
+                <br>
+                <button class="button" id="export" type="submit" value="Export">Export</button>
+            </form>
+        </fieldset>
+
+        <footer>
+            <%- include('../partials/footer') %>
+        </footer>
+
+    </div>
+
+    <%- include('../partials/scripts') %>
+</body>
+
+</html>

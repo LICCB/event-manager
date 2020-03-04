@@ -3,12 +3,14 @@
   <head>
     <%- include('../partials/head', {title: "All Participants"}) %>
   </head>
-  <body class="bg-gray">
+  <body>
     <%- include('../partials/header', {title: "All Participants"}) %>
     <div class="container content">
       <table class="table">
         <thead>
           <tr>
+            <th scope="col"> History </th>
+            <th scope="col"> Event </th>
             <th scope="col"> First Name </th>
             <th scope="col"> Last Name </th>
             <th scope="col"> Phone # </th>
@@ -31,23 +33,29 @@
         <tbody>
           <% for(i = 0; i < participants.length; i++){ %>
             <tr>
-              <td> <%=  participants[i].firstName %> </td>
-              <td> <%=  participants[i].lastName %> </td>
-              <td> <%=  participants[i].phone %> </td>
-              <td> <%=  participants[i].email %> </td>
-              <td> <%=  participants[i].zip %> </td>
-              <td> <%=  participants[i].isAdult %> </td>
-              <td> <%=  participants[i].hasCPRCert %> </td>
-              <td> <%=  participants[i].canSwim %> </td>
-              <td> <%=  participants[i].boatExperience %> </td>
-              <td> <%=  participants[i].boathouseDisc %> </td>
-              <td> <%=  participants[i].eventDisc %> </td>
-              <td> <%=  participants[i].regComments %> </td>
-              <td> <%=  participants[i].regStatus %> </td>
-              <td> <%=  participants[i].checkinStatus %> </td>
-              <td> <%=  participants[i].volunteer %> </td>
-              <td> <%=  participants[i].regTime %> </td>
-              <td> <%=  participants[i].userComments %> </td>
+              <td>
+                <a class="tb-button" href="/participant/<%= participants[i].participantID %>" role="button">
+                  View
+                </a>
+              </td>
+              <td> <%= participants[i].eventName %> </td>
+              <td> <%= participants[i].firstName %> </td>
+              <td> <%= participants[i].lastName %> </td>
+              <td> <%= participants[i].phone %> </td>
+              <td> <%= participants[i].email %> </td>
+              <td> <%= participants[i].zip %> </td>
+              <td> <%= participants[i].isAdult %> </td>
+              <td> <%= participants[i].hasCPRCert %> </td>
+              <td> <%= participants[i].canSwim %> </td>
+              <td> <%= participants[i].boatExperience %> </td>
+              <td> <%= participants[i].boathouseDisc %> </td>
+              <td> <%= participants[i].eventDisc %> </td>
+              <td> <%= participants[i].regComments %> </td>
+              <td> <%= participants[i].regStatus %> </td>
+              <td> <%= participants[i].checkinStatus %> </td>
+              <td> <%= participants[i].volunteer %> </td>
+              <td> <%= participants[i].regTime %> </td>
+              <td> <%= participants[i].userComments %> </td>
             </tr>
           <% } %>
 

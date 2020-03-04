@@ -7,7 +7,7 @@
 
 <body>
   <%- include('../partials/header', {title: title}) %>
-  <div class="content">
+  <div class="container content">
     <button class="button-left"><a href="createEvent">Create New Event</a></button>
     <label for="archived">Archived</label>
     <input type="checkbox" id="archived" checked=checked>
@@ -18,25 +18,37 @@
         <% var keys = Object.keys(events[0]) %>
         <tr>
           <th></th>
-          <% for(i = 0; i < keys.length; i++){ %>
-          <th scope="col"> <%=  keys[i].charAt(0).toUpperCase() + keys[i].substring(1) %> </th>
-          <% } %>
+            <th scope="col">Name</th>
+            <th scope="col">Manager</th>
+            <th scope="col">Status</th>
+            <th scope="col">Private</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">End Time</th>
         </tr>
       </thead>
       <tbody>
         <% for(i = 0; i < events.length; i++){ %>
-        <tr <%= `class=${events[i].eventStatus.replace(/\s/g, '')}` %>>
+        <tr <%= `class=${events[i].eventStatus}` %>>
           <td>
-            <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> |
-            <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> |
-            <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> |
-            <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> |
-            <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a> |
+            <button class="tb-button" data-toggle="collapse" data-target="#options<%=events[i].eventID%>">Options</button>
+            <br>
+
+            <p id="options<%=events[i].eventID%>" class="collapse">
+            <a href=<%="event/"+events[i].eventID%>>Detail</a> <br>
+            <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> <br>
+            <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> <br>
+            <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> <br>
+            <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> <br>
+            <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a>
+          </p>
+
           </td>
-          <% var vals = Object.values(events[i]) %>
-          <% for(j = 0; j < vals.length; j++){ %>
-          <td> <%=  vals[j] %> </td>
-          <% } %>
+            <td> <%=  events[i].eventName %> </td>
+            <td> <%=  events[i].Manager %> </td>
+            <td> <%=  events[i].eventStatus %> </td>
+            <td> <%=  events[i].privateEvent %> </td>
+            <td> <%=  events[i].startTime %> </td>
+            <td> <%=  events[i].endTime %> </td>
         </tr>
         <% } %>
       </tbody>
@@ -49,6 +61,6 @@
   <%- include('../partials/scripts') %>
   <script src="/scripts/filterEvents.js"></script>
   <script src="/scripts/tableSorter.js"></script>
-</body>
 
+</body>
 </html>

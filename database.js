@@ -11,6 +11,13 @@ const pool = mariadb.createPool({
 
 const uuidv4 = require('uuid/v4');
 
+async function queryAllCols(tableName) {
+  let conn = await pool.getConnection();
+  let cols = await conn.query(`SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='${tableName}'`);
+  conn.release();
+  return cols;
+}
+
 async function queryAllUsers() {
   let conn = await pool.getConnection();
   let users = await conn.query("SELECT * FROM LICCB.users");
@@ -25,16 +32,42 @@ async function queryAllEvents() {
   return events;
 };
 
+async function queryEventsTableData(){
+  let conn = await pool.getConnection();
+  const query = "SELECT eventID, eventName, firstName, lastName, eventStatus, privateEvent, startTime, endTime " +
+                "FROM (LICCB.events AS e) JOIN (LICCB.users AS u) on " +
+                      "e.managerID=u.userID;"
+  let events = await conn.query(query);
+  conn.release();
+  return events;
+}
+
+async function queryParticipantsByEventID(eventID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}'`)
+  conn.release();
+  return participants;
+}
+
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
   let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'")
   conn.release();
   return event;
 }
+async function queryEventDetailsByID(eventID) {
+  let conn = await pool.getConnection();
+  const query = "SELECT * " + 
+                `FROM (SELECT * FROM LICCB.events WHERE eventID='${eventID}') as E JOIN (SELECT * FROM LICCB.users) AS U on ` + 
+                      `E.managerID=U.userID;`;
+  let event = await conn.query(query)
+  conn.release();
+  return event;
+}
 
 async function queryParticipants() {
   let conn = await pool.getConnection();
-  let participants = await conn.query("SELECT * FROM LICCB.participants");
+  let participants = await conn.query("SELECT * FROM LICCB.participants JOIN LICCB.events ON LICCB.participants.eventID=LICCB.events.eventID");
   conn.release();
   return participants;
 }
@@ -46,10 +79,29 @@ async function queryParticipantsByEventID(eventID) {
   return participants;
 }
 
+async function queryParticipantByID(participantID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query("SELECT * FROM " +
+                                      "(SELECT * FROM LICCB.participants WHERE participantID = '" + participantID + "') AS p " +
+                                      "JOIN LICCB.events ON p.eventID=LICCB.events.eventID");
+  conn.release();
+  return participants;
+}
+
 async function checkinParticipant(participantID, eventID) {
   let conn = await pool.getConnection();
   let participant = await conn.query("UPDATE LICCB.participants " +
                                      "SET checkinStatus = 'Checked In' " +
+                                     "WHERE LICCB.participants.participantID = '" + participantID + "' " +
+                                           "AND LICCB.participants.eventID = '" + eventID + "'");
+  conn.release();
+  return participant;
+}
+
+async function editUserComments(participantID, eventID, comment) {
+  let conn = await pool.getConnection();
+  let participant = await conn.query("UPDATE LICCB.participants " +
+                                     "SET userComments = '" + comment + "' " +
                                      "WHERE LICCB.participants.participantID = '" + participantID + "' " +
                                            "AND LICCB.participants.eventID = '" + eventID + "'");
   conn.release();
@@ -351,13 +403,18 @@ async function queryRegistrantEmailsByEventID(eventID){
 }
 
 module.exports.queryAllUsers = queryAllUsers;
+module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
+module.exports.queryEventDetailsByID = queryEventDetailsByID;
 module.exports.queryParticipants = queryParticipants;
+module.exports.queryParticipantByID = queryParticipantByID;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
 module.exports.checkinParticipant = checkinParticipant;
+module.exports.editUserComments = editUserComments;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
+module.exports.queryAllCols = queryAllCols;
 module.exports.archiveEvent = archiveEvent;
 module.exports.cancelEvent = cancelEvent;
 module.exports.deleteEvent = deleteEvent;
