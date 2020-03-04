@@ -189,6 +189,7 @@ async function publishEvent(id) {
 
 async function updateEvent(event, id) {
   const eventMetadata = utils.getEventMetadata(event);
+  const eventTypeMetadata = "";
   const dateTimeQuery = "Select startTime, endTime " + 
                         "From LICCB.events " + 
                         `WHERE eventID='${id}';`;
@@ -208,7 +209,9 @@ async function updateEvent(event, id) {
                   "staffRatio=" + event.staffRatio + ", " + 
                   "eventDesc='" + event.eventDesc + "', " +
                   "eventNotes='" + event.eventNotes + "', " +
-                  "eventMetadata='" + eventMetadata + "' " +                  
+                  "eventMetadata='" + eventMetadata + "', " +                  
+                  "eventTypeMetadata='" + eventTypeMetadata + "', " +
+                  "eventType='" + event.typeID + "' " +                  
                 "WHERE eventID='" + id + "';"
   let conn = await pool.getConnection();
   let oldDateTimes = await conn.query(dateTimeQuery);
