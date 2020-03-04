@@ -10,7 +10,7 @@ CREATE TABLE LICCB.users(
 CREATE TABLE LICCB.eventTypes(
     typeID          CHAR(36) NOT NULL PRIMARY KEY,
     typeMetadata    TEXT NOT NULL
-)
+);
 
 CREATE TABLE LICCB.events(
     -- IDs

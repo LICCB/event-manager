@@ -4,7 +4,7 @@ INSERT INTO LICCB.users (userID, firstName, lastName, userEnabled)
     ('e382d3ee-392d-42c1-a453-5c97806be39d', 'Britney', 'Spears', 1);
 
 INSERT INTO LICCB.eventTypes (typeID, typeMetadata)
-    VALUES('test', '#extraCarSeats: 4')
+    VALUES('test', '#extraCarSeats: 4');
 
 INSERT INTO LICCB.events (eventID, managerID, creatorID, eventName, maxPartySize, privateEvent, startTime, endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata, eventType, eventTypeMetadata)
     VALUES('123e4567-e89b-12d3-a456-556642440000', 'e382d3ee-392d-42c1-a453-5c97806be39d', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'July Outting', 2, 0, '2020-7-10 12:00:00', '2020-7-10 18:00:00', 'Registration Open', 15, 0.5, 'Annual July boating adventure!', NULL, NULL, 'test', '#extraCarSeats: 4');
