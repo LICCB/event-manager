@@ -2,13 +2,28 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./database');
 const utils = require('./utils');
+const mailer = require('./email');
 const app = express();
+
+const fs = require('fs');
+const { Parser } = require('json2csv');
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/views'));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+/*
+  Cookies Implementation
+*/
+/*const cookieParser = require('cookie-parser');
+app.use(cookieParser);
+
+const cookieSession = require('cookie-session');
+app.use(cookieSession);*/
+
+
 
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
@@ -44,7 +59,19 @@ app.post('/createEvent', async (req, res) => {
 app.get('/events', async (req, res) => {
   res.render('event/events', {
     title: "Events",
-    events: await db.queryAllEvents()
+    events: utils.cleanupEventData(await db.queryEventsTableData())
+  });
+});
+
+app.get('/event/:id', async (req, res) => {
+  const e = await db.queryEventDetailsByID(req.params.id);
+  console.log(e);
+  console.log(e.startTime);
+  res.render('event/event', {
+    title: "Event Detail",
+    event: e[0],
+    participants: await db.queryParticipantsByEventID(req.params.id),
+    utils: utils
   });
 });
 
@@ -70,11 +97,6 @@ app.get('/privateSignup', async (req, res) => {
   });
 });
 
-app.post('/privateSignup', async (req, res) => {
-  await db.insertParty(req.body);
-  res.redirect('signup/signupThanks');
-});
-
 app.get('/volunteerSignup', async (req, res) => {
   res.render('signup/volunteerSignup', {
     title: "VolunteerSingup",
@@ -85,6 +107,17 @@ app.get('/volunteerSignup', async (req, res) => {
 app.post('/volunteerSignup', async (req, res) => {
   await db.insertVolunteerParty(req.body);
   res.redirect('/signupThanks');
+}
+         
+app.post('/signup', async (req, res) => {
+  const regID = await db.insertVolunteerParty(req.body);
+  const reg = req.body;
+  mailer.sendConfirmationEmail(reg.regemail, reg.eventID, regID);
+  res.redirect('/signup/signupThanks')
+});
+
+app.get('/signup/signupThanks', function(req, res) {
+  res.render('signup/signupThanks')
 });
 
 app.get('/signupThanks', function(req, res) {
@@ -107,7 +140,12 @@ app.get('/editEvent/:id', async (req, res) => {
  * Redirects to the events page after updating the event in the database
  */
 app.post('/editEvent/:id', async (req, res) => {
-  await db.updateEvent(req.body, req.params.id);
+  const {oldStart, oldEnd, newStart, newEnd} = await db.updateEvent(req.body, req.params.id);
+  if((oldStart.getTime() !== newStart.getTime()) || (oldEnd.getTime() !== newEnd.getTime())){
+    const emails = await db.queryRegistrantEmailsByEventID(req.params.id);
+    console.log(emails);
+    mailer.sendTimeChangeEmail(emails, oldStart, oldEnd, newStart, newEnd, req.body.eventName);
+  }
   res.redirect('/events');
 });
 
@@ -158,6 +196,21 @@ app.get('/participants/:id', async (req, res) => {
 });
 
 /**
+ * Renders the participant list for the specified participant
+ */
+app.get('/participant/:id', async (req, res) => {
+  res.render('participants/singleParticipant', {participants: await db.queryParticipantByID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+});
+
+/**
+ * Updates the userCommets for the participant
+ */
+app.post('/participant/comment/:eventID/:participantID', async (req, res) => {
+  await db.editUserComments(req.params.participantID, req.params.eventID, req.body.comment)
+  res.redirect('/participants/' + req.params.eventID)
+});
+
+/**
  * Renders the participant check in list for the specified event
  */
 app.get('/participants/checkin/:id', async (req, res) => {
@@ -185,6 +238,59 @@ app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
 app.post('/editRegistration/:eventid/:partyid', async (req, res) => {
   await db.updateParty(req.body, req.params.eventid, req.params.partyid);
   res.redirect('/signupThanks');
+  
+  app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
+  const {email, eventName} = await db.confirmEmail(req.params.eventID, req.params.registrantID);
+  mailer.sendEditRegistrationEmail(email, eventName, req.params.eventID, req.params.registrantID);
+  res.render('email/confirmEmail', {title: "Email Confirmed"});
+});
+
+app.get('/editRegistration/:eventID/:registrantID', async (req, res) => {
+  res.render('registration/editRegistration', {title: "Edit Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
+});
+
+app.post('/editRegistration/:eventID/:registrantID', async (req, res) => {
+  // TODO add updateRegistration database method
+  res.redirect('registration/updatedRegistration', {title: "Updated Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
+});
+
+/**
+ * Redirects to the export page where the user can export participant data based on certain attributes
+ */
+app.get('/export', async (req, res) => {
+  res.render("export/export", {
+    title: "Export",
+  });
+});
+
+/**
+ * Export participants from a certain list of eventId's
+ * EventId lists would be built later on based on certain attributes
+ * For now, only one ID is received explicitly from the form
+ */
+app.post('/export/exportData', async (req, res) => {
+  let fileName = `${req.body.fileName}.${req.body.fileType}`;
+
+  // Will eventually be an additional database query to get a list of eventIDs from a certain attribute
+  let eventID = req.body.eventID;
+  let participants = await db.queryParticipantsByEventID(eventID);
+  delete participants.meta;
+
+  // Grabs the names of all the columns from database table for use in creating the csv file header
+  let cols = await db.queryAllCols('participants');
+  delete cols.meta;
+  let fields = [];
+  for (let i = 0; i < cols.length; i++) {
+    fields.push(cols[i]['COLUMN_NAME'])
+  }
+  // Converts participants list into csv file using json2csv module: https://www.npmjs.com/package/json2csv
+  const csvParser = new Parser({fields});
+  const csv = csvParser.parse(participants);
+  
+  // Send file to the browser to start download
+  res.setHeader('Content-disposition', `attachment; filename=${fileName}`);
+  res.set('Content-Type', 'text/csv');
+  res.status(200).send(csv);
 });
 
 app.listen(3000, function () {

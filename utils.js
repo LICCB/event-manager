@@ -74,24 +74,13 @@ function getEventMetadata(event) {
     return JSON.stringify(JSON.parse(md));
 }
 
-function filterEventData(events){
+function cleanupEventData(events){
     for(i = 0; i < events.length; i++){
-        // delete events[i].eventID;
-        delete events[i].creatorID;
-        delete events[i].eventMetadata;
-        delete events[i].maxPartySize;
-        delete events[i].capacity;
-        delete events[i].staffRatio;
         events[i].startTime = trimTime(events[i].startTime);
         events[i].endTime = trimTime(events[i].endTime);
-        var keys = Object.keys(events[i]);
-        // for(j = 0; j <  keys.length; j++) {
-        //     var key = keys[j];
-        //     var newKey = key.replace(/([A-Z])/g, ' $1').trim();
-        //     var val = events[i].key;
-        //     delete events[i].key;
-        //     events[i][newKey] = val;
-        // }
+        events[i]["Manager"] = `${events[i].firstName} ${events[i].lastName}`;
+        delete events[i].firstName;
+        delete events[i].lastName;
     }
     return events;
 }
@@ -105,5 +94,5 @@ function trimTime(time){
 module.exports.getTime = getTime;
 module.exports.getDate = getDate;
 module.exports.getEventMetadata = getEventMetadata;
-module.exports.filterEventData = filterEventData;
+module.exports.cleanupEventData = cleanupEventData;
 module.exports.getDateTime = getDateTime;

@@ -6,7 +6,7 @@
   <body class="bg-gray">
     <%- include('../partials/header', {title: event.eventName + " Check In"}) %>
     <div class="container content">
-      <table class="table table-striped table-dark table-bordered table-hover">
+      <table id="checkinTable" class="table">
         <thead>
           <tr>
             <th scope="col">First Name</th>
@@ -21,7 +21,7 @@
               <td> <%= participants[i].firstName %></td>
               <td> <%= participants[i].lastName %></td>
               <td> <%= participants[i].checkinStatus %></td>
-              <td> <a href="/participants/checkin/<%= event.eventID %>/<%= participants[i].participantID %>">Check In</a> </td>
+              <td> <a class="btn btn-primary" href="/participants/checkin/<%= event.eventID %>/<%= participants[i].participantID %>" role="button">Check In</a> </td>
             </tr>
           <% } %>
 
@@ -34,5 +34,6 @@
     </div>
 
     <%- include('../partials/scripts') %>
+    <script src="/scripts/jQueryDataTables.js"></script>
   </body>
 </html>

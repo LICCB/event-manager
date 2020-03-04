@@ -11,6 +11,13 @@ const pool = mariadb.createPool({
 
 const uuidv4 = require('uuid/v4');
 
+async function queryAllCols(tableName) {
+  let conn = await pool.getConnection();
+  let cols = await conn.query(`SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='${tableName}'`);
+  conn.release();
+  return cols;
+}
+
 async function queryAllUsers() {
   let conn = await pool.getConnection();
   let users = await conn.query("SELECT * FROM LICCB.users");
@@ -25,16 +32,42 @@ async function queryAllEvents() {
   return events;
 };
 
+async function queryEventsTableData(){
+  let conn = await pool.getConnection();
+  const query = "SELECT eventID, eventName, firstName, lastName, eventStatus, privateEvent, startTime, endTime " +
+                "FROM (LICCB.events AS e) JOIN (LICCB.users AS u) on " +
+                      "e.managerID=u.userID;"
+  let events = await conn.query(query);
+  conn.release();
+  return events;
+}
+
+async function queryParticipantsByEventID(eventID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}'`)
+  conn.release();
+  return participants;
+}
+
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
   let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'")
   conn.release();
   return event;
 }
+async function queryEventDetailsByID(eventID) {
+  let conn = await pool.getConnection();
+  const query = "SELECT * " + 
+                `FROM (SELECT * FROM LICCB.events WHERE eventID='${eventID}') as E JOIN (SELECT * FROM LICCB.users) AS U on ` + 
+                      `E.managerID=U.userID;`;
+  let event = await conn.query(query)
+  conn.release();
+  return event;
+}
 
 async function queryParticipants() {
   let conn = await pool.getConnection();
-  let participants = await conn.query("SELECT * FROM LICCB.participants");
+  let participants = await conn.query("SELECT * FROM LICCB.participants JOIN LICCB.events ON LICCB.participants.eventID=LICCB.events.eventID");
   conn.release();
   return participants;
 }
@@ -53,10 +86,29 @@ async function queryParticipantsByEventAndParty(eventID, partyID) {
   return participants;
 }
 
+async function queryParticipantByID(participantID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query("SELECT * FROM " +
+                                      "(SELECT * FROM LICCB.participants WHERE participantID = '" + participantID + "') AS p " +
+                                      "JOIN LICCB.events ON p.eventID=LICCB.events.eventID");
+  conn.release();
+  return participants;
+}
+
 async function checkinParticipant(participantID, eventID) {
   let conn = await pool.getConnection();
   let participant = await conn.query("UPDATE LICCB.participants " +
                                      "SET checkinStatus = 'Checked In' " +
+                                     "WHERE LICCB.participants.participantID = '" + participantID + "' " +
+                                           "AND LICCB.participants.eventID = '" + eventID + "'");
+  conn.release();
+  return participant;
+}
+
+async function editUserComments(participantID, eventID, comment) {
+  let conn = await pool.getConnection();
+  let participant = await conn.query("UPDATE LICCB.participants " +
+                                     "SET userComments = '" + comment + "' " +
                                      "WHERE LICCB.participants.participantID = '" + participantID + "' " +
                                            "AND LICCB.participants.eventID = '" + eventID + "'");
   conn.release();
@@ -133,6 +185,12 @@ async function publishEvent(id) {
 
 async function updateEvent(event, id) {
   const eventMetadata = utils.getEventMetadata(event);
+  const dateTimeQuery = "Select startTime, endTime " + 
+                        "From LICCB.events " + 
+                        `WHERE eventID='${id}';`;
+  console.log(dateTimeQuery);
+  const startTime = event.startDate + " " + event.startTime + ":00";
+  const endTime = event.endDate + " " + event.endTime + ":00";
   const update = "UPDATE LICCB.events " + 
                 "SET " +
                   "managerID='" + event.managerID + "', " + 
@@ -140,8 +198,8 @@ async function updateEvent(event, id) {
                   "eventName='" + event.eventName + "', " + 
                   "maxPartySize=" + event.maxPartySize + ", " + 
                   "privateEvent=" + event.privateEvent + ", " +
-                  "startTime='" + event.startDate + " " + event.startTime + ":00', " +  
-                  "endTime='" + event.endDate + " " + event.endTime + ":00', " +
+                  "startTime='" + startTime + "', " +  
+                  "endTime='" + endTime + "', " +
                   "capacity=" + event.capacity + ", " +
                   "staffRatio=" + event.staffRatio + ", " + 
                   "eventDesc='" + event.eventDesc + "', " +
@@ -149,9 +207,33 @@ async function updateEvent(event, id) {
                   "eventMetadata='" + eventMetadata + "' " +                  
                 "WHERE eventID='" + id + "';"
   let conn = await pool.getConnection();
+  let oldDateTimes = await conn.query(dateTimeQuery);
   let upd = await conn.query(update);
   conn.release();
-  return upd;
+  return {
+          oldStart : oldDateTimes[0].startTime,
+          oldEnd : oldDateTimes[0].endTime,
+          newStart : new Date(startTime),
+          newEnd : new Date(endTime)
+         };
+}
+
+async function confirmEmail(eventID, registrantID){
+  const confirm = "UPDATE LICCB.participants " + 
+                  "SET " +
+                    "regStatus='Registered' " +                 
+                  `WHERE eventID='${eventID}' AND partyID='${registrantID}';`;
+  const query = "SELECT email, eventName " + 
+                 "FROM " + 
+                        `(SELECT * FROM LICCB.participants WHERE participantID='${registrantID}' AND eventID='${eventID}') AS p ` + 
+                 "JOIN " + 
+                        `(SELECT * FROM LICCB.events WHERE eventID='${eventID}') AS e on ` + 
+                        "p.eventID = e.eventID;";
+  let conn = await pool.getConnection();
+  let update = await conn.query(confirm);
+  let vals = await conn.query(query);
+  conn.release();
+  return vals[0];
 }
 
 async function insertParty(signup) {
@@ -407,19 +489,39 @@ async function updateParty(signup, eventID, partyID) {
   return partyID;
 };
 
+async function queryRegistrantEmailsByEventID(eventID){
+  const query = "SELECT email " + 
+                "FROM LICCB.participants " +
+                `WHERE eventID='${eventID}' and email !='';`; 
+  let conn = await pool.getConnection();
+  let emails = await conn.query(query);
+  conn.release();
+  return emails.map(function (x) {
+    return Object.values(x);
+    },
+    emails.slice(0, emails.length - 1)).flat()
+}
+
 module.exports.queryAllUsers = queryAllUsers;
+module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
+module.exports.queryEventDetailsByID = queryEventDetailsByID;
 module.exports.queryParticipants = queryParticipants;
+module.exports.queryParticipantByID = queryParticipantByID;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
 module.exports.checkinParticipant = checkinParticipant;
+module.exports.editUserComments = editUserComments;
 module.exports.insertEvent = insertEvent;
 module.exports.updateEvent = updateEvent;
+module.exports.queryAllCols = queryAllCols;
 module.exports.archiveEvent = archiveEvent;
 module.exports.cancelEvent = cancelEvent;
 module.exports.deleteEvent = deleteEvent;
 module.exports.publishEvent = publishEvent;
+module.exports.confirmEmail = confirmEmail;
 module.exports.insertParty = insertParty;
 module.exports.insertVolunteerParty = insertVolunteerParty;
 module.exports.queryParticipantsByEventAndParty = queryParticipantsByEventAndParty;
 module.exports.updateParty = updateParty;
+module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;

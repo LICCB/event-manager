@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head', {title: title}) %>
+</head>
+
+<body class="bg-gray">
+    <%- include('../partials/header', {title: title}) %>
+    <% if(event !== null && participants !== null){%>
+    <div class="content">
+      <div class="top">
+          <div class="left">
+            <p>EventName: <%= event.eventName %></p>  
+            <p>Manager: <%= `${event.firstName} ${event.lastName}` %></p>
+            <p>Max Party Size: <%= event.maxPartySize %></p>
+            <p>Private Event: <%= event.isPrivate ? "Yes" : "No" %></p>
+            <p>Start Time: <%= event.startTime.toString() %></p>
+            <p>End Time: <%= event.endTime.toString() %></p>
+          </div>
+          <div class="right">
+            <p>Status: <%= event.eventStatus %></p>
+            <p>Capacity: <%= event.capacity %></p>
+            <p>Staff Ratio: <%= event.staffRatio %></p>
+            <p>Description: <%= event.eventDesc %></p>
+            <p>Notes: <%= event.eventNotes %></p>
+            <p>Metadata: <%= event.eventMetadata %></p>
+          </div>
+      </div>
+      </div>
+    <div class="container content">
+        <table id="singleEventTable" class="table">
+            <thead>
+              <tr>
+                <th scope="col"> History </th>
+                <th scope="col"> First Name </th>
+                <th scope="col"> Last Name </th>
+                <th scope="col"> Phone # </th>
+                <th scope="col"> Email </th>
+                <th scope="col"> Emergency Name </th>
+                <th scope="col"> Emergency Phone # </th>
+                <th scope="col"> Zipcode </th>
+                <th scope="col"> Is Adult </th>
+                <th scope="col"> Is CPR Certified </th>
+                <th scope="col"> Can Swim </th>
+                <th scope="col"> Has Boat Experience </th>
+                <th scope="col"> Boathouse Discovery </th>
+                <th scope="col"> Event Discovery </th>
+                <th scope="col"> Registration Comments </th>
+                <th scope="col"> Registration Status </th>
+                <th scope="col"> Check In Status </th>
+                <th scope="col"> Is Volunteer </th>
+                <th scope="col"> Registration Time </th>
+                <th scope="col"> User Comments </th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(i = 0; i < participants.length; i++){ %>
+                <tr>
+                  <td>
+                    <a class="btn btn-primary" href="/participant/<%= participants[i].participantID %>" role="button">
+                      View
+                    </a>
+                  </td>
+                  <td> <%= participants[i].firstName %> </td>
+                  <td> <%= participants[i].lastName %> </td>
+                  <td> <%= participants[i].phone %> </td>
+                  <td> <%= participants[i].email %> </td>
+                  <td> <%= participants[i].emergencyName %> </td>
+                  <td> <%= participants[i].emergencyPhone %> </td>
+                  <td> <%= participants[i].zip %> </td>
+                  <td> <%= participants[i].isAdult %> </td>
+                  <td> <%= participants[i].hasCPRCert %> </td>
+                  <td> <%= participants[i].canSwim %> </td>
+                  <td> <%= participants[i].boatExperience %> </td>
+                  <td> <%= participants[i].boathouseDisc %> </td>
+                  <td> <%= participants[i].eventDisc %> </td>
+                  <td> <%= participants[i].regComments %> </td>
+                  <td> <%= participants[i].regStatus %> </td>
+                  <td> <%= participants[i].checkinStatus %> </td>
+                  <td> <%= participants[i].volunteer %> </td>
+                  <td> <%= participants[i].regTime %> </td>
+                  <td>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#comments<%= participants[i].participantID %>">
+                      Comments
+                    </button>
+                  </td>
+                </tr>
+              <% } %>
+    
+            </tbody>
+          </table>
+    
+          <% for(i = 0; i < participants.length; i++){ %>
+            <div class="modal" id="comments<%= participants[i].participantID %>">
+              <div class="modal-dialog">
+                <div class="modal-content">
+            
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <h4 class="modal-title">Comments for <%= participants[i].firstName + " " + participants[i].lastName %></h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+            
+                  <!-- Modal body -->
+                  <div class="modal-body">
+                    <form action="/participant/comment/<%= event.eventID %>/<%= participants[i].participantID %>" method="POST" id="form<%= participants[i].participantID %>">
+                      <textarea class="form-control" name="comment"><%= participants[i].userComments %></textarea>
+                    </form>
+                  </div>
+            
+                  <!-- Modal footer -->
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" form="form<%= participants[i].participantID %>">Save</button>
+                  </div>
+    
+                </div>
+              </div>
+            </div>
+          <% } %> 
+    
+          <a href="/participants/checkin/<%= event.eventID %>">Check In Participants</a>                
+        <footer>
+            <%- include('../partials/footer') %>
+        </footer>
+    </div>
+    <% } %>
+
+    <%- include('../partials/scripts') %>
+    <script src="/scripts/addFields.js" metadata="<%= event.eventMetadata %>"></script>
+    <script src="/scripts/jQueryDataTables.js"></script>
+</body>
+
+</html>
