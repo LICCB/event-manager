@@ -66,9 +66,17 @@ app.get('/event/:id', async (req, res) => {
 
 app.get('/publicSignup', async (req, res) => {
   res.render('signup/publicSignup', {
-    title: "PublicSingup",
+    title: "Public Signup",
     events: await db.queryAllEvents()
   });
+});
+
+/**
+ * Update to redirect to THANKS page
+ */
+app.post('/publicSignup', async (req, res) => {
+  await db.insertParty(req.body);
+  res.redirect('/signupThanks');
 });
 
 app.get('/privateSignup', async (req, res) => {
@@ -85,6 +93,11 @@ app.get('/volunteerSignup', async (req, res) => {
   });
 });
 
+app.post('/volunteerSignup', async (req, res) => {
+  await db.insertVolunteerParty(req.body);
+  res.redirect('/signupThanks');
+}
+         
 app.post('/signup', async (req, res) => {
   const regID = await db.insertVolunteerParty(req.body);
   const reg = req.body;
@@ -95,6 +108,10 @@ app.post('/signup', async (req, res) => {
 app.get('/signup/signupThanks', function(req, res) {
   res.render('signup/signupThanks')
 });
+
+app.get('/signupThanks', function(req, res) {
+  res.render('signup/signupThanks');
+})
 
 /**
  * Renders the editEvent page with the properties of the given event
@@ -197,7 +214,21 @@ app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { /
   res.redirect('/participants/checkin/' + req.params.eventid);
 });
 
-app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
+app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
+  res.render("signup/editRegistration", {
+    title: "Edit Public Signup",
+    events: await db.queryAllEvents(),
+    event: (await db.queryEventByID(req.params.eventid))[0],
+    participants: await db.queryParticipantsByEventAndParty(req.params.eventid, req.params.partyid),
+    utils: utils
+  });
+});
+
+app.post('/editRegistration/:eventid/:partyid', async (req, res) => {
+  await db.updateParty(req.body, req.params.eventid, req.params.partyid);
+  res.redirect('/signupThanks');
+  
+  app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
   const {email, eventName} = await db.confirmEmail(req.params.eventID, req.params.registrantID);
   mailer.sendEditRegistrationEmail(email, eventName, req.params.eventID, req.params.registrantID);
   res.render('email/confirmEmail', {title: "Email Confirmed"});

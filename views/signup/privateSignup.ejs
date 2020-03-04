@@ -21,7 +21,7 @@
 
                 <!--Most likely will not have a "general" private event signup page. Instead a link will direct to this page with eventID already known from url-->
                 <label for="ename">Event:</label>
-                    <select name="eventID" form="publicSignupform" required>
+                    <select name="eventID" form="privateSignupform" required>
                         <option selected disabled hidden style='display: none' value=''>Select an event</option>
                         <% for(i = 0; i < events.length; i++) { %>
                             <option value=<%= events[i].eventID %>> <%= events[i].eventName%> </option>
@@ -59,8 +59,8 @@
                     <label for="regcpr">CPR Certification</label>
                     <select name="regcpr" form="privateSignupform" required>
                         <option selected disabled hidden style='display: none' value=''></option>
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
                     </select>
 
                     <label for="regemail">Registrant Email:</label>
@@ -130,7 +130,7 @@
                     </select>
 
                     <label for="notes">Additional Notes:</label>
-                    <textarea name="notes" form="publicSignupform"></textarea>
+                    <textarea name="notes" form="privateSignupform"></textarea>
 
                 </div>
 
