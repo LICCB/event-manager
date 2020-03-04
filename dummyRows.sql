@@ -3,8 +3,11 @@ INSERT INTO LICCB.users (userID, firstName, lastName, userEnabled)
     ('858603fb-4980-430b-970c-c80159666dae', 'Charlie', 'Harper', 1),
     ('e382d3ee-392d-42c1-a453-5c97806be39d', 'Britney', 'Spears', 1);
 
-INSERT INTO LICCB.events (eventID, managerID, creatorID, eventName, maxPartySize, privateEvent, startTime, endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata)
-    VALUES('123e4567-e89b-12d3-a456-556642440000', 'e382d3ee-392d-42c1-a453-5c97806be39d', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'July Outting', 2, 0, '2020-7-10 12:00:00', '2020-7-10 18:00:00', 'Registration Open', 15, 0.5, 'Annual July boating adventure!', NULL, NULL);
+INSERT INTO LICCB.eventTypes (typeID, typeMetadata)
+    VALUES('test', '#extraCarSeats: 4')
+
+INSERT INTO LICCB.events (eventID, managerID, creatorID, eventName, maxPartySize, privateEvent, startTime, endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata, eventType, eventTypeMetadata)
+    VALUES('123e4567-e89b-12d3-a456-556642440000', 'e382d3ee-392d-42c1-a453-5c97806be39d', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'July Outting', 2, 0, '2020-7-10 12:00:00', '2020-7-10 18:00:00', 'Registration Open', 15, 0.5, 'Annual July boating adventure!', NULL, NULL, 'test', '#extraCarSeats: 4');
 
 INSERT INTO LICCB.participants (participantID, partyID, eventID, firstName, lastName, phone, email, emergencyPhone, emergencyName, zip, isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata)
     VALUES ('2c5ea4c0-4067-11e9-8bad-9b1deb4d3b7d', NULL, '123e4567-e89b-12d3-a456-556642440000', 'Timmy', 'Too', 
@@ -23,8 +26,8 @@ INSERT INTO LICCB.participants (participantID, partyID, eventID, firstName, last
     '429-482-9532', 'leslieforpresident@aol.com', '930-392-4920', 'Ben Wyatt', '74292', 1, 1, 1, 1, 'Ad', 'Facebook', NULL, 0, 0, 'Registered',
     'Pending', 0, '2020-7-2 5:00:00', NULL, NULL);
 
-INSERT INTO LICCB.events (eventID, managerID, creatorID, eventName, maxPartySize, privateEvent, startTime, endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata)
-    VALUES('db21ff8e-cf41-4261-9bbe-591eb5dbd862', '858603fb-4980-430b-970c-c80159666dae', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'January Outting', 2, 0, '2020-1-11 12:00:00', '2020-1-11 18:00:00', 'Selection Finished', 20, 0.2, 'Join us for a fun trip down the Hudson!', NULL, NULL);
+INSERT INTO LICCB.events (eventID, managerID, creatorID, eventName, maxPartySize, privateEvent, startTime, endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata, eventType, eventTypeMetadata)
+    VALUES('db21ff8e-cf41-4261-9bbe-591eb5dbd862', '858603fb-4980-430b-970c-c80159666dae', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'January Outting', 2, 0, '2020-1-11 12:00:00', '2020-1-11 18:00:00', 'Selection Finished', 20, 0.2, 'Join us for a fun trip down the Hudson!', NULL, NULL, 'test', '#extraCarSeats: 4');
 
 INSERT INTO LICCB.participants (participantID, partyID, eventID, firstName, lastName, phone, email, emergencyPhone, emergencyName, zip, isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata)
     VALUES('33faf21b-c0c5-4586-8952-ad89f52a6708', NULL, 'db21ff8e-cf41-4261-9bbe-591eb5dbd862', 'Papa', 'John', 
