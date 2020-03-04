@@ -9,7 +9,8 @@ CREATE TABLE LICCB.users(
 
 CREATE TABLE LICCB.eventTypes(
     typeID          CHAR(36) NOT NULL PRIMARY KEY,
-    typeMetadata    TEXT NOT NULL
+    typeMetadata    TEXT NOT NULL,
+    typeName        VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE LICCB.events(
