@@ -242,16 +242,24 @@ app.get('/lottery/', async (req, res) => {
 });
 app.get('/lottery/:id', async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
-  test2 = (await db.queryParticipantsNotRegistered(req.params.id));
+  test2 = (await db.queryParticipantsNotReady(req.params.id));
   if (test[0] == null || test[0] == undefined || test2[0] == null || test2[0] == undefined){
     res.redirect('/events');
   } else {
-    res.render('lottery/lotteryEvent', {participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+    res.render('lottery/lotteryEvent', {title: "Manual Selection", participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
   }
 });
 app.get('/lottery/random/:id', async (req, res) => {
-  capacity = await db.getCapacityFromEventID(req.params.id);
-  res.render('lottery/lotteryEventLocked', {participants: await db.runSelectionRandom(req.params.id, Object.values(capacity[0])), event: (await db.queryEventByID(req.params.id))[0]})
+  test = (await db.queryParticipantsByEventID(req.params.id));
+  test2 = (await db.queryParticipantsNotReady(req.params.id));
+  test3 = (await db.queryEventStatusByID(req.params.id));
+  console.log(Object.values(test3[0]));
+  if (test[0] == null || test[0] == undefined || test2[0] == null || test2[0] == undefined || Object.values(test3[0]) == 'Selection Finished') {
+    res.redirect('/events');
+  } else {
+    capacity = await db.getCapacityFromEventID(req.params.id);
+    res.render('lottery/lotteryEventLocked', {title: "Run Strategy",participants: await db.runSelectionRandom(req.params.id, Object.values(capacity[0])), event: (await db.queryEventByID(req.params.id))[0]})
+  }
 });
 
 

@@ -12,6 +12,13 @@ input[type=text], select, input[type=time] {
 
   }
 
+  input[type="checkbox"] {
+    border: 2px solid black;
+    outline: 0;
+    background: transparent;
+    position: relative;
+}
+
   input[type=submit] {
     width: 50%;
     background-color: #4CAF50;
