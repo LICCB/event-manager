@@ -96,7 +96,7 @@ app.get('/volunteerSignup', async (req, res) => {
 app.post('/volunteerSignup', async (req, res) => {
   await db.insertVolunteerParty(req.body);
   res.redirect('/signupThanks');
-}
+});
          
 app.post('/signup', async (req, res) => {
   const regID = await db.insertVolunteerParty(req.body);
@@ -227,20 +227,12 @@ app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
 app.post('/editRegistration/:eventid/:partyid', async (req, res) => {
   await db.updateParty(req.body, req.params.eventid, req.params.partyid);
   res.redirect('/signupThanks');
+});
   
-  app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
+app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
   const {email, eventName} = await db.confirmEmail(req.params.eventID, req.params.registrantID);
   mailer.sendEditRegistrationEmail(email, eventName, req.params.eventID, req.params.registrantID);
   res.render('email/confirmEmail', {title: "Email Confirmed"});
-});
-
-app.get('/editRegistration/:eventID/:registrantID', async (req, res) => {
-  res.render('registration/editRegistration', {title: "Edit Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
-});
-
-app.post('/editRegistration/:eventID/:registrantID', async (req, res) => {
-  // TODO add updateRegistration database method
-  res.redirect('registration/updatedRegistration', {title: "Updated Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
 });
 
 /**
