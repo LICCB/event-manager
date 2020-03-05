@@ -56,6 +56,20 @@ async function queryParticipantsByEventID(eventID) {
   return participants;
 }
 
+async function queryParticipantsNotRegistered(eventID) {
+  let conn = await pool.getConnection();
+  status = "Awaiting Confirmation";
+  status2='Not Confirmed';
+  status3='Not Selected';
+  status4= 'Standby';
+  status5='Selected';
+  status6='Cancelled';
+  status7='Same Day Cancel';
+  let participants = await conn.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}' AND regStatus='${status}' OR regStatus='${status2}' OR regStatus='${status3}' OR regStatus='${status4}' OR regStatus='${status5}' OR regStatus='${status6}' OR regStatus='${status7}'`)
+  conn.release();
+  return participants;  
+}
+
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
   let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'")
@@ -471,3 +485,4 @@ module.exports.queryAllEventNames = queryAllEventNames;
 module.exports.runSelectionDefault = runSelectionDefault;
 module.exports.runSelectionRandom = runSelectionRandom;
 module.exports.getCapacityFromEventID = getCapacityFromEventID;
+module.exports.queryParticipantsNotRegistered = queryParticipantsNotRegistered;

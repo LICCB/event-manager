@@ -241,11 +241,13 @@ app.get('/lottery/', async (req, res) => {
   res.render('lottery/lotteryLanding', {title:"Lottery Landing Page", events: (await db.queryAllEventNames())});
 });
 app.get('/lottery/:id', async (req, res) => {
-  test = (await db.queryEventByID(req.params.id))[0];
-  // if (test == null){
-  //   res.redirect('lottery/lotteryLanding', {title:"Lottery Landing Page", events: (await db.queryAllEventNames())});
-  // }
-  res.render('lottery/lotteryEvent', {participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  test = (await db.queryParticipantsByEventID(req.params.id));
+  test2 = (await db.queryParticipantsNotRegistered(req.params.id));
+  if (test[0] == null || test[0] == undefined || test2[0] == null || test2[0] == undefined){
+    res.redirect('/events');
+  } else {
+    res.render('lottery/lotteryEvent', {participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  }
 });
 app.get('/lottery/random/:id', async (req, res) => {
   capacity = await db.getCapacityFromEventID(req.params.id);
