@@ -30,13 +30,13 @@ async function queryAllEvents() {
   let events = await conn.query("SELECT * FROM LICCB.events");
   conn.release();
   return events;
-};
+}
 
 async function queryEventsTableData(){
   let conn = await pool.getConnection();
   const query = "SELECT eventID, eventName, firstName, lastName, eventStatus, privateEvent, startTime, endTime " +
                 "FROM (LICCB.events AS e) JOIN (LICCB.users AS u) on " +
-                      "e.managerID=u.userID;"
+                      "e.managerID=u.userID;";
   let events = await conn.query(query);
   conn.release();
   return events;
@@ -44,14 +44,14 @@ async function queryEventsTableData(){
 
 async function queryParticipantsByEventID(eventID) {
   let conn = await pool.getConnection();
-  let participants = await conn.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}'`)
+  let participants = await conn.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}'`);
   conn.release();
   return participants;
 }
 
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
-  let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'")
+  let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'");
   conn.release();
   return event;
 }
@@ -60,7 +60,7 @@ async function queryEventDetailsByID(eventID) {
   const query = "SELECT * " + 
                 `FROM (SELECT * FROM LICCB.events WHERE eventID='${eventID}') as E JOIN (SELECT * FROM LICCB.users) AS U on ` + 
                       `E.managerID=U.userID;`;
-  let event = await conn.query(query)
+  let event = await conn.query(query);
   conn.release();
   return event;
 }
@@ -120,7 +120,7 @@ async function deleteEvent(id) {
   let del = await conn.query("DELETE FROM LICCB.events WHERE eventID='" + id + "'");
   conn.release();
   return del;
-};
+}
 
 async function insertEvent(event) {
   const eventMetadata = utils.getEventMetadata(event);
@@ -155,7 +155,7 @@ async function archiveEvent(id) {
   const archive = "UPDATE LICCB.events " + 
                   "SET " +
                     "eventStatus='Archived'" +              
-                  "WHERE eventID='" + id + "';"
+                  "WHERE eventID='" + id + "';";
   let arc = await conn.query(archive);
   conn.release();
   return arc;
@@ -166,7 +166,7 @@ async function cancelEvent(id) {
   const cancel = "UPDATE LICCB.events " + 
                   "SET " +
                     "eventStatus='Cancelled'" +              
-                  "WHERE eventID='" + id + "';"
+                  "WHERE eventID='" + id + "';";
   let canc = await conn.query(cancel);
   conn.release();
   return canc;
@@ -177,7 +177,7 @@ async function publishEvent(id) {
   const publish = "UPDATE LICCB.events " + 
                   "SET " +
                     "eventStatus='Registration Open'" +              
-                  "WHERE eventID='" + id + "';"
+                  "WHERE eventID='" + id + "';";
   let pub = await conn.query(publish);
   conn.release();
   return pub;
@@ -205,7 +205,7 @@ async function updateEvent(event, id) {
                   "eventDesc='" + event.eventDesc + "', " +
                   "eventNotes='" + event.eventNotes + "', " +
                   "eventMetadata='" + eventMetadata + "' " +                  
-                "WHERE eventID='" + id + "';"
+                "WHERE eventID='" + id + "';";
   let conn = await pool.getConnection();
   let oldDateTimes = await conn.query(dateTimeQuery);
   let upd = await conn.query(update);
@@ -243,15 +243,14 @@ async function insertParty(signup) {
   var partsize = 0;
   if(signupkeys > 15) {
     partsize = (signupkeys - 15) / 10;
-  };
-
+  }
   const registrantID = uuidv4();
   console.log(registrantID);
   const insertStmt = "INSERT INTO LICCB.participants " +
     "(participantID, partyID, eventID, firstName, " +
     "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
     "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
-    "eventDisc, regComments, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
+    "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
     "VALUES(" +
     "'" + registrantID + "', " + //participantID
     "'" + registrantID + "', " + //partyID
@@ -270,6 +269,7 @@ async function insertParty(signup) {
     "'" + signup.bhdiscovery + "', " + //boathouse discovery
     "'" + signup.eventdiscovery + "', " + //event discvoery
     "'" + signup.notes + "', " + //regComments
+    "0, 0, " +
     "'Awaiting Confirmation', " + //regStatus
     "'Pending', " + //checkinStatus
     "0, " + //volunteer
@@ -285,7 +285,7 @@ async function insertParty(signup) {
       "(participantID, partyID, eventID, firstName, " +
       "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
       "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
-      "eventDisc, regComments, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
+      "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
       "VALUES(" +
       "'" + newParticipantID + "', " + //participantID
       "'" + registrantID + "', " + //partyID
@@ -304,6 +304,7 @@ async function insertParty(signup) {
       "'" + signup.bhdiscovery + "', " + //boathouse discovery
       "'" + signup.eventdiscovery + "', " + //event discvoery
       "'" + signup.notes + "', " + //regComments
+      "0, 0, " +
       "'Awaiting Confirmation', " + //regStatus
       "'Pending', " + //checkinStatus
       "0, " + //volunteer
@@ -311,10 +312,10 @@ async function insertParty(signup) {
       "'', " + //userComments
       "'');"; //metadata
       let insert = await conn.query(insertStmt1);
-  };
+  }
   conn.release();
   return registrantID;
-};
+}
 
 async function insertVolunteerParty(signup) {
   console.log(signup);
@@ -323,7 +324,7 @@ async function insertVolunteerParty(signup) {
   var partsize = 0;
   if(signupkeys > 17) {
     partsize = (signupkeys - 17) / 10;
-  };
+  }
   const registrantID = uuidv4();
   const insertStmt = "INSERT INTO LICCB.participants " +
     "(participantID, partyID, eventID, firstName, " +
@@ -389,10 +390,10 @@ async function insertVolunteerParty(signup) {
       "'', " + //userComments
       "'');"; //metadata
     let insert = await conn.query(insertStmt);
-  };
+  }
   conn.release();
   return registrantID;
-};
+}
 
 async function updateParty(signup, eventID, partyID) {
   console.log(signup);
@@ -401,7 +402,7 @@ async function updateParty(signup, eventID, partyID) {
   var partsize = 0;
   if(signupkeys > 16) {
     partsize = (signupkeys - 16) / 11;
-  };
+  }
   console.log(partsize);
   const update = "UPDATE LICCB.participants " +
     "SET " +
@@ -472,7 +473,7 @@ async function updateParty(signup, eventID, partyID) {
       "'', " + //userComments
       "''); END IF;"; //metadata
     let insert = await conn.query(updateStmt);
-  };
+  }
   if(partsize < signup.partIDs.length) {
     //Update partyID to ''
     //loop through participants who need to be deleted
@@ -482,12 +483,12 @@ async function updateParty(signup, eventID, partyID) {
       "SET " +
       "partyID='' " + 
       "WHERE eventID='" + eventID + "' AND partyID='" + partyID + "' AND participantID='" + partIds[i] + "';";
-    };
+    }
     let insert = await conn.query(deleteStmt);
-  };
+  }
   conn.release();
   return partyID;
-};
+}
 
 async function queryRegistrantEmailsByEventID(eventID){
   const query = "SELECT email " + 
@@ -499,7 +500,7 @@ async function queryRegistrantEmailsByEventID(eventID){
   return emails.map(function (x) {
     return Object.values(x);
     },
-    emails.slice(0, emails.length - 1)).flat()
+    emails.slice(0, emails.length - 1)).flat();
 }
 
 module.exports.queryAllUsers = queryAllUsers;
