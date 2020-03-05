@@ -58,8 +58,8 @@ async function queryEventByID(eventID) {
 async function queryEventDetailsByID(eventID) {
   let conn = await pool.getConnection();
   const query = "SELECT * " + 
-                `FROM (SELECT * FROM LICCB.events WHERE eventID='${eventID}') as E JOIN (SELECT * FROM LICCB.users) AS U on ` + 
-                      `E.managerID=U.userID;`;
+                `FROM (SELECT * FROM LICCB.events WHERE eventID='${eventID}') as E JOIN (SELECT * FROM LICCB.users) AS U on E.managerID=U.userID ` +
+                      `JOIN (SELECT * FROM LICCB.eventTypes) AS T on E.eventType=T.typeID;`
   let event = await conn.query(query)
   conn.release();
   return event;
@@ -68,6 +68,14 @@ async function queryEventDetailsByID(eventID) {
 async function queryEventTypes(){
   let conn = await pool.getConnection();
   const query = "SELECT * FROM LICCB.eventTypes;";
+  let types = await conn.query(query)
+  conn.release();
+  return types;
+}
+
+async function queryEventTypeByID(id){
+  let conn = await pool.getConnection();
+  const query = `SELECT * FROM LICCB.eventTypes WHERE typeID='${id}';`;
   let types = await conn.query(query)
   conn.release();
   return types;
@@ -434,6 +442,7 @@ module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
 module.exports.queryEventDetailsByID = queryEventDetailsByID;
 module.exports.queryEventTypes = queryEventTypes;
+module.exports.queryEventTypeByID = queryEventTypeByID;
 module.exports.queryParticipants = queryParticipants;
 module.exports.queryParticipantByID = queryParticipantByID;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;

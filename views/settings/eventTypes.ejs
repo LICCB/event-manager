@@ -22,7 +22,8 @@
         <% for(i = 0; i < types.length; i++){ %>
         <tr <%= `class=${types[i].typeID}` %>>
           <td>
-            <a href=<%= `settings/deleteEventType/${types[i].typeID}` %> >Delete</a>
+            <a href=<%= `/settings/deleteEventType/${types[i].typeID}` %> >Delete</a> |
+            <a href=<%= `/settings/editEventType/${types[i].typeID}` %> >Edit</a>
           </td>
             <td> <%=  types[i].typeName %> </td>
             <td> <%=  types[i].typeMetadata %> </td>

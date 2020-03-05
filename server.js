@@ -288,6 +288,23 @@ app.get('/settings/eventTypes', async (req, res) => {
   });
 });
 
+app.get('/settings/editEventType/:id', async (req, res) => {
+  const type = await db.queryEventTypeByID(req.params.id);
+  console.log(type);
+  console.log(type[0]);
+  res.render("settings/editEventType", {
+    title: "Edit Event Type",
+    type: type[0]
+  });
+});
+
+app.post('/settings/editEventType/:id', async (req, res) => {
+  res.render("settings/editEventType", {
+    title: "Edit Event Type",
+    type: await db.queryEventTypeByID(req.params.id)[0]
+  });
+});
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });
