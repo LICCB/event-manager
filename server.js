@@ -248,7 +248,8 @@ app.get('/lottery/:id', async (req, res) => {
   res.render('lottery/lotteryEvent', {participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });
 app.get('/lottery/random/:id', async (req, res) => {
-  res.render('lottery/lotteryEventLocked', {participants: await db.runSelectionRandom(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  capacity = await db.getCapacityFromEventID(req.params.id);
+  res.render('lottery/lotteryEventLocked', {participants: await db.runSelectionRandom(req.params.id, Object.values(capacity[0])), event: (await db.queryEventByID(req.params.id))[0]})
 });
 
 

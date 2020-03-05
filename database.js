@@ -119,7 +119,7 @@ async function editUserComments(participantID, eventID, comment) {
 async function runSelectionDefault(eventID) {
   let conn = await pool.getConnection();
   // populate all contenders into new table
-  let returnSelectedRegistrants = await conn.query("SELECT *" +  
+  let returnSelectedRegistrants = await conn.query("SELECT * " +  
                                                     "FROM LICCB.participants " +  
                                                     "WHERE eventID = '" + eventID + "'" +
                                                     "ORDER BY regTime");
@@ -128,20 +128,28 @@ async function runSelectionDefault(eventID) {
   return returnSelectedRegistrants;
 }
 // initializes run selection process
-async function runSelectionRandom(eventID) {
+async function runSelectionRandom(eventID, maxCapacity) {
   let conn = await pool.getConnection();
-  // populate all contenders into new table
-  let returnSelectedRegistrants = await conn.query("SELECT *" +  
-                                                    "FROM LICCB.participants " +  
-                                                    "WHERE eventID = '" + eventID + "'" +
+  let returnSelectedRegistrants = await conn.query("SELECT * " +
+                                                    " FROM LICCB.participants" +  
+                                                    " WHERE eventID = '" + eventID + "'" +
                                                     " AND regStatus='Registered'" +
                                                     " AND isAdult='1'" +
-                                                    " ORDER BY RAND()" + 
-                                                    " LIMIT 20"
+                                                    " ORDER BY regTime" +
+                                                    " LIMIT " + maxCapacity
                                                     );
-
   conn.release();
   return returnSelectedRegistrants;
+}
+
+async function getCapacityFromEventID(eventID) {
+  let conn = await pool.getConnection();
+  let capacity = await conn.query("SELECT capacity " +  
+                                  "FROM LICCB.events " +  
+                                  "WHERE eventID = '" + eventID + "'"
+                                  );
+  conn.release();
+  return capacity;  
 }
 
 async function deleteEvent(id) {
@@ -462,3 +470,4 @@ module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;
 module.exports.queryAllEventNames = queryAllEventNames;
 module.exports.runSelectionDefault = runSelectionDefault;
 module.exports.runSelectionRandom = runSelectionRandom;
+module.exports.getCapacityFromEventID = getCapacityFromEventID;
