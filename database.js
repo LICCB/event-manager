@@ -93,6 +93,14 @@ async function insertEventType(type){
   return typeID;
 }
 
+async function deleteEventType(typeID){
+  const delStmt = `DELETE FROM LICCB.eventTypes WHERE typeID='${typeID}'`;
+  let conn = await pool.getConnection();
+  let del = await conn.query(delStmt);
+  conn.release();
+  return del;
+}
+
 async function queryParticipants() {
   let conn = await pool.getConnection();
   let participants = await conn.query("SELECT * FROM LICCB.participants JOIN LICCB.events ON LICCB.participants.eventID=LICCB.events.eventID");
@@ -443,6 +451,7 @@ module.exports.queryEventByID = queryEventByID;
 module.exports.queryEventDetailsByID = queryEventDetailsByID;
 module.exports.queryEventTypes = queryEventTypes;
 module.exports.queryEventTypeByID = queryEventTypeByID;
+module.exports.deleteEventType = deleteEventType;
 module.exports.queryParticipants = queryParticipants;
 module.exports.queryParticipantByID = queryParticipantByID;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;

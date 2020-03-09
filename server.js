@@ -305,6 +305,11 @@ app.post('/settings/editEventType/:id', async (req, res) => {
   });
 });
 
+app.get('/settings/deleteEventType/:id', async (req, res) => {
+  await db.deleteEventType(req.params.id);
+  res.redirect('/settings/eventTypes');
+});
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });
