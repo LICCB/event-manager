@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Event Signup - Event List</title>
+    <link rel="stylesheet" type="text/css" href="/css/form.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+
+<body>
+  <div class="container content">
+    <table class="table" id="eventsTable">
+      <thead>
+        <tr>
+          <th></th>
+            <th scope="col">Name</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">End Time</th>
+            <th scope="col">Event Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(i = 0; i < events.length; i++){ %>
+        <tr>
+            <td> <%=  events[i].eventName %> </td>
+            <td> <%=  events[i].startTime %> </td>
+            <td> <%=  events[i].endTime %> </td>
+            <td> <%=  events[i].eventDesc %> </td>
+
+            <td>
+                <a href=<%= "/eventSignup/" + events[i].eventID + "/" + volunteerStatus %>>Sign Up</a>
+    
+              </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <footer class="footer">
+      <%- include('../partials/footer') %>
+    </footer>
+  </div>
+
+  <script src="/scripts/jQueryDataTables.js"></script>
+</body>
+</html>

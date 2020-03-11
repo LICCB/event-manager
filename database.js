@@ -490,6 +490,24 @@ async function updateParty(signup, eventID, partyID) {
   return partyID;
 }
 
+async function querySpecificEvents(choice) {
+  var query = "";
+  if (choice == 1) {
+    query = "SELECT * " +
+                "FROM LICCB.events " +
+                "WHERE eventStatus = 'Registration Open';";
+  } else {
+    query = "SELECT * " +
+                "FROM LICCB.events " +
+                "WHERE eventStatus = 'Registration Open' AND privateEvent = 0;";
+  }
+  
+  let conn = await pool.getConnection();
+  let events = await conn.query(query);
+  conn.release();
+  return events;
+}
+
 async function queryRegistrantEmailsByEventID(eventID){
   const query = "SELECT email " + 
                 "FROM LICCB.participants " +
@@ -526,3 +544,4 @@ module.exports.insertVolunteerParty = insertVolunteerParty;
 module.exports.queryParticipantsByEventAndParty = queryParticipantsByEventAndParty;
 module.exports.updateParty = updateParty;
 module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;
+module.exports.querySpecificEvents = querySpecificEvents;
