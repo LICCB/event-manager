@@ -8,16 +8,28 @@
 <body class="bg-gray">
     <%- include('../partials/header', {title: title}) %>
     <div class="container content">
+        <% if (error) { %>
+        <div class="alert alert-danger" role="alert">
+            <%= error %>
+        </div>
+        <% } %>
 
         <fieldset>
             <form action="exportData" method="POST" id="exportForm">
-                <label for="eventID">Enter EventID:</label>
-                <input type="text" id="eventID" name="eventID" placeholder="eventID">
-                <label for="fileName"></label>
-                <input type="text" id="fileName" name="fileName" placeholder="fileName">
-                <select id="fileType" name="fileType">
-                    <option value="csv">.csv</option>
+                <label for="eventAttr">Choose event attribute:</label>
+                <select id="eventAttr" name="eventAttr">
+                    <option value="eventName">Event Name</option>
+                    <option value="eventStatus">Event Status</option>
+                    <option value="eventType">Event Type</option>
+                    <option value="managerID">Manager ID</option>
+                    <option value="creatorID">Creator ID</option>
                 </select>
+                <br>
+                <label for="eventAttrValue">Attribute Value:</label>
+                <input type="text" id="eventAttrValue" name="eventAttrValue">
+                <br>
+                <label for="fileName">Name the output File:</label>
+                <input type="text" id="fileName" name="fileName" placeholder="fileName">
                 <br>
                 <button class="button" id="export" type="submit" value="Export">Export</button>
             </form>

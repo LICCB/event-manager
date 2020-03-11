@@ -49,6 +49,20 @@ async function queryParticipantsByEventID(eventID) {
   return participants;
 }
 
+async function queryParticipantsByEventAttr(eventAttr, eventAttrValue) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query(`SELECT * FROM LICCB.events as E, LICCB.participants as P WHERE E.${eventAttr}='${eventAttrValue}' AND E.eventID = P.eventID`);
+  conn.release();
+  return participants;
+}
+
+async function queryEventTypeIDByName(eventTypeName) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query(`SELECT typeID FROM LICCB.eventTypes WHERE typeName='${eventTypeName}'`);
+  conn.release();
+  return participants;
+}
+
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
   let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'");
@@ -526,3 +540,5 @@ module.exports.insertVolunteerParty = insertVolunteerParty;
 module.exports.queryParticipantsByEventAndParty = queryParticipantsByEventAndParty;
 module.exports.updateParty = updateParty;
 module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;
+module.exports.queryParticipantsByEventAttr = queryParticipantsByEventAttr;
+module.exports.queryEventTypeIDByName = queryEventTypeIDByName;

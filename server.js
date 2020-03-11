@@ -241,6 +241,7 @@ app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
 app.get('/export', async (req, res) => {
   res.render("export/export", {
     title: "Export",
+    error: null
   });
 });
 
@@ -250,12 +251,30 @@ app.get('/export', async (req, res) => {
  * For now, only one ID is received explicitly from the form
  */
 app.post('/export/exportData', async (req, res) => {
-  let fileName = `${req.body.fileName}.${req.body.fileType}`;
+  let fileName = "ParticipantData.csv";
+  if (req.body.fileName != '') {
+    fileName = `${req.body.fileName}.csv`;
+  }
 
   // Will eventually be an additional database query to get a list of eventIDs from a certain attribute
-  let eventID = req.body.eventID;
-  let participants = await db.queryParticipantsByEventID(eventID);
+  let eventAttr = req.body.eventAttr;
+  let eventAttrValue = req.body.eventAttrValue;
+  // Event type attribute in events table is an ID linked to eventTypes table with a human-readable name for the type
+  if (eventAttr == 'eventType') {
+    tmp = await db.queryEventTypeIDByName(eventAttrValue);
+    delete tmp.meta;
+    eventAttrValue = tmp.typeID;
+  }
+  let participants = await db.queryParticipantsByEventAttr(eventAttr, eventAttrValue);
   delete participants.meta;
+
+  if (participants.length == 0) {
+    res.render("export/export",  {
+      title: "Export",
+      error: "No participants were found."
+    });
+    return;
+  }
 
   // Grabs the names of all the columns from database table for use in creating the csv file header
   let cols = await db.queryAllCols('participants');
