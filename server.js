@@ -235,15 +235,6 @@ app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
   res.render('email/confirmEmail', {title: "Email Confirmed"});
 });
 
-app.get('/editRegistration/:eventID/:registrantID', async (req, res) => {
-  res.render('registration/editRegistration', {title: "Edit Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
-});
-
-app.post('/editRegistration/:eventID/:registrantID', async (req, res) => {
-  // TODO add updateRegistration database method
-  res.redirect('registration/updatedRegistration', {title: "Updated Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
-});
-
 /**
  * Redirects to the export page where the user can export participant data based on certain attributes
  */
