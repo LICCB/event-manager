@@ -34,6 +34,12 @@ input[type=text], select, input[type=time] {
 
   * {box-sizing:border-box}
 
+#errorDiv {
+  text-align: left;
+  display: none;
+  white-space: pre-wrap;
+}
+
 /* Slideshow container */
 .slideshow-container {
   max-width: 1000px;

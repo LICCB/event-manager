@@ -1,22 +1,64 @@
+jQuery.validator.addClassRules('name', {
+    required: true,
+    pattern: /^[A-Za-z]+[ ]{0,1}[-]{0,1}[']{0,1}[A-Za-z]*$/,
+    messages: {
+        required: "First name is required.",
+        pattern: "Names must include only letters, hyphens, or spaces."
+    }
+});
+jQuery.validator.addClassRules('email', {
+    required: true,
+    email: true,
+    messages: {
+        required: "First name is required.",
+        email: "Emails must be in the format 'example@example.com'."
+    }
+});
+jQuery.validator.addClassRules('phone', {
+    required: true,
+    pattern: /^\d{3}[-]{0,1}\d{3}[-]{0,1}\d{4}$/,
+    messages: {
+        required: "Phone number is required.",
+        pattern: "Phone numbers must be in the format '123-456-7890' or '1234567890'."
+    }
+});
+jQuery.validator.addClassRules('zip', {
+    required: true,
+    pattern: /^\d{5}$/,
+    messages: {
+        required: "Zip Code is required.",
+        pattern: "Zip codes must be in the format '12345'."
+    }
+});
+
+$("#publicSignupform").validate({});
+
 // Checks all form input and if all pass, submit form
 function validateInput() {
-    
+    let errorText = '';
     // First check required fields
     let allInputs = $('#publicSignupform').find('input, select');
     for (let i = 0; i < allInputs.length; i++) {
         if (allInputs[i].name == 'eventID' & allInputs[i].value == '') {
-            alert("You must select an event to register for.");
-            return;
+            errorText += "You must select an event to register for.\n";
+            $(allInputs[i]).attr('class', 'form-control is-invalid');
         }
         else if (allInputs[i].name == 'zipcode' & allInputs[i].value == '') {
-            alert("Zip Code is a required field.");
-            return;
+            errorText += "Zip Code is a required field.\n";
+            currInput = $(allInputs[i]);
+            currInput.attr('class', `${currInput.attr('class')} form-control is-invalid`);
         }
         else if (allInputs[i].required & allInputs[i].value == '') {
             prettyName = $(`label[for='${allInputs[i].name}']`)[0].innerText.replace(':','');
-            alert(`${prettyName} is a required field.`);
-            return;
+            errorText += `${prettyName} is a required field.\n`;
+            currInput = $(allInputs[i]);
+            currInput.attr('class', `${currInput.attr('class')} form-control is-invalid`);
         }
+    }
+    if (errorText != '') {
+        $("#errorDiv").text(errorText);
+        $("#errorDiv").attr('style', 'display: block;');
+        return;
     }
 
     // Validate input

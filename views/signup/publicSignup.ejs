@@ -7,6 +7,8 @@
     <link rel="stylesheet" type="text/css" href="/css/form.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <%- include('../partials/scripts') %>
+    <%- include('../partials/head') %>
 </head>
 
 <body>
@@ -142,10 +144,14 @@
 
                 <br>
 
+                <!-- Allows for alerts to be in one central location rather than one popup per error -->
+                <div id="errorDiv" class="alert alert-danger" role="alert"></div>
+
                 <!-- The actual button to click runs validation before submission -->
-                <button id="validateButton" onclick="validateInput()" type="button">Submit Registration</button>
+                <!-- <button id="validateButton" onclick="validateInput()" type="button">Submit Registration</button> -->
                 <!-- The button that submits the form is hidden and clicked by the validation script if everything passes -->
-                <input id="submitForm" type="submit" value="Submit Registration" style="display: none;">
+                <!-- <input id="submitForm" type="submit" value="Submit Registration" style="display: none;"> -->
+                <input id="submitForm" type="submit" value="Submit Registration">
             </form>
         </fieldset>
     </div>
@@ -153,5 +159,5 @@
 
 <script src="/scripts/addParticipant.js"></script>
 <script src="/scripts/validator.js"></script>
-
+<script src="jquery.validate.js"></script>
 </html>
