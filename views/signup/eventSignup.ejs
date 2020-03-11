@@ -24,10 +24,7 @@
                     of selections will usually take place 3 to 2 days ahead of the trip. A final round of selections are
                     usually made the day before, along with the Declines.</p>
                 <br>
-
-                <input type="hidden" id="eventID" name="eventID" value=<%= eventID%>>
-
-                <!--Check for/Insert Volunteer Data-->
+                
                 <%if(volunteerStatus == 1) { %>
                     <h2>Volunteer Information</h2>
                     <div name = "Volunteer Info">
@@ -188,6 +185,11 @@
             </form>
         </fieldset>
     </div>
+    <footer class="footer">
+        <%- include('../partials/footer') %>
+      </footer>
+    </div>
+    <br>
 </body>
 
 

@@ -94,7 +94,7 @@ app.get('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
 });
 
 app.post('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
-  await db.insertParty(req.body);
+  await db.insertParty(req.body, req.params.eventID, req.params.volunteerStatus);
   res.redirect('/signupThanks');
 });
 

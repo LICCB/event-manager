@@ -236,13 +236,13 @@ async function confirmEmail(eventID, registrantID){
   return vals[0];
 }
 
-async function insertParty(signup) {
+async function insertParty(signup, eventID, volunteerStatus) {
   console.log(signup);
   const date = utils.getDateTime();
   const signupkeys = Object.keys(signup).length;
   var partsize = 0;
-  if(signupkeys > 15) {
-    partsize = (signupkeys - 15) / 10;
+  if(signupkeys > 17) {
+    partsize = (signupkeys - 17) / 10;
   }
   const registrantID = uuidv4();
   console.log(registrantID);
@@ -254,7 +254,7 @@ async function insertParty(signup) {
     "VALUES(" +
     "'" + registrantID + "', " + //participantID
     "'" + registrantID + "', " + //partyID
-    "'" + signup.eventID + "', " + //eventID
+    "'" + eventID + "', " + //eventID
     "'" + signup.regfirstname + "', " + //firstName
     "'" + signup.reglastname + "', " + //lastName
     "'" + signup.regphone + "', " + //phone
@@ -269,10 +269,11 @@ async function insertParty(signup) {
     "'" + signup.bhdiscovery + "', " + //boathouse discovery
     "'" + signup.eventdiscovery + "', " + //event discvoery
     "'" + signup.notes + "', " + //regComments
-    "0, 0, " +
+    signup.priorVolunteer + ", " + //priorVolunteer
+    signup.roleFamiliarity + ", " + //roleFamiliarity
     "'Awaiting Confirmation', " + //regStatus
     "'Pending', " + //checkinStatus
-    "0, " + //volunteer
+    volunteerStatus + ", " + //volunteer
     "'" + date + "', " + //regTime
     "'', " + //userComments
     "'');"; //metadata
@@ -289,7 +290,7 @@ async function insertParty(signup) {
       "VALUES(" +
       "'" + newParticipantID + "', " + //participantID
       "'" + registrantID + "', " + //partyID
-      "'" + signup.eventID + "', " + //eventID
+      "'" + eventID + "', " + //eventID
       "'" + signup[`part${i}fname`] + "', " + //firstName
       "'" + signup[`part${i}lname`]+ "', " + //lastName
       "'" + signup[`part${i}phone`] + "', " + //phone
@@ -304,10 +305,11 @@ async function insertParty(signup) {
       "'" + signup.bhdiscovery + "', " + //boathouse discovery
       "'" + signup.eventdiscovery + "', " + //event discvoery
       "'" + signup.notes + "', " + //regComments
-      "0, 0, " +
+      signup.priorVolunteer + ", " + //priorVolunteer
+      signup.roleFamiliarity + ", " + //roleFamiliarity
       "'Awaiting Confirmation', " + //regStatus
       "'Pending', " + //checkinStatus
-      "0, " + //volunteer
+      volunteerStatus + ", " + //volunteer
       "'" + date + "', " + //regTime
       "'', " + //userComments
       "'');"; //metadata

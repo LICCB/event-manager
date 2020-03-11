@@ -2,23 +2,20 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>Event Signup - Event List</title>
-    <link rel="stylesheet" type="text/css" href="/css/form.css">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <%- include('../partials/head', {title: title}) %>
 </head>
 
 <body>
   <div class="container content">
+    <h1>Events</h1>
     <table class="table" id="eventsTable">
       <thead>
         <tr>
-          <th></th>
             <th scope="col">Name</th>
             <th scope="col">Start Time</th>
             <th scope="col">End Time</th>
             <th scope="col">Event Description</th>
+            <th></th>
         </tr>
       </thead>
       <tbody>
@@ -40,6 +37,8 @@
     <footer class="footer">
       <%- include('../partials/footer') %>
     </footer>
+  </div>
+  <br>
   </div>
 
   <script src="/scripts/jQueryDataTables.js"></script>
