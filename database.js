@@ -232,13 +232,13 @@ async function confirmEmail(eventID, registrantID){
   return vals[0];
 }
 
-async function insertParty(signup) {
+async function insertParty(signup, eventID, volunteerStatus) {
   console.log(signup);
   const date = utils.getDateTime();
   const signupkeys = Object.keys(signup).length;
   var partsize = 0;
-  if(signupkeys > 15) {
-    partsize = (signupkeys - 15) / 10;
+  if(signupkeys > 17) {
+    partsize = (signupkeys - 17) / 10;
   }
   const registrantID = uuidv4();
   console.log(registrantID);
@@ -250,7 +250,7 @@ async function insertParty(signup) {
     "VALUES(" +
     "'" + registrantID + "', " + //participantID
     "'" + registrantID + "', " + //partyID
-    "'" + signup.eventID + "', " + //eventID
+    "'" + eventID + "', " + //eventID
     "'" + signup.regfirstname + "', " + //firstName
     "'" + signup.reglastname + "', " + //lastName
     "'" + signup.regphone + "', " + //phone
@@ -265,10 +265,11 @@ async function insertParty(signup) {
     "'" + signup.bhdiscovery + "', " + //boathouse discovery
     "'" + signup.eventdiscovery + "', " + //event discvoery
     "'" + signup.notes + "', " + //regComments
-    "0, 0, " +
+    signup.priorVolunteer + ", " + //priorVolunteer
+    signup.roleFamiliarity + ", " + //roleFamiliarity
     "'Awaiting Confirmation', " + //regStatus
     "'Pending', " + //checkinStatus
-    "0, " + //volunteer
+    volunteerStatus + ", " + //volunteer
     "'" + date + "', " + //regTime
     "'', " + //userComments
     "'');"; //metadata
@@ -285,7 +286,7 @@ async function insertParty(signup) {
       "VALUES(" +
       "'" + newParticipantID + "', " + //participantID
       "'" + registrantID + "', " + //partyID
-      "'" + signup.eventID + "', " + //eventID
+      "'" + eventID + "', " + //eventID
       "'" + signup[`part${i}fname`] + "', " + //firstName
       "'" + signup[`part${i}lname`]+ "', " + //lastName
       "'" + signup[`part${i}phone`] + "', " + //phone
@@ -300,10 +301,11 @@ async function insertParty(signup) {
       "'" + signup.bhdiscovery + "', " + //boathouse discovery
       "'" + signup.eventdiscovery + "', " + //event discvoery
       "'" + signup.notes + "', " + //regComments
-      "0, 0, " +
+      signup.priorVolunteer + ", " + //priorVolunteer
+      signup.roleFamiliarity + ", " + //roleFamiliarity
       "'Awaiting Confirmation', " + //regStatus
       "'Pending', " + //checkinStatus
-      "0, " + //volunteer
+      volunteerStatus + ", " + //volunteer
       "'" + date + "', " + //regTime
       "'', " + //userComments
       "'');"; //metadata
@@ -442,7 +444,8 @@ async function updateParty(signup, eventID, partyID) {
       "boatExperience=" + signup[`part${i}boat`] + ", " + //boat
       "boathouseDisc='" + signup.bhdiscovery + "', " + //boathouse discovery
       "eventDisc='" + signup.eventdiscovery + "', " + //event discvoery
-      "regComments='" + signup.notes + "'; " + //regComments
+      "regComments='" + signup.notes + "' " + //regComments
+      "WHERE eventID='" + eventID + "' AND partyID='" + partyID + "' AND participantID='" + signup[`part${i}ID`] + "'; " +
       "ELSE " + 
       "INSERT INTO LICCB.participants VALUES(" +
       "'" + newParticipantID + "', " + //participantID
@@ -486,6 +489,24 @@ async function updateParty(signup, eventID, partyID) {
   return partyID;
 }
 
+async function querySpecificEvents(choice) {
+  var query = "";
+  if (choice == 1) {
+    query = "SELECT * " +
+                "FROM LICCB.events " +
+                "WHERE eventStatus = 'Registration Open';";
+  } else {
+    query = "SELECT * " +
+                "FROM LICCB.events " +
+                "WHERE eventStatus = 'Registration Open' AND privateEvent = 0;";
+  }
+  
+  let conn = await pool.getConnection();
+  let events = await conn.query(query);
+  conn.release();
+  return events;
+}
+
 async function queryRegistrantEmailsByEventID(eventID){
   const query = "SELECT email " + 
                 "FROM LICCB.participants " +
@@ -522,3 +543,4 @@ module.exports.insertVolunteerParty = insertVolunteerParty;
 module.exports.queryParticipantsByEventAndParty = queryParticipantsByEventAndParty;
 module.exports.updateParty = updateParty;
 module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;
+module.exports.querySpecificEvents = querySpecificEvents;
