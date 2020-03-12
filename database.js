@@ -42,13 +42,6 @@ async function queryEventsTableData(){
   return events;
 }
 
-async function queryParticipantsByEventID(eventID) {
-  let conn = await pool.getConnection();
-  let participants = await conn.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}'`);
-  conn.release();
-  return participants;
-}
-
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
   let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID='" + eventID + "'");
@@ -74,7 +67,7 @@ async function queryParticipants() {
 
 async function queryParticipantsByEventID(eventID) {
   let conn = await pool.getConnection();
-  let participants = await conn.query("SELECT * FROM LICCB.participants WHERE eventID = '" + eventID + "'");
+  let participants = await conn.query("SELECT * FROM LICCB.participants WHERE eventID = ?", [eventID]);
   conn.release();
   return participants;
 }
@@ -89,8 +82,9 @@ async function queryParticipantsByEventAndParty(eventID, partyID) {
 async function queryParticipantByID(participantID) {
   let conn = await pool.getConnection();
   let participants = await conn.query("SELECT * FROM " +
-                                      "(SELECT * FROM LICCB.participants WHERE participantID = '" + participantID + "') AS p " +
-                                      "JOIN LICCB.events ON p.eventID=LICCB.events.eventID");
+                                      "(SELECT * FROM LICCB.participants WHERE participantID = ?) AS p " +
+                                      "JOIN LICCB.events ON p.eventID=LICCB.events.eventID",
+                                      [participantID]);
   conn.release();
   return participants;
 }
@@ -99,8 +93,9 @@ async function checkinParticipant(participantID, eventID) {
   let conn = await pool.getConnection();
   let participant = await conn.query("UPDATE LICCB.participants " +
                                      "SET checkinStatus = 'Checked In' " +
-                                     "WHERE LICCB.participants.participantID = '" + participantID + "' " +
-                                           "AND LICCB.participants.eventID = '" + eventID + "'");
+                                     "WHERE LICCB.participants.participantID = ? " +
+                                           "AND LICCB.participants.eventID = ?",
+                                     [participantID, eventID]);
   conn.release();
   return participant;
 }
@@ -108,9 +103,10 @@ async function checkinParticipant(participantID, eventID) {
 async function editUserComments(participantID, eventID, comment) {
   let conn = await pool.getConnection();
   let participant = await conn.query("UPDATE LICCB.participants " +
-                                     "SET userComments = '" + comment + "' " +
-                                     "WHERE LICCB.participants.participantID = '" + participantID + "' " +
-                                           "AND LICCB.participants.eventID = '" + eventID + "'");
+                                     "SET userComments = ? " +
+                                     "WHERE LICCB.participants.participantID = ? " +
+                                           "AND LICCB.participants.eventID = ?",
+                                     [comment, participantID, eventID]);
   conn.release();
   return participant;
 }
