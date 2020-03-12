@@ -448,7 +448,8 @@ async function updateParty(signup, eventID, partyID) {
       "boatExperience=" + signup[`part${i}boat`] + ", " + //boat
       "boathouseDisc='" + signup.bhdiscovery + "', " + //boathouse discovery
       "eventDisc='" + signup.eventdiscovery + "', " + //event discvoery
-      "regComments='" + signup.notes + "'; " + //regComments
+      "regComments='" + signup.notes + "' " + //regComments
+      "WHERE eventID='" + eventID + "' AND partyID='" + partyID + "' AND participantID='" + signup[`part${i}ID`] + "'; " +
       "ELSE " + 
       "INSERT INTO LICCB.participants VALUES(" +
       "'" + newParticipantID + "', " + //participantID
