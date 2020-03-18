@@ -6,7 +6,7 @@
 </head>
 
 <body>
-  <div class="container content">
+  <div class="container signup">
     <h1>Events</h1>
     <table class="table" id="eventsTable">
       <thead>
@@ -27,8 +27,8 @@
             <td> <%=  events[i].eventDesc %> </td>
 
             <td>
-                <a href=<%= "/eventSignup/" + events[i].eventID + "/" + volunteerStatus %>>Sign Up</a>
-    
+                <a class="tb-button" href=<%= "/eventSignup/" + events[i].eventID + "/" + volunteerStatus %>>Sign Up</a>
+
               </td>
         </tr>
         <% } %>

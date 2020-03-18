@@ -11,20 +11,23 @@
 
 <body>
     <div class="container">
-        <fieldset>
-            <form action=<%= `/eventSignup/${eventID}/${volunteerStatus}` %> method="post" id="eventSignupForm">
-                <h1>Public Event</h1>
-                <p>Events displayed on the public calendars will not be available for registration until their
-                    registration windows officially open (typically a few weeks ahead of the event date). If you don't
-                    see the event you seek available for selection, check back at a later date.</p>
+      <div class="note">
+      <h1 class="header">Public Event Registration</h1>
+      <p> <b>NOTE:</b> Events displayed on the public calendars will not be available for registration until their
+          registration windows officially open (typically a few weeks ahead of the event date). If you don't
+          see the event you seek available for selection, check back at a later date.</p>
 
-                <p>For trips open to the public, Parties are selected by lottery when demand is greater than
-                    availability (this is typical).
-                    Selected registrants will receive email notification before the start of the trip. The first round
-                    of selections will usually take place 3 to 2 days ahead of the trip. A final round of selections are
-                    usually made the day before, along with the Declines.</p>
-                <br>
-                
+      <p>For trips open to the public, Parties are selected by lottery when demand is greater than
+          availability (this is typical).
+          Selected registrants will receive email notification before the start of the trip. The first round
+          of selections will usually take place 3 to 2 days ahead of the trip. A final round of selections are
+          usually made the day before, along with the Declines.</p>
+        </div>
+      <br>
+
+
+        <fieldset class="fieldset">
+            <form action=<%= `/eventSignup/${eventID}/${volunteerStatus}` %> method="post" id="eventSignupForm">
                 <%if(volunteerStatus == 1) { %>
                     <h2>Volunteer Information</h2>
                     <div name = "Volunteer Info">
@@ -43,10 +46,10 @@
                             <option value="true">Yes</option>
                         </select>
                     </div>
-                    
+
                 <% } %>
 
-                <div-left class="reginfo">
+                <div style="text-align:right; padding-right:25%;" class="reginfo">
                     <h2>Registrant Information</h2>
                     <label for="regfirstname">Registrant First Name:</label>
                     <input type="text" id="regfirstname" name="regfirstname" class = "fname "placeholder="Your First Name Here" required>
@@ -70,9 +73,8 @@
 
                     <label for="regephone">Registrant Emergency Contact Phone Number:</label>
                     <input type="text" id="regephone" name="regephone" class = "phone "placeholder="Emergency Contact Phone Number" required>
-                  </div-left>
+                    <br>
 
-                  <div-right class="reginfo">
                     <label for="regadult">Over 18?</label>
                     <select name="regadult" form="eventSignupForm" required>
                         <option selected disabled hidden style='display: none' value=''></option>
@@ -112,15 +114,26 @@
                         <option value="false">No</option>
                         <option value="true">Yes</option>
                     </select>
-                    <br>
-                </div-right>
-
+              </div>
                 <br>
-    
+
                 <!--Insert Dynamic Fields-->
                 <!--Insert Event Type Specific Fields-->
 
-                <div-right class="discinfo">
+                <div>
+                    <div class="reginfo">
+                      <label for="partysize"></label>
+                      <input type="button" value="Add a Party Member" class="button" id="addpart" />
+                    </div>
+                    <br>
+
+                    <div id="partymembers" form="PublicSignup"> </div> <br>
+                    <input id="remove" type="button" class="button" value="Remove Last Party Member"/>
+                </div>
+                <br>
+
+                <!--Event Discovery fields-->
+                <div style="text-align:right; padding-right:25%;" class="discinfo">
                     <label for="zip">Zip Code:</label>
                     <input type="text" id="zip" name="zipcode" class ="zip" placeholder="Zip Code" required>
                     <br>
@@ -167,25 +180,17 @@
                     <br>
 
                     <label for="notes">Additional Notes:</label>
-                    <textarea style="width:100px" name="notes" form="eventSignupForm"></textarea>
-                </div-right>
-                <div>
-                    <div-center class="reginfo">
-                      <label for="partysize"></label>
-                      <input type="button" value="Add a Party Member" class="button" id="addpart" />
-                    </div-center>
-            
-                    <div id="partymembers" form="PublicSignup"> </div>
-            
-                    <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/>
-                    <br>
-        
+                    <textarea name="notes" form="eventSignupForm"></textarea>
                 </div>
+                <br>
+
                 <input type="submit" value="Submit Registration">
+
             </form>
         </fieldset>
     </div>
-    <footer class="footer">
+    <br>
+    <footer style="color:#eef4fd;" class="footer">
         <%- include('../partials/footer') %>
       </footer>
     </div>
