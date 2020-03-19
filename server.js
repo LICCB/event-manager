@@ -108,10 +108,6 @@ app.get('/signup/signupThanks', function(req, res) {
   res.render('signup/signupThanks')
 });
 
-app.get('/signupThanks', function(req, res) {
-  res.render('signup/signupThanks');
-});
-
 /**
  * Renders the editEvent page with the properties of the given event
  */
