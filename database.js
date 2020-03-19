@@ -240,8 +240,16 @@ async function insertParty(signup, eventID, volunteerStatus) {
   if(signupkeys > 17) {
     partsize = (signupkeys - 17) / 10;
   }
-  const registrantID = uuidv4();
-  console.log(registrantID);
+  let conn = await pool.getConnection();
+  const queryStmt = "SELECT participantID FROM LICCB.participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ?";
+  const query = await conn.query(queryStmt, [signup.regfname, signup.reglastname, signup.regemail, signup.regphone]);
+  var registrantID;
+  if(query == {}) {
+    registrantID = uuidv4();
+  } else {
+    registrantID = query[0];
+  }
+
   const insertStmt = "INSERT INTO LICCB.participants " +
     "(participantID, partyID, eventID, firstName, " +
     "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
@@ -273,8 +281,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "'" + date + "', " + //regTime
     "'', " + //userComments
     "'');"; //metadata
-    let conn = await pool.getConnection();
-    let insert = await conn.query(insertStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.regadult, signup.regcpr, signup.regswim, signup.regboat, signup.bhdiscovery, signup.eventdiscovery, signup.notes, signup.priorVolunteer, signup.roleFamiliarity, volunteerStatus]);
+  let insert = await conn.query(insertStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.regadult, signup.regcpr, signup.regswim, signup.regboat, signup.bhdiscovery, signup.eventdiscovery, signup.notes, signup.priorVolunteer, signup.roleFamiliarity, volunteerStatus]);
 
   for(i = 1; i <= partsize; i++) {
     var newParticipantID = uuidv4();
@@ -309,7 +316,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "'" + date + "', " + //regTime
       "'', " + //userComments
       "'');"; //metadata
-      let insert = await conn.query(insertStmt1, [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup[`part${i}age`], signup[`part${i}cpr`], signup[`part${i}swim`], signup[`part${i}boat`], signup.bhdiscovery, signup.eventdiscovery, signup.notes, signup.priorVolunteer, signup.roleFamiliarity, volunteerStatus]);
+    let insert = await conn.query(insertStmt1, [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup[`part${i}age`], signup[`part${i}cpr`], signup[`part${i}swim`], signup[`part${i}boat`], signup.bhdiscovery, signup.eventdiscovery, signup.notes, signup.priorVolunteer, signup.roleFamiliarity, volunteerStatus]);
   }
   conn.release();
   return registrantID;
@@ -404,8 +411,7 @@ async function updateParty(signup, eventID, partyID) {
       "SET " +
       "partyID='' " + 
       "WHERE eventID=? AND partyID=? AND participantID=?;";
-
-      let insert = await conn.query(deleteStmt, [eventID, partyID, partIds[i]]);
+    let insert = await conn.query(deleteStmt, [eventID, partyID, partIds[i]]);
     }
   }
   conn.release();
