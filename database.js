@@ -237,19 +237,16 @@ async function insertParty(signup, eventID, volunteerStatus) {
   const date = utils.getDateTime();
   const signupkeys = Object.keys(signup).length;
   var partsize = 0;
-  if(signupkeys > 17) {
-    partsize = (signupkeys - 17) / 10;
+  if(signupkeys > 16) {
+    partsize = (signupkeys - 16) / 10;
   }
   let conn = await pool.getConnection();
   const queryStmt = "SELECT participantID FROM LICCB.participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ?";
-  const query = await conn.query(queryStmt, [signup.regfname, signup.reglastname, signup.regemail, signup.regphone]);
-  var registrantID;
-  if(query == {}) {
-    registrantID = uuidv4();
-  } else {
-    registrantID = query[0];
+  const query = await conn.query(queryStmt, [signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone]);
+  var registrantID = uuidv4();
+  if(query[0] != undefined) {
+    registrantID = query[0].participantID;
   }
-
   const insertStmt = "INSERT INTO LICCB.participants " +
     "(participantID, partyID, eventID, firstName, " +
     "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
@@ -284,6 +281,12 @@ async function insertParty(signup, eventID, volunteerStatus) {
   let insert = await conn.query(insertStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.regadult, signup.regcpr, signup.regswim, signup.regboat, signup.bhdiscovery, signup.eventdiscovery, signup.notes, signup.priorVolunteer, signup.roleFamiliarity, volunteerStatus]);
 
   for(i = 1; i <= partsize; i++) {
+    const queryStmt = "SELECT participantID FROM LICCB.participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ?";
+    const query = await conn.query(queryStmt, [signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}email`], signup[`part${i}phone`]]);
+    var newParticipantID = uuidv4();
+    if(query[0] != undefined) {
+      registrantID = query[0].participantID;
+    }
     var newParticipantID = uuidv4();
     var insertStmt1 = "INSERT INTO LICCB.participants " +
       "(participantID, partyID, eventID, firstName, " +
@@ -350,31 +353,31 @@ async function updateParty(signup, eventID, partyID) {
     "regComments=? " + //regComments
     "WHERE eventID=? AND partyID=? AND participantID=?;";
   let conn = await pool.getConnection();
-  let insert = await conn.query(update, [singup.eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.regadult, signup.regcpr, signup.regboat, signup.bhdiscovery, signup.eventdiscovery, signup.notes, eventID, partyID, partyID]);
+  let insert = await conn.query(update, [signup.eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.regadult, signup.regcpr, signup.regboat, signup.bhdiscovery, signup.eventdiscovery, signup.notes, eventID, partyID, partyID]);
 
   var partIds = signup.partIDs;
   for(i = 1; i <= partsize; i++) {
     var newParticipantID = uuidv4();
     console.log(signup[`part${i}ID`]);
     var updateStmt = "IF EXISTS (SELECT * FROM LICCB.participants " + 
-      "WHERE eventID='" + eventID + "' AND partyID='" + partyID + "' AND participantID='" + signup[`part${i}ID`] + "' AND firstName = '" + signup[`part${i}fname`] + "' AND lastName = '" + signup[`part${i}lname`] + "') " +
+      "WHERE eventID=? AND partyID=? AND participantID=? AND firstName = ? AND lastName = ?) " +
       "THEN UPDATE LICCB.participants SET " +
-      "eventID='" + signup.eventID + "', " + //eventID
-      "firstName='" + signup[`part${i}fname`] + "', " + //firstName
-      "lastName='" + signup[`part${i}lname`]+ "', " + //lastName
-      "phone='" + signup[`part${i}phone`] + "', " + //phone
-      "email='" + signup[`part${i}email`] + "', " + //email
-      "emergencyPhone='" + signup[`part${i}ephone`] + "', " + //emergencyPhone
-      "emergencyName='" + signup[`part${i}ename`] + "', " + //emergencyName
-      "zip='" + signup.zipcode + "', " + //zipcode
-      "isAdult=" + signup[`part${i}age`] + ", " + //isAdult
-      "hasCPRCert=" + signup[`part${i}cpr`] + ", " + //CPR
-      "canSwim=" + signup[`part${i}swim`] + ", " + //swim
-      "boatExperience=" + signup[`part${i}boat`] + ", " + //boat
-      "boathouseDisc='" + signup.bhdiscovery + "', " + //boathouse discovery
-      "eventDisc='" + signup.eventdiscovery + "', " + //event discvoery
-      "regComments='" + signup.notes + "' " + //regComments
-      "WHERE eventID='" + eventID + "' AND partyID='" + partyID + "' AND participantID='" + signup[`part${i}ID`] + "'; " +
+      "eventID=?, " + //eventID
+      "firstName=?, " + //firstName
+      "lastName=?, " + //lastName
+      "phone=?, " + //phone
+      "email=?, " + //email
+      "emergencyPhone=?, " + //emergencyPhone
+      "emergencyName=?, " + //emergencyName
+      "zip=?, " + //zipcode
+      "isAdult=?, " + //isAdult
+      "hasCPRCert=?, " + //CPR
+      "canSwim=?, " + //swim
+      "boatExperience=?, " + //boat
+      "boathouseDisc=?, " + //boathouse discovery
+      "eventDisc=?, " + //event discvoery
+      "regComments=? " + //regComments
+      "WHERE eventID=? AND partyID=? AND participantID=?; " +
       "ELSE " + 
       "INSERT INTO LICCB.participants VALUES(" +
       "'" + newParticipantID + "', " + //participantID
