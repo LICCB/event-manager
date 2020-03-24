@@ -6,8 +6,9 @@
     <title>Public Signup</title>
     <link rel="stylesheet" type="text/css" href="/css/form.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <%- include('../partials/scripts') %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/additional-methods.min.js"></script> -->
     <%- include('../partials/head') %>
 </head>
 
@@ -26,7 +27,7 @@
                     of selections will usually take place 3 to 2 days ahead of the trip. A final round of selections are
                     usually made the day before, along with the Declines.</p>
                 <label for="ename">Event:</label>
-                <select id="eventID" name="eventID" form="publicSignupform" required>
+                <select id="eventID" name="eventID" form="publicSignupform">
                     <option value='' selected="selected" disabled hidden style='display: none' >Select an event</option>
                     <% for(i = 0; i < events.length; i++) { %>
                         <% if(events[i].eventStatus == "Registration Open" && !events[i].privateEvent) {%>
@@ -39,34 +40,34 @@
 
                 <div class="reginfo">
                     <label for="regfirstname">Registrant First Name:</label>
-                    <input type="text" id="regfirstname" name="regfirstname" class="name" placeholder="Your First Name Here" required>
+                    <input type="text" id="regfirstname" name="regfirstname" class="name" placeholder="Your First Name Here">
                     
                     <label for="reglastname">Registrant Last Name:</label>
-                    <input type="text" id="reglastname" name="reglastname" class="name" placeholder="Your Last Name Here" required>
+                    <input type="text" id="reglastname" name="reglastname" class="name" placeholder="Your Last Name Here">
 
                     <label for="regadult">Over 18?</label>
-                    <select name="regadult" form="publicSignupform" required>
+                    <select name="regadult" form="publicSignupform" class="select">
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
                         <option value="true">Yes</option>
                     </select>
 
                     <label for="regswim">Swimmer</label>
-                    <select name="regswim" form="publicSignupform" required>
+                    <select name="regswim" form="publicSignupform" class="select">
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
                         <option value="true">Yes</option>
                     </select>
 
                     <label for="regboat">Boating Experience</label>
-                    <select name="regboat" form="publicSignupform" required>
+                    <select name="regboat" form="publicSignupform" class="select">
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
                         <option value="true">Yes</option>
                     </select>
 
                     <label for="regcpr">CPR Certification</label>
-                    <select name="regcpr" form="publicSignupform" required>
+                    <select name="regcpr" form="publicSignupform" class="select">
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
                         <option value="true">Yes</option>
@@ -74,16 +75,16 @@
 
                     <!--All of this must be validated to be correct email and phone #-->
                     <label for="regemail">Registrant Email:</label>
-                    <input type="text" id="regemail" name="regemail" class="email" placeholder="Your Email Here" required>
+                    <input type="text" id="regemail" name="regemail" class="email" placeholder="Your Email Here">
 
                     <label for="regphone">Registrant Phone Number:</label>
-                    <input type="text" id="regphone" name="regphone" class="phone" placeholder="Your Phone Number Here" required>
+                    <input type="text" id="regphone" name="regphone" class="phone" placeholder="Your Phone Number Here">
 
                     <label for="regename">Registrant Emergency Contact Name:</label>
-                    <input type="text" id="regename" name="regename" class="name" placeholder="Emergency Contact Name" required>
+                    <input type="text" id="regename" name="regename" class="name" placeholder="Emergency Contact Name">
 
                     <label for="regephone">Registrant Emergency Contact Phone Number:</label>
-                    <input type="text" id="regephone" name="regephone" class="phone" placeholder="Emergency Contact Phone Number" required>
+                    <input type="text" id="regephone" name="regephone" class="phone" placeholder="Emergency Contact Phone Number">
 
                     <label for="partysize">Add Party Member</label>
                     <input type="button" value="Add a Party Member" class="button" id="addpart" />
@@ -97,10 +98,10 @@
                 <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/>
                 <div class="discinfo">
                     <label for="zip">Zip Code:</label>
-                    <input type="text" id="zip" name="zipcode" class ="zip" placeholder="Zip Code" required>
+                    <input type="text" id="zip" name="zipcode" class ="zip" placeholder="Zip Code">
     
                     <label for="eventdiscovery">Event Discovery:</label>
-                    <select name="eventdiscovery" form="publicSignupform" required>
+                    <select name="eventdiscovery" form="publicSignupform" class="select">
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="calendar">LICCB Calendar</option>
                         <option value="subscriber">LICCB subscriber Newsletter or direct email</option>
@@ -120,7 +121,7 @@
                     </select>
     
                     <label for="bhdiscovery">Boat House Discovery:</label>
-                    <select name="bhdiscovery" form="publicSignupform" required>
+                    <select name="bhdiscovery" form="publicSignupform" class="select">
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="facebook">Facebook</option>
                         <option value="instagram">Instagram</option>
@@ -143,14 +144,6 @@
                 </div>
 
                 <br>
-
-                <!-- Allows for alerts to be in one central location rather than one popup per error -->
-                <div id="errorDiv" class="alert alert-danger" role="alert"></div>
-
-                <!-- The actual button to click runs validation before submission -->
-                <!-- <button id="validateButton" onclick="validateInput()" type="button">Submit Registration</button> -->
-                <!-- The button that submits the form is hidden and clicked by the validation script if everything passes -->
-                <!-- <input id="submitForm" type="submit" value="Submit Registration" style="display: none;"> -->
                 <input id="submitForm" type="submit" value="Submit Registration">
             </form>
         </fieldset>
@@ -159,5 +152,4 @@
 
 <script src="/scripts/addParticipant.js"></script>
 <script src="/scripts/validator.js"></script>
-<script src="jquery.validate.js"></script>
 </html>
