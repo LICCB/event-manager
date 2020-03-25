@@ -235,6 +235,14 @@ app.get('/participants/tie/:id', async (req, res) => {
 });
 
 /**
+ * Ties two participants together and renders the all participants view with a success alert
+ */
+app.get('/participants/tie/:id/:idwith', async (req, res) => {
+  await db.tieParticipants(req.params.id, req.params.idwith);
+  res.render('participants/participants');
+});
+
+/**
  * Updates the userCommets for the participant
  */
 app.post('/participant/comment/:eventID/:participantID', async (req, res) => {
