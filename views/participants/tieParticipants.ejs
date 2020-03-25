@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head', {title: "Tie Participant"}) %>
+  </head>
+  <body class="bg-gray">
+    <%- include('../partials/header', {title: "Tie Participant"}) %>
+    <div class="container content">
+      <table id="participantsTable" class="table">
+        <thead>
+          <tr>
+            <th scope="col"> Event </th>
+            <th scope="col"> First Name </th>
+            <th scope="col"> Last Name </th>
+            <th scope="col"> Phone # </th>
+            <th scope="col"> Email </th>
+            <th scope="col"> Zipcode </th>
+            <th scope="col"> Is Adult </th>
+            <th scope="col"> Is CPR Certified </th>
+            <th scope="col"> Can Swim </th>
+            <th scope="col"> Has Boat Experience </th>
+            <th scope="col"> Boathouse Discovery </th>
+            <th scope="col"> Event Discovery </th>
+            <th scope="col"> Registration Comments </th>
+            <th scope="col"> Registration Status </th>
+            <th scope="col"> Check In Status </th>
+            <th scope="col"> Is Volunteer </th>
+            <th scope="col"> Registration Time </th>
+            <th scope="col"> User Comments </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td> <%= selected.eventName %> </td>
+            <td> <%= selected.firstName %> </td>
+            <td> <%= selected.lastName %> </td>
+            <td> <%= selected.phone %> </td>
+            <td> <%= selected.email %> </td>
+            <td> <%= selected.zip %> </td>
+            <td> <%= selected.isAdult %> </td>
+            <td> <%= selected.hasCPRCert %> </td>
+            <td> <%= selected.canSwim %> </td>
+            <td> <%= selected.boatExperience %> </td>
+            <td> <%= selected.boathouseDisc %> </td>
+            <td> <%= selected.eventDisc %> </td>
+            <td> <%= selected.regComments %> </td>
+            <td> <%= selected.regStatus %> </td>
+            <td> <%= selected.checkinStatus %> </td>
+            <td> <%= selected.volunteer %> </td>
+            <td> <%= selected.regTime %> </td>
+            <td> <%= selected.userComments %> </td>
+          </tr>
+        </tbody>
+      </table>
+      <table id="participantsTable" class="table">
+        <thead>
+          <tr>
+            <th scope="col"> Tie With </th>
+            <th scope="col"> Event </th>
+            <th scope="col"> First Name </th>
+            <th scope="col"> Last Name </th>
+            <th scope="col"> Phone # </th>
+            <th scope="col"> Email </th>
+            <th scope="col"> Zipcode </th>
+            <th scope="col"> Is Adult </th>
+            <th scope="col"> Is CPR Certified </th>
+            <th scope="col"> Can Swim </th>
+            <th scope="col"> Has Boat Experience </th>
+            <th scope="col"> Boathouse Discovery </th>
+            <th scope="col"> Event Discovery </th>
+            <th scope="col"> Registration Comments </th>
+            <th scope="col"> Registration Status </th>
+            <th scope="col"> Check In Status </th>
+            <th scope="col"> Is Volunteer </th>
+            <th scope="col"> Registration Time </th>
+            <th scope="col"> User Comments </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(i = 0; i < participants.length; i++){ %>
+            <tr>
+              <td>
+                <a class="btn btn-primary" href="/participant/tieWith/<%= participants[i].participantID %>" role="button">
+                  Tie
+                </a>
+              </td>
+              <td> <%= participants[i].eventName %> </td>
+              <td> <%= participants[i].firstName %> </td>
+              <td> <%= participants[i].lastName %> </td>
+              <td> <%= participants[i].phone %> </td>
+              <td> <%= participants[i].email %> </td>
+              <td> <%= participants[i].zip %> </td>
+              <td> <%= participants[i].isAdult %> </td>
+              <td> <%= participants[i].hasCPRCert %> </td>
+              <td> <%= participants[i].canSwim %> </td>
+              <td> <%= participants[i].boatExperience %> </td>
+              <td> <%= participants[i].boathouseDisc %> </td>
+              <td> <%= participants[i].eventDisc %> </td>
+              <td> <%= participants[i].regComments %> </td>
+              <td> <%= participants[i].regStatus %> </td>
+              <td> <%= participants[i].checkinStatus %> </td>
+              <td> <%= participants[i].volunteer %> </td>
+              <td> <%= participants[i].regTime %> </td>
+              <td> <%= participants[i].userComments %> </td>
+            </tr>
+          <% } %>
+
+        </tbody>
+      </table>
+      <footer class="footer">
+        <%- include('../partials/footer') %>
+      </footer>
+    </div>
+
+    <%- include('../partials/scripts') %>
+    <script src="/scripts/jQueryDataTables.js"></script>
+  </body>
+</html>
