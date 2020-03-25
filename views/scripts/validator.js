@@ -23,4 +23,6 @@ jQuery.validator.addClassRules({
     }
 });
 
-$("#publicSignupform").validate();
+$("#publicSignupform").validate({
+    errorClass: "alert alert-danger"
+});

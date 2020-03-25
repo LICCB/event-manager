@@ -6,10 +6,11 @@ input[type=text], select, input[type=time] {
     padding: 10px 10px;
     margin: 7px 0;
     display: inline-block;
-    border: 1px solid #ccc;
+    border: 1px solid #ccc !important;
     border-radius: 4px;
     box-sizing: border-box;
-
+    background-color: white !important;
+    color: black !important;
   }
 
   input[type=submit] {
