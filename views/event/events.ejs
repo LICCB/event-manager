@@ -36,8 +36,10 @@
             <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> |
             <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> |
             <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a> |
-            <a href=<%= "lottery/" + events[i].eventID %>>Selection</a> |
-            <a href=<%= "lottery/random/" + events[i].eventID %>>Random Lottery</a>
+            <a href=<%= "lottery/" + events[i].eventID %>>Manual Selection</a> |
+            <a href=<%= "lottery/random/" + events[i].eventID %>>Run Strategy</a> |
+            <a href=<%= "lottery/selectAll/" + events[i].eventID %>>Select All</a> |
+            <a href=<%= "lottery/resetSelection/" + events[i].eventID %>>Reset Selection</a>
           </td>
             <td> <%=  events[i].eventName %> </td>
             <td> <%=  events[i].Manager %> </td>

@@ -56,7 +56,7 @@ async function queryParticipantsByEventID(eventID) {
   return participants;
 }
 
-async function queryParticipantsNotRegistered(eventID) {
+async function queryParticipantsNotReady(eventID) {
   let conn = await pool.getConnection();
   status = "Awaiting Confirmation";
   status2='Not Confirmed';
@@ -86,6 +86,17 @@ async function queryEventDetailsByID(eventID) {
   return event;
 }
 
+async function queryEventStatusByID(eventID) {
+  let conn = await pool.getConnection();
+  status="status";
+  let event = await conn.query("SELECT eventStatus " +
+                               "FROM LICCB.events " +  
+                               "WHERE eventID = '" + eventID + "'"
+                              );
+  conn.release();
+  return event;  
+}
+
 async function queryParticipants() {
   let conn = await pool.getConnection();
   let participants = await conn.query("SELECT * FROM LICCB.participants JOIN LICCB.events ON LICCB.participants.eventID=LICCB.events.eventID");
@@ -107,6 +118,35 @@ async function queryParticipantByID(participantID) {
                                       "JOIN LICCB.events ON p.eventID=LICCB.events.eventID");
   conn.release();
   return participants;
+}
+
+async function selectParticipant(participantID, eventID) {
+  let conn = await pool.getConnection();
+  let updateParticipant = await conn.query("UPDATE LICCB.participants " +
+                                           "SET regStatus = 'Selected' " +
+                                           "WHERE LICCB.participants.participantID = '" + participantID + "' " +
+                                           "AND LICCB.participants.eventID = '" + eventID + "'");
+  conn.release();
+  return updateParticipant;
+}
+
+async function resetParticipantsStatus(eventID) {
+  let conn = await pool.getConnection();
+  let resetParticipants = await conn.query("UPDATE LICCB.participants " +
+                                           "SET regStatus='Registered' " +
+                                           "WHERE LICCB.participants.regStatus = 'Selected' " +
+                                           "AND LICCB.participants.eventID = '" + eventID + "'");
+  conn.release();
+  return resetParticipants;
+}
+
+async function selectAllParticipantStatus(eventID) {
+  let conn = await pool.getConnection();
+  let selectAll = await conn.query("UPDATE LICCB.participants " +
+                                           "SET regStatus='Selected' " +
+                                           "AND LICCB.participants.eventID = '" + eventID + "'");
+  conn.release();
+  return selectAll;
 }
 
 async function checkinParticipant(participantID, eventID) {
@@ -485,4 +525,8 @@ module.exports.queryAllEventNames = queryAllEventNames;
 module.exports.runSelectionDefault = runSelectionDefault;
 module.exports.runSelectionRandom = runSelectionRandom;
 module.exports.getCapacityFromEventID = getCapacityFromEventID;
-module.exports.queryParticipantsNotRegistered = queryParticipantsNotRegistered;
+module.exports.queryParticipantsNotReady = queryParticipantsNotReady;
+module.exports.queryEventStatusByID = queryEventStatusByID;
+module.exports.selectParticipant = selectParticipant;
+module.exports.resetParticipantsStatus = resetParticipantsStatus;
+module.exports.selectAllParticipantStatus = selectAllParticipantStatus;

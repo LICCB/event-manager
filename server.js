@@ -233,7 +233,6 @@ app.get('/export', async (req, res) => {
 });
 
 
-
 /**
  * Redirects to the lottery run selection pages
  */
@@ -260,6 +259,22 @@ app.get('/lottery/random/:id', async (req, res) => {
     capacity = await db.getCapacityFromEventID(req.params.id);
     res.render('lottery/lotteryEventLocked', {title: "Run Strategy",participants: await db.runSelectionRandom(req.params.id, Object.values(capacity[0])), event: (await db.queryEventByID(req.params.id))[0]})
   }
+});
+
+
+app.get('/updateSelectedParticipants', async (req, res) => {
+  res.redirect('/events');
+  // selectTheParticipants = await db.selectParticipant();
+});
+
+app.get('/lottery/resetSelection/:id', async (req, res) => {
+  res.redirect('/events');
+  resetParticipants = await db.resetParticipantsStatus(req.params.id);
+});
+
+app.get('/lottery/selectAll/:id', async (req, res) => {
+  res.redirect('/events');
+  resetParticipants = await db.selectAllParticipantStatus(req.params.id);
 });
 
 
