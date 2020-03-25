@@ -239,8 +239,11 @@ app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
  * Redirects to the export page where the user can export participant data based on certain attributes
  */
 app.get('/export', async (req, res) => {
+  let users = await db.queryAllUsers();
+  delete users.meta;
   res.render("export/export", {
     title: "Export",
+    users: users,
     error: null
   });
 });
@@ -255,22 +258,27 @@ app.post('/export/exportData', async (req, res) => {
   if (req.body.fileName != '') {
     fileName = `${req.body.fileName}.csv`;
   }
-
-  // Will eventually be an additional database query to get a list of eventIDs from a certain attribute
-  let eventAttr = req.body.eventAttr;
-  let eventAttrValue = req.body.eventAttrValue;
   // Event type attribute in events table is an ID linked to eventTypes table with a human-readable name for the type
-  if (eventAttr == 'eventType') {
-    tmp = await db.queryEventTypeIDByName(eventAttrValue);
+  if (req.body.eventTypeCheck == 'on') {
+    tmp = await db.queryEventTypeIDByName(req.body.eventTypeVal);
     delete tmp.meta;
-    eventAttrValue = tmp.typeID;
+    eventType = tmp.typeID;
   }
-  let participants = await db.queryParticipantsByEventAttr(eventAttr, eventAttrValue);
+  let eventAttrs = {
+    "eventName": req.body.eventNameCheck == 'on' ? req.body.eventNameVal : '',
+    "eventStatus": req.body.eventStatusCheck == 'on' ? req.body.eventStatusVal : '',
+    "eventType": req.body.eventTypeCheck == 'on' ? eventType : '',
+    "managerID": req.body.managerNameCheck == 'on' ? req.body.managerNameVal : '',
+    "creatorID": req.body.creatorNameCheck == 'on' ? req.body.creatorNameVal : '',
+  };
+  let participants = await db.queryParticipantsByEventAttr(eventAttrs);
   delete participants.meta;
 
+  let users = await db.queryAllUsers();
   if (participants.length == 0) {
     res.render("export/export",  {
       title: "Export",
+      users: users,
       error: "No participants were found."
     });
     return;

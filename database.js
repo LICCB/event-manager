@@ -49,9 +49,20 @@ async function queryParticipantsByEventID(eventID) {
   return participants;
 }
 
-async function queryParticipantsByEventAttr(eventAttr, eventAttrValue) {
+async function queryParticipantsByEventAttr(eventAttrs) {
   let conn = await pool.getConnection();
-  let participants = await conn.query(`SELECT * FROM LICCB.events as E, LICCB.participants as P WHERE E.${eventAttr}='${eventAttrValue}' AND E.eventID = P.eventID`);
+  let queryString = `SELECT * FROM LICCB.events as E, LICCB.participants as P WHERE `;
+
+  // Add all selected attributes to query
+  let attrKeys = Object.keys(eventAttrs);
+  for (let i = 0; i < attrKeys.length; i++) {
+    if (eventAttrs[attrKeys[i]] != '') {
+      queryString += `E.${attrKeys[i]} = '${eventAttrs[attrKeys[i]]}' AND `
+    }
+  }
+  // Join events table with participants table to get participant data
+  queryString += "E.eventID = P.eventID"
+  let participants = await conn.query(queryString);
   conn.release();
   return participants;
 }
