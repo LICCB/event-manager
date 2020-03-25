@@ -228,6 +228,13 @@ app.get('/participant/:id', async (req, res) => {
 });
 
 /**
+ * Renders the participant list to tie with the selected participant
+ */
+app.get('/participants/tie/:id', async (req, res) => {
+  res.render('participants/tieParticipants', {selected: (await db.queryParticipantByID(req.params.id))[0], participants: await db.queryParticipantsByNotID(req.params.id)})
+});
+
+/**
  * Updates the userCommets for the participant
  */
 app.post('/participant/comment/:eventID/:participantID', async (req, res) => {
