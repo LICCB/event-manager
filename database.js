@@ -99,6 +99,16 @@ async function queryParticipantsByNotID(participantID) {
   return participants;
 }
 
+async function tieParticipants(participantID, tieWithParticipantID) {
+  let conn = await pool.getConnection();
+  let result = await conn.query("UPDATE LICCB.participants " +
+                                "SET participantID = ?" +
+                                "WHERE LICCB.participants.participantID = ?",
+                                [participantID, tieWithParticipantID]);
+  conn.release();
+  return result;
+}
+
 async function checkinParticipant(participantID, eventID) {
   let conn = await pool.getConnection();
   let participant = await conn.query("UPDATE LICCB.participants " +
@@ -538,6 +548,7 @@ module.exports.queryEventDetailsByID = queryEventDetailsByID;
 module.exports.queryParticipants = queryParticipants;
 module.exports.queryParticipantByID = queryParticipantByID;
 module.exports.queryParticipantsByNotID = queryParticipantsByNotID;
+module.exports.tieParticipants = tieParticipants;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
 module.exports.checkinParticipant = checkinParticipant;
 module.exports.editUserComments = editUserComments;
