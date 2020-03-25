@@ -3,12 +3,13 @@
   <head>
     <%- include('../partials/head', {title: "All Participants"}) %>
   </head>
-  <body>
+  <body class="bg-gray">
     <%- include('../partials/header', {title: "All Participants"}) %>
     <div class="container content">
       <table id="participantsTable" class="table">
         <thead>
           <tr>
+            <th scope="col"> Tie Participant</th>
             <th scope="col"> History </th>
             <th scope="col"> Event </th>
             <th scope="col"> First Name </th>
@@ -34,7 +35,12 @@
           <% for(i = 0; i < participants.length; i++){ %>
             <tr>
               <td>
-                <a class="tb-button" href="/participant/<%= participants[i].participantID %>" role="button">
+                <a class="btn btn-primary" href="/participants/tie/<%= participants[i].participantID %>" role="button">
+                  Tie
+                </a>
+              </td>
+              <td>
+                <a class="btn btn-primary" href="/participants/<%= participants[i].participantID %>" role="button">
                   View
                 </a>
               </td>
