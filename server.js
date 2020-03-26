@@ -14,17 +14,6 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-/*
-  Cookies Implementation
-*/
-/*const cookieParser = require('cookie-parser');
-app.use(cookieParser);
-
-const cookieSession = require('cookie-session');
-app.use(cookieSession);*/
-
-
-
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
@@ -76,11 +65,55 @@ app.get('/event/:id', async (req, res) => {
   });
 });
 
+//Unify Signup start
+app.get('/signup', function (req, res) {
+  res.render('signup/volunteer');
+});
+
+app.post('/signup', function (req, res) {
+  if (req.body.volunteer == 'true') {
+    res.redirect('signupEventList/1');
+  } else {
+    res.redirect('signupEventList/0');
+  };
+});
+
+app.get('/signupEventList/:volunteerStatus', async (req, res) => {
+  res.render('signup/signupEventList', {
+    title: "List of Events",
+    events: await db.querySpecificEvents(req.params.volunteerStatus),
+    volunteerStatus: req.params.volunteerStatus
+  });
+});
+
+app.get('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
+  res.render('signup/eventSignup', {
+    title: "Public Signup",
+    eventID: req.params.eventID,
+    volunteerStatus: req.params.volunteerStatus
+  });
+});
+
+app.post('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
+  await db.insertParty(req.body, req.params.eventID, req.params.volunteerStatus);
+  res.redirect('/signupThanks');
+});
+
+//Unified Signup End
+
 app.get('/publicSignup', async (req, res) => {
   res.render('signup/publicSignup', {
-    title: "PublicSingup",
+    title: "Public Signup",
     events: await db.queryAllEvents()
   });
+});
+
+/**
+ * Update to redirect to THANKS page
+ */
+app.post('/publicSignup', async (req, res) => {
+  await db.insertParty(req.body);
+  res.redirect('/signupThanks');
 });
 
 app.get('/privateSignup', async (req, res) => {
@@ -97,6 +130,11 @@ app.get('/volunteerSignup', async (req, res) => {
   });
 });
 
+app.post('/volunteerSignup', async (req, res) => {
+  await db.insertVolunteerParty(req.body);
+  res.redirect('/signupThanks');
+});
+         
 app.post('/signup', async (req, res) => {
   const regID = await db.insertVolunteerParty(req.body);
   const reg = req.body;
@@ -106,6 +144,10 @@ app.post('/signup', async (req, res) => {
 
 app.get('/signup/signupThanks', function(req, res) {
   res.render('signup/signupThanks')
+});
+
+app.get('/signupThanks', function(req, res) {
+  res.render('signup/signupThanks');
 });
 
 /**
@@ -210,19 +252,25 @@ app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { /
   res.redirect('/participants/checkin/' + req.params.eventid);
 });
 
+app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
+  res.render("signup/editRegistration", {
+    title: "Edit Public Signup",
+    events: await db.queryAllEvents(),
+    event: (await db.queryEventByID(req.params.eventid))[0],
+    participants: await db.queryParticipantsByEventAndParty(req.params.eventid, req.params.partyid),
+    utils: utils
+  });
+});
+
+app.post('/editRegistration/:eventid/:partyid', async (req, res) => {
+  await db.updateParty(req.body, req.params.eventid, req.params.partyid);
+  res.redirect('/signupThanks');
+});
+  
 app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
   const {email, eventName} = await db.confirmEmail(req.params.eventID, req.params.registrantID);
   mailer.sendEditRegistrationEmail(email, eventName, req.params.eventID, req.params.registrantID);
   res.render('email/confirmEmail', {title: "Email Confirmed"});
-});
-
-app.get('/editRegistration/:eventID/:registrantID', async (req, res) => {
-  res.render('registration/editRegistration', {title: "Edit Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
-});
-
-app.post('/editRegistration/:eventID/:registrantID', async (req, res) => {
-  // TODO add updateRegistration database method
-  res.redirect('registration/updatedRegistration', {title: "Updated Registration", registration: await db.confirmEmail(req.params.eventID, req.params.registrantID)});
 });
 
 /**

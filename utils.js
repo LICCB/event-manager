@@ -25,14 +25,15 @@ function getDateTime() {
     if(now.getMonth() + 1 < 10) {
         month = "0" + (now.getMonth() + 1).toString();
     } else {month = now.getMonth + 1};
-    if(now.getDay() < 10) {
-        day = "0" + now.getDay().toString();
-    } else {day = now.getDay().toString();}
+    if(now.getDate() < 10) {
+        day = "0" + now.getDate().toString();
+    } else {day = now.getDate().toString();}
     hour = now.getHours().toString();
     minute = now.getMinutes().toString();
     second = now.getSeconds().toString();
+    miliseconds = now.getMilliseconds().toString();
 
-    return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+    return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + miliseconds;
 };
 
 /**

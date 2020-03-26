@@ -3,10 +3,10 @@
   <head>
     <%- include('../partials/head', {title: participants[0].firstName + ' ' + participants[0].lastName}) %>
   </head>
-  <body class="bg-gray">
+  <body>
     <%- include('../partials/header', {title: "All Participants"}) %>
     <div class="container content">
-      <table class="table table-striped table-dark table-bordered table-hover">
+      <table class="table">
         <thead>
           <tr>
             <th scope="col"> Event </th>
@@ -54,6 +54,9 @@
           <% } %>
         </tbody>
       </table>
+      <br>
+      <button class="button" value="Go Back" onclick="history.back()">Go Back</button>
+      <br>
       <footer class="footer">
         <%- include('../partials/footer') %>
       </footer>

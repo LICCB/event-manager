@@ -191,15 +191,14 @@ input[type=text], select, input[type=time] {
 }
 
 .table {
-  /*table-striped table-dark table-bordered table-hover table-sm*/
   width: 100%;
   padding: 2%;
-  /*margin: 0em;*/
+  position: relative;
 }
 
 .table tr {
   /*background-color: #eef2fd;*/
-  background-image: repeating-linear-gradient(#fff, #eef2fd);
+  background-image: repeating-linear-gradient(#fff, #fff, #eef2fd);
   color: #000;
 }
 
@@ -214,24 +213,17 @@ input[type=text], select, input[type=time] {
   border: 1px solid #fff;
 }
 
-/*.table tr:nth-of-type(odd) {
-  background-color: #fff;
-}*/
-
 .table tr:hover {
-  background-image: linear-gradient(#fff, #fff6c3);
+  background-image: linear-gradient(#fff, #fff,  #fff6c3);
 }
 
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
-
-
 body {
-    font-family: 'Poppins', sans-serif;
-    background: #fafafa;
+    font-family: Verdana, Arial, sans-serif;
+    background: #fff;
 }
 
 p {
-    font-family: 'Poppins', sans-serif;
+    font-family: Verdana, Arial, sans-serif;
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
@@ -272,7 +264,7 @@ a, a:hover, a:focus {
 }
 #sidebar ul li a:hover {
   color: #082B47; /*fff*/
-  background-color: #fff6c3;
+  background-color: #fff9d7;
   border-left: 15px solid #082B47;
 }
 
@@ -291,6 +283,10 @@ ul ul a {
   height: 100%;
 } */
 
+/*#options {
+  display: none;
+}*/
+
 .button-left {
   float: left;
   color: #082b47;
@@ -301,17 +297,36 @@ ul ul a {
   border-radius: 4px;
 }
 
+.button-left:hover {
+  background-color: #fff9d7;
+}
+
+/*buttons inside the events table*/
+.tb-button {
+  color: #fff6c3;
+  font-weight: lighter;
+  padding: 6px;
+  margin: 5px;
+  background-color: #082b47;
+  border-radius: 5px;
+}
+
+.tb-button:hover {
+  background-color: #0e387c;
+  color: #fff6c3;
+}
+
 .button {
   color: #082b47;
   padding: 5px;
   margin: 10px;
   background-color: #fff6c3;
   border-color: #082b47;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
-.bg-gray {
-  background-color: #fff; /*gainsboro*/
+.button:hover {
+  background-color: #fff9d7;
 }
 
 .center {
@@ -326,6 +341,12 @@ ul ul a {
 ::placeholder {
   font-size: small;
   color: gainsboro;
+}
+
+/*Modal for Participants Comments*/
+.modal {
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
 }
 
 footer {

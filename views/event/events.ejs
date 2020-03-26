@@ -5,9 +5,9 @@
   <%- include('../partials/head', {title: title}) %>
 </head>
 
-<body class="bg-gray">
+<body>
   <%- include('../partials/header', {title: title}) %>
-  <div class="content">
+  <div class="container content">
     <button class="button-left"><a href="createEvent">Create New Event</a></button>
     <label for="archived">Archived</label>
     <input type="checkbox" id="archived" checked=checked>
@@ -30,12 +30,18 @@
         <% for(i = 0; i < events.length; i++){ %>
         <tr <%= `class=${events[i].eventStatus}` %>>
           <td>
-            <a href=<%= "event/" + events[i].eventID %>>Detail</a> |
-            <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> |
-            <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> |
-            <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> |
-            <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> |
+            <button class="tb-button" data-toggle="collapse" data-target="#options<%=events[i].eventID%>">Options</button>
+            <br>
+
+            <p id="options<%=events[i].eventID%>" class="collapse">
+            <a href=<%="event/"+events[i].eventID%>>Detail</a> <br>
+            <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> <br>
+            <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> <br>
+            <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> <br>
+            <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> <br>
             <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a>
+          </p>
+
           </td>
             <td> <%=  events[i].eventName %> </td>
             <td> <%=  events[i].Manager %> </td>
@@ -55,7 +61,10 @@
   <%- include('../partials/scripts') %>
   <script src="/scripts/filterEvents.js"></script>
   <script src="/scripts/tableSorter.js"></script>
+
   <script src="/scripts/jQueryDataTables.js"></script>
 </body>
 
+
+</body>
 </html>
