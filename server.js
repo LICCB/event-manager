@@ -64,6 +64,42 @@ app.get('/event/:id', async (req, res) => {
   });
 });
 
+//Unify Signup start
+app.get('/signup', function (req, res) {
+  res.render('signup/volunteer');
+});
+
+app.post('/signup', function (req, res) {
+  if (req.body.volunteer == 'true') {
+    res.redirect('signupEventList/1');
+  } else {
+    res.redirect('signupEventList/0');
+  };
+});
+
+app.get('/signupEventList/:volunteerStatus', async (req, res) => {
+  res.render('signup/signupEventList', {
+    title: "List of Events",
+    events: await db.querySpecificEvents(req.params.volunteerStatus),
+    volunteerStatus: req.params.volunteerStatus
+  });
+});
+
+app.get('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
+  res.render('signup/eventSignup', {
+    title: "Public Signup",
+    eventID: req.params.eventID,
+    volunteerStatus: req.params.volunteerStatus
+  });
+});
+
+app.post('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
+  await db.insertParty(req.body, req.params.eventID, req.params.volunteerStatus);
+  res.redirect('/signupThanks');
+});
+
+//Unified Signup End
+
 app.get('/publicSignup', async (req, res) => {
   res.render('signup/publicSignup', {
     title: "Public Signup",
@@ -111,7 +147,7 @@ app.get('/signup/signupThanks', function(req, res) {
 
 app.get('/signupThanks', function(req, res) {
   res.render('signup/signupThanks');
-})
+});
 
 /**
  * Renders the editEvent page with the properties of the given event

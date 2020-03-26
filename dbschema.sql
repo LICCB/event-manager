@@ -31,7 +31,6 @@ CREATE TABLE LICCB.events(
     eventDesc           TEXT,
     eventNotes          TEXT,
     eventMetadata       TEXT,
-    eventTypeMetadata   TEXT,
     eventType           CHAR(36) NOT NULL,
 
     -- Foreign key for manager to ensure it is a real user

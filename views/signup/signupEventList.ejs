@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head', {title: title}) %>
+</head>
+
+<body>
+  <div class="container content">
+    <h1>Events</h1>
+    <table class="table" id="eventsTable">
+      <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">End Time</th>
+            <th scope="col">Event Description</th>
+            <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(i = 0; i < events.length; i++){ %>
+        <tr>
+            <td> <%=  events[i].eventName %> </td>
+            <td> <%=  events[i].startTime %> </td>
+            <td> <%=  events[i].endTime %> </td>
+            <td> <%=  events[i].eventDesc %> </td>
+
+            <td>
+                <a href=<%= "/eventSignup/" + events[i].eventID + "/" + volunteerStatus %>>Sign Up</a>
+    
+              </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <footer class="footer">
+      <%- include('../partials/footer') %>
+    </footer>
+  </div>
+  <br>
+  </div>
+
+  <script src="/scripts/jQueryDataTables.js"></script>
+</body>
+</html>
