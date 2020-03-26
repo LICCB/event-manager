@@ -67,8 +67,12 @@ async function queryEventDetailsByID(eventID) {
 
 async function queryEventTypes(){
   let conn = await pool.getConnection();
-  const query = "SELECT * FROM LICCB.eventTypes;";
+  // const query = "SELECT * FROM LICCB.eventTypes;";
+  const query = 'SELECT eventTypes.typeID, eventTypes.typeName, IF(events.eventType IS NULL, FALSE, TRUE) as inUse ' + 
+                'FROM LICCB.eventTypes ' +
+                'LEFT JOIN LICCB.events ON (eventTypes.typeID = events.eventType)';
   let types = await conn.query(query)
+  console.log(types);
   conn.release();
   return types;
 }
