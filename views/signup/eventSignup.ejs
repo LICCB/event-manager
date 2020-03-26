@@ -29,8 +29,9 @@
         <fieldset class="fieldset">
             <form action=<%= `/eventSignup/${eventID}/${volunteerStatus}` %> method="post" id="eventSignupForm">
                 <%if(volunteerStatus == 1) { %>
-                    <h2>Volunteer Information</h2>
-                    <div name = "Volunteer Info">
+                  <!--  <h2>Volunteer Information</h2> -->
+                    <div style="text-align:right; padding-right:25%;" name = "Volunteer Info">
+                      <h2>Volunteer Information</h2>
                         <label for="priorVolunteer">Have you been a volunteer before?</label>
                         <select name="priorVolunteer" form="eventSignupForm" required>
                             <option selected disabled hidden style='display: none' value=''></option>
