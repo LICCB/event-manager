@@ -36,17 +36,27 @@ app.use(passport.session());
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes)
 
+const authCheck = (req, res, next) => {
+  if(!req.user){
+      // if not logged in
+      res.redirect('/auth/login');
+  } else {
+      // if logged in
+      next();
+  }
+};
+
 /**
  * Renders the home page
  */
-app.get('/', function (req, res) {
+app.get('/',function (req, res) {
   res.render('index');
 });
 
 /**
  * Renders the createEvent page with the list of possible event managers
  */
-app.get('/createEvent', async (req, res) => {
+app.get('/createEvent', authCheck, async (req, res) => {
   res.render('event/createEvent', {
     title: "Create Event",
     users: await db.queryAllUsers()
@@ -56,7 +66,7 @@ app.get('/createEvent', async (req, res) => {
 /**
  * Redirects to the events page after inserting the new event into the database and creating its participant table
  */
-app.post('/createEvent', async (req, res) => {
+app.post('/createEvent', authCheck, async (req, res) => {
   await db.insertEvent(req.body);
   res.redirect('/events');
 });
@@ -64,14 +74,14 @@ app.post('/createEvent', async (req, res) => {
 /**
  * Renders the events page with the list of all events
  */
-app.get('/events', async (req, res) => {
+app.get('/events', authCheck, async (req, res) => {
   res.render('event/events', {
     title: "Events",
     events: utils.cleanupEventData(await db.queryEventsTableData())
   });
 });
 
-app.get('/event/:id', async (req, res) => {
+app.get('/event/:id', authCheck, async (req, res) => {
   const e = await db.queryEventDetailsByID(req.params.id);
   console.log(e);
   console.log(e.startTime);
@@ -171,7 +181,7 @@ app.get('/signupThanks', function(req, res) {
 /**
  * Renders the editEvent page with the properties of the given event
  */
-app.get('/editEvent/:id', async (req, res) => {
+app.get('/editEvent/:id', authCheck, async (req, res) => {
   res.render("event/editEvent", {
     title: "Edit Event",
     event: (await db.queryEventByID(req.params.id))[0],
@@ -183,7 +193,7 @@ app.get('/editEvent/:id', async (req, res) => {
 /**
  * Redirects to the events page after updating the event in the database
  */
-app.post('/editEvent/:id', async (req, res) => {
+app.post('/editEvent/:id', authCheck, async (req, res) => {
   const {oldStart, oldEnd, newStart, newEnd} = await db.updateEvent(req.body, req.params.id);
   if((oldStart.getTime() !== newStart.getTime()) || (oldEnd.getTime() !== newEnd.getTime())){
     const emails = await db.queryRegistrantEmailsByEventID(req.params.id);
@@ -196,7 +206,7 @@ app.post('/editEvent/:id', async (req, res) => {
 /**
  * Redirects to the events page after deleting a given event
  */
-app.get('/deleteEvent/:id', async (req, res) => {
+app.get('/deleteEvent/:id', authCheck, async (req, res) => {
   await db.deleteEvent(req.params.id);
   res.redirect('/events');
 });
@@ -204,7 +214,7 @@ app.get('/deleteEvent/:id', async (req, res) => {
 /**
  * Redirects to the events page after archiving a given event
  */
-app.get('/archiveEvent/:id', async (req, res) => {
+app.get('/archiveEvent/:id', authCheck, async (req, res) => {
   await db.archiveEvent(req.params.id);
   res.redirect('/events');
 });
@@ -212,7 +222,7 @@ app.get('/archiveEvent/:id', async (req, res) => {
 /**
 * Redirects to the events page after publishing a given event
 */
-app.get('/publishEvent/:id', async (req, res) => {
+app.get('/publishEvent/:id', authCheck, async (req, res) => {
  await db.publishEvent(req.params.id);
  res.redirect('/events');
 });
@@ -220,7 +230,7 @@ app.get('/publishEvent/:id', async (req, res) => {
 /**
  * Redirects to the events page after cancelling a given event
  */
-app.get('/cancelEvent/:id', async (req, res) => {
+app.get('/cancelEvent/:id', authCheck, async (req, res) => {
   await db.cancelEvent(req.params.id);
   res.redirect('/events');
 });
@@ -228,28 +238,28 @@ app.get('/cancelEvent/:id', async (req, res) => {
 /**
  * Renders the complete participant list
  */
-app.get('/participants', async (req, res) => {
+app.get('/participants', authCheck, async (req, res) => {
   res.render('participants/allParticipants', {participants: await db.queryParticipants()})
 });
 
 /**
  * Renders the participant list for the specified event
  */
-app.get('/participants/:id', async (req, res) => {
+app.get('/participants/:id', authCheck, async (req, res) => {
   res.render('participants/eventParticipants', {participants: await db.queryParticipantsByEventID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });
 
 /**
  * Renders the participant list for the specified participant
  */
-app.get('/participant/:id', async (req, res) => {
+app.get('/participant/:id', authCheck, async (req, res) => {
   res.render('participants/singleParticipant', {participants: await db.queryParticipantByID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });
 
 /**
  * Updates the userCommets for the participant
  */
-app.post('/participant/comment/:eventID/:participantID', async (req, res) => {
+app.post('/participant/comment/:eventID/:participantID', authCheck, async (req, res) => {
   await db.editUserComments(req.params.participantID, req.params.eventID, req.body.comment)
   res.redirect('/participants/' + req.params.eventID)
 });
@@ -257,14 +267,14 @@ app.post('/participant/comment/:eventID/:participantID', async (req, res) => {
 /**
  * Renders the participant check in list for the specified event
  */
-app.get('/participants/checkin/:id', async (req, res) => {
+app.get('/participants/checkin/:id', authCheck, async (req, res) => {
   res.render('participants/checkinParticipants', {participants: await db.queryParticipantsByEventID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });
 
 /**
  * Checks in a participant and redirects back to the event's check in table
  */
-app.get('/participants/checkin/:eventid/:participantid', async (req, res) => { // Should be changed to POST
+app.get('/participants/checkin/:eventid/:participantid', authCheck, async (req, res) => { // Should be changed to POST
   await db.checkinParticipant(req.params.participantid, req.params.eventid);
   res.redirect('/participants/checkin/' + req.params.eventid);
 });
@@ -293,7 +303,7 @@ app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
 /**
  * Redirects to the export page where the user can export participant data based on certain attributes
  */
-app.get('/export', async (req, res) => {
+app.get('/export', authCheck, async (req, res) => {
   res.render("export/export", {
     title: "Export",
   });
@@ -304,7 +314,7 @@ app.get('/export', async (req, res) => {
  * EventId lists would be built later on based on certain attributes
  * For now, only one ID is received explicitly from the form
  */
-app.post('/export/exportData', async (req, res) => {
+app.post('/export/exportData', authCheck, async (req, res) => {
   let fileName = `${req.body.fileName}.${req.body.fileType}`;
 
   // Will eventually be an additional database query to get a list of eventIDs from a certain attribute

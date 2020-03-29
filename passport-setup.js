@@ -39,7 +39,9 @@ passport.use(
         console.log(profile);
         db.queryUserByEmail(profile.emails[0].value).then((result) => {
             console.log(result);
-            const valid = !(Object.keys(result).length === 0 && result.constructor === Object);
+            console.log(result.length);
+            // const valid = !(Object.keys(result).length === 0 && result.constructor === Object);
+            const valid = !(result.length === 0);
             if(valid){
                 console.log(profile.emails[0].value + " is a valid user");
                 // error, user
