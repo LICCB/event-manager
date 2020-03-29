@@ -4,9 +4,14 @@ const db = require('./database');
 const utils = require('./utils');
 const mailer = require('./email');
 const app = express();
-
 const fs = require('fs');
 const { Parser } = require('json2csv');
+const authRoutes = require('./routes/auth-routes');
+const profileRoutes = require('./routes/profile-routes');
+const passportSetup = require('./passport-setup');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+const config = require('./config.json');
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/views'));
@@ -16,6 +21,20 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
+
+// cookies
+app.use(cookieSession({
+  maxAge: 24 * 60 * 60 * 1000,
+  keys: [config.keys.session.cookieKey]
+}));
+
+// initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// setup routes
+app.use('/auth', authRoutes);
+app.use('/profile', profileRoutes)
 
 /**
  * Renders the home page
