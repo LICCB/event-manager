@@ -520,6 +520,15 @@ async function queryRegistrantEmailsByEventID(eventID){
     emails.slice(0, emails.length - 1)).flat();
 }
 
+async function queryAllUsers(){
+  const query = 'SELECT * FROM LICCB.users;';
+  console.log(query);
+  let conn = await pool.getConnection();
+  let user = await conn.query(query);
+  conn.release();
+  return user;
+}
+
 async function queryUserByEmail(email){
   const query = `SELECT * FROM LICCB.users WHERE email='${email}';`;
   console.log(query);
@@ -549,6 +558,18 @@ async function updateUser(email, googleID, fname, lname){
   return upd;
 }
 
+async function insertUser(email, fName, lName){
+  const userID = uuidv4();
+  const query = 'INSERT INTO LICCB.users ' +
+                '(userID, email, googleID, firstName, lastName, userEnabled) ' +
+                `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1)`; // set googleID to userID until first login
+  console.log(query);
+  let conn = await pool.getConnection();
+  let insert = await conn.query(query);
+  conn.release();
+  return insert;
+}
+
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
@@ -573,6 +594,8 @@ module.exports.queryParticipantsByEventAndParty = queryParticipantsByEventAndPar
 module.exports.updateParty = updateParty;
 module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;
 module.exports.querySpecificEvents = querySpecificEvents;
+module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryUserByEmail = queryUserByEmail;
 module.exports.queryUserByID = queryUserByID;
 module.exports.updateUser = updateUser;
+module.exports.insertUser = insertUser;
