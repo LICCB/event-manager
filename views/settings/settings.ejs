@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head', {title: title}) %>
+</head>
+
+<body>
+  <%- include('../partials/header', {title: title}) %>
+  <div class="container content">
+    <a href="/settings/addUser">Add New User</a> <br>
+    <a href="/settings/users">View All Users</a>
+    <footer class="footer">
+      <%- include('../partials/footer') %>
+    </footer>
+  </div>
+  <br>
+  <%- include('../partials/scripts') %>
+</body>
+</html>
