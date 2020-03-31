@@ -570,6 +570,34 @@ async function insertUser(email, fName, lName){
   return insert;
 }
 
+async function disableUser(id){
+  const query = `UPDATE LICCB.users SET userEnabled=0 WHERE userID='${id}';`;
+  console.log(query);
+  let conn = await pool.getConnection();
+  let upd = await conn.query(query);
+  conn.release();
+  return upd;
+}
+
+async function enableUser(id){
+  const query = `UPDATE LICCB.users SET userEnabled=1 WHERE userID='${id}';`;
+  console.log(query);
+  let conn = await pool.getConnection();
+  let upd = await conn.query(query);
+  conn.release();
+  return upd;
+}
+
+async function deleteUser(id){
+  const query = `DELETE FROM LICCB.users WHERE userID='${id}';`;
+  console.log(query);
+  let conn = await pool.getConnection();
+  let del = await conn.query(query);
+  conn.release();
+  return del;
+}
+
+
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
@@ -599,3 +627,6 @@ module.exports.queryUserByEmail = queryUserByEmail;
 module.exports.queryUserByID = queryUserByID;
 module.exports.updateUser = updateUser;
 module.exports.insertUser = insertUser;
+module.exports.disableUser = disableUser;
+module.exports.enableUser = enableUser;
+module.exports.deleteUser = deleteUser;

@@ -29,6 +29,26 @@ router.post('/addUser', authCheck, async (req, res) => {
     res.redirect('/settings/users');
 });
 
+router.get('/deleteUser/:id', authCheck, async (req, res) => {
+    await db.deleteUser(req.params.id);
+    res.redirect('/settings/users');
+});
+
+router.get('/enableUser/:id', authCheck, async (req, res) => {
+    await db.enableUser(req.params.id);
+    res.redirect('/settings/users');
+});
+
+router.get('/disableUser/:id', authCheck, async (req, res) => {
+    await db.disableUser(req.params.id);
+    res.redirect('/settings/users');
+});
+
+router.get('/deleteUser/:id', authCheck, async (req, res) => {
+    await db.deleteUser(req.params.id);
+    res.redirect('/settings/users');
+});
+
 router.get('/users', authCheck, async (req, res) => {
     console.log(req.user);
     const users = await db.queryAllUsers();

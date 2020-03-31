@@ -7,7 +7,6 @@ const app = express();
 const fs = require('fs');
 const { Parser } = require('json2csv');
 const authRoutes = require('./routes/auth-routes');
-const profileRoutes = require('./routes/profile-routes');
 const settingsRoutes = require('./routes/settings-routes');
 const passportSetup = require('./passport-setup');
 const cookieSession = require('cookie-session');
@@ -35,13 +34,12 @@ app.use(passport.session());
 
 // setup routes
 app.use('/auth', authRoutes);
-app.use('/profile', profileRoutes);
 app.use('/settings', settingsRoutes);
 
 const authCheck = (req, res, next) => {
   if(!req.user){
       // if not logged in
-      res.redirect('/auth/login');
+      res.redirect('/auth/google');
   } else {
       // if logged in
       next();
