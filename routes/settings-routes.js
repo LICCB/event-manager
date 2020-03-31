@@ -56,4 +56,46 @@ router.get('/users', authCheck, async (req, res) => {
     res.render('settings/users', {title: "All Users", users: users});
 });
 
+router.get('/createEventType', authCheck, async (req, res) => {
+    res.render("settings/createEventType", {
+      title: "Creat Event Type"
+    });
+  });
+  
+  router.post('/createEventType', authCheck, async (req, res) => {
+    console.log(req.body);
+    await db.insertEventType(req.body);
+    res.redirect("/settings/eventTypes");
+  });
+  
+  router.get('/eventTypes', authCheck, async (req, res) => {
+    const ets = await db.queryEventTypes();
+    console.log(ets);
+    res.render("settings/eventTypes", {
+      title: "Event Types",
+      types: ets
+    });
+  });
+  
+  router.get('/editEventType/:id', authCheck, async (req, res) => {
+    const type = await db.queryEventTypeByID(req.params.id);
+    console.log(type);
+    console.log(type[0]);
+    res.render("settings/editEventType", {
+      title: "Edit Event Type",
+      type: type[0]
+    });
+  });
+  
+  router.post('/editEventType/:id', authCheck, async (req, res) => {
+    console.log("REQ BODY", req.body);
+    await db.updateEventType(req.params.id, req.body);
+    res.redirect('/settings/eventTypes');
+  });
+  
+  router.get('/deleteEventType/:id', authCheck, async (req, res) => {
+    await db.deleteEventType(req.params.id);
+    res.redirect('/settings/eventTypes');
+  });
+
 module.exports = router;
