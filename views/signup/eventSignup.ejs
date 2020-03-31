@@ -119,6 +119,24 @@
     
                 <!--Insert Dynamic Fields-->
                 <!--Insert Event Type Specific Fields-->
+                <div id="newfields" form="eventSignupForm">
+                    <% if(event.eventMetadata != null) { %>
+                        <h2>Additional Questions:</h2>
+                        <% var md = JSON.parse(event.eventMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
+                        <% for(i=0; i < keys.length; i++){ %>
+                            <label for="<%= keys[i] %>"> <%= keys[i] %></label>
+                            <% if(vals[i] == "checkbox") { %>
+                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "1" required>
+                            <% } %>
+                            <% if(vals[i] == "textbox") { %>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required>
+                            <% } %>
+                            <% if(vals[i] == "textarea") { %>
+                                <input type="textarea" id="<%=keys[i] %>" name = "<%=keys[i] %>" required>
+                            <% } %>
+                        <% } %>
+                    <% } %>
+                </div>
 
                 <div-right class="discinfo">
                     <label for="zip">Zip Code:</label>
