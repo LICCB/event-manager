@@ -48,12 +48,13 @@ async function queryEventByID(eventID) {
   conn.release();
   return event;
 }
+
 async function queryEventDetailsByID(eventID) {
   let conn = await pool.getConnection();
   const query = "SELECT * " + 
-                `FROM (SELECT * FROM LICCB.events WHERE eventID='${eventID}') as E JOIN (SELECT * FROM LICCB.users) AS U on ` + 
-                      `E.managerID=U.userID;`;
-  let event = await conn.query(query);
+                `FROM (SELECT * FROM LICCB.events WHERE eventID='${eventID}') as E JOIN (SELECT * FROM LICCB.users) AS U on E.managerID=U.userID ` +
+                      `JOIN (SELECT * FROM LICCB.eventTypes) AS T on E.eventType=T.typeID;`
+  let event = await conn.query(query)
   conn.release();
   return event;
 }
@@ -120,11 +121,12 @@ async function deleteEvent(id) {
 
 async function insertEvent(event) {
   const eventMetadata = utils.getEventMetadata(event);
+  const eventTypeMetadata = "";
   const eventID = uuidv4();
   const insertStmt = "INSERT INTO LICCB.events " +
                     "(eventID, managerID, creatorID, eventName, " +
                     "maxPartySize, privateEvent, startTime, " + 
-                    "endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata) " + 
+                    "endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata, eventType) " + 
                 "VALUES(" +
                     "'" + eventID + "', " + 
                     "'" + event.managerID + "', " +
@@ -139,7 +141,8 @@ async function insertEvent(event) {
                     event.staffRatio + ", " + 
                     "'" + event.eventDesc + "', " +
                     "'" + event.eventNotes + "', " +
-                    "'" + eventMetadata + "');";
+                    "'" + eventMetadata + "'," + 
+                    "'" + event.typeID + "');";
   let conn = await pool.getConnection();
   let insert = await conn.query(insertStmt);
   conn.release();
@@ -181,6 +184,7 @@ async function publishEvent(id) {
 
 async function updateEvent(event, id) {
   const eventMetadata = utils.getEventMetadata(event);
+  const eventTypeMetadata = "";
   const dateTimeQuery = "Select startTime, endTime " + 
                         "From LICCB.events " + 
                         `WHERE eventID='${id}';`;
@@ -200,8 +204,9 @@ async function updateEvent(event, id) {
                   "staffRatio=" + event.staffRatio + ", " + 
                   "eventDesc='" + event.eventDesc + "', " +
                   "eventNotes='" + event.eventNotes + "', " +
-                  "eventMetadata='" + eventMetadata + "' " +                  
-                "WHERE eventID='" + id + "';";
+                  "eventMetadata='" + eventMetadata + "', " +                  
+                  "eventType='" + event.typeID + "' " +                  
+                "WHERE eventID='" + id + "';"
   let conn = await pool.getConnection();
   let oldDateTimes = await conn.query(dateTimeQuery);
   let upd = await conn.query(update);
@@ -597,6 +602,59 @@ async function deleteUser(id){
   return del;
 }
 
+async function queryEventTypes(){
+  let conn = await pool.getConnection();
+  // const query = "SELECT * FROM LICCB.eventTypes;";
+  const query = 'SELECT DISTINCT eventTypes.typeID, eventTypes.typeName, eventTypes.typeMetadata, IF(events.eventType IS NULL, FALSE, TRUE) as inUse ' + 
+                'FROM LICCB.eventTypes ' +
+                'LEFT JOIN LICCB.events ON (eventTypes.typeID = events.eventType)';
+  let types = await conn.query(query)
+  // console.log(types);
+  conn.release();
+  return types;
+}
+
+async function queryEventTypeByID(id){
+  let conn = await pool.getConnection();
+  const query = `SELECT * FROM LICCB.eventTypes WHERE typeID='${id}';`;
+  let types = await conn.query(query)
+  conn.release();
+  return types;
+}
+
+async function insertEventType(type){
+  const metadata = utils.getEventMetadata(type);
+  const typeID = uuidv4();
+  const insertStmt = "INSERT INTO LICCB.eventTypes " +
+                        "(typeID, typeMetadata, typeName) " + 
+                     `VALUES("${typeID}", '${metadata}', "${type.typeName}");`;
+  console.log(insertStmt);
+  let conn = await pool.getConnection();
+  let insert = await conn.query(insertStmt);
+  conn.release();
+  return typeID;
+}
+
+async function deleteEventType(typeID){
+  const delStmt = `DELETE FROM LICCB.eventTypes WHERE typeID='${typeID}'`;
+  let conn = await pool.getConnection();
+  let del = await conn.query(delStmt);
+  conn.release();
+  return del;
+}
+
+async function updateEventType(id, type){
+  console.log(type);
+  const md = utils.getEventMetadata(type);
+  const query = 'UPDATE LICCB.eventTypes ' +
+                `SET typeName='${type.typeName}', typeMetadata='${md}' ` +
+                `WHERE typeID='${id}';`;
+  console.log(query);
+  let conn = await pool.getConnection();
+  let upd = await conn.query(query);
+  conn.release();
+  return upd;
+}
 
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryEventsTableData = queryEventsTableData;
@@ -630,3 +688,8 @@ module.exports.insertUser = insertUser;
 module.exports.disableUser = disableUser;
 module.exports.enableUser = enableUser;
 module.exports.deleteUser = deleteUser;
+module.exports.insertEventType = insertEventType;
+module.exports.queryEventTypes = queryEventTypes;
+module.exports.queryEventTypeByID = queryEventTypeByID;
+module.exports.deleteEventType = deleteEventType;
+module.exports.updateEventType = updateEventType;
