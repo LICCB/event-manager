@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS LICCB.participants, LICCB.events, LICCB.eventTypes, LICCB.users;
 
 CREATE TABLE LICCB.users(
-    userID      VARCHAR(36) NOT NULL,
+    userID      CHAR(36) NOT NULL,
     email       VARCHAR(36) NOT NULL,
     googleID    VARCHAR(36) NOT NULL,
     firstName   VARCHAR(30) NOT NULL,
