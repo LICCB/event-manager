@@ -42,6 +42,38 @@ async function queryEventsTableData(){
   return events;
 }
 
+async function queryParticipantsByEventID(eventID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}'`);
+  conn.release();
+  return participants;
+}
+
+async function queryParticipantsByEventAttr(eventAttrs) {
+  let conn = await pool.getConnection();
+  let queryString = `SELECT * FROM LICCB.events as E, LICCB.participants as P WHERE `;
+
+  // Add all selected attributes to query
+  let attrKeys = Object.keys(eventAttrs);
+  for (let i = 0; i < attrKeys.length; i++) {
+    if (eventAttrs[attrKeys[i]] != '') {
+      queryString += `E.${attrKeys[i]} = '${eventAttrs[attrKeys[i]]}' AND `
+    }
+  }
+  // Join events table with participants table to get participant data
+  queryString += "E.eventID = P.eventID"
+  let participants = await conn.query(queryString);
+  conn.release();
+  return participants;
+}
+
+async function queryEventTypeIDByName(eventTypeName) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query(`SELECT typeID FROM LICCB.eventTypes WHERE typeName='${eventTypeName}'`);
+  conn.release();
+  return participants;
+}
+
 async function queryEventByID(eventID) {
   let conn = await pool.getConnection();
   let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID= ?", [eventID]);
@@ -612,6 +644,8 @@ module.exports.insertParty = insertParty;
 module.exports.queryParticipantsByEventAndParty = queryParticipantsByEventAndParty;
 module.exports.updateParty = updateParty;
 module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;
+module.exports.queryParticipantsByEventAttr = queryParticipantsByEventAttr;
+module.exports.queryEventTypeIDByName = queryEventTypeIDByName;
 module.exports.querySpecificEvents = querySpecificEvents;
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryUserByEmail = queryUserByEmail;

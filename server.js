@@ -265,8 +265,12 @@ app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
  * Redirects to the export page where the user can export participant data based on certain attributes
  */
 app.get('/export', authCheck, async (req, res) => {
+  let users = await db.queryAllUsers();
+  delete users.meta;
   res.render("export/export", {
     title: "Export",
+    users: users,
+    error: null
   });
 });
 
@@ -276,12 +280,36 @@ app.get('/export', authCheck, async (req, res) => {
  * For now, only one ID is received explicitly from the form
  */
 app.post('/export/exportData', authCheck, async (req, res) => {
-  let fileName = `${req.body.fileName}.${req.body.fileType}`;
+  let fileName = "ParticipantData.csv";
+  if (req.body.fileName != '') {
+    fileName = `${req.body.fileName}.csv`;
+  }
+  // Event type attribute in events table is an ID linked to eventTypes table with a human-readable name for the type
+  if (req.body.eventTypeCheck == 'on') {
+    tmp = await db.queryEventTypeIDByName(req.body.eventTypeVal);
+    delete tmp.meta;
+    eventType = tmp.typeID;
+  }
+  let eventAttrs = {
+    "eventName": req.body.eventNameCheck == 'on' ? req.body.eventNameVal : '',
+    "eventStatus": req.body.eventStatusCheck == 'on' ? req.body.eventStatusVal : '',
+    "eventType": req.body.eventTypeCheck == 'on' ? eventType : '',
+    "managerID": req.body.managerNameCheck == 'on' ? req.body.managerNameVal : '',
+    "creatorID": req.body.creatorNameCheck == 'on' ? req.body.creatorNameVal : '',
+  };
+  let participants = await db.queryParticipantsByEventAttr(eventAttrs);
 
-  // Will eventually be an additional database query to get a list of eventIDs from a certain attribute
-  let eventID = req.body.eventID;
-  let participants = await db.queryParticipantsByEventID(eventID);
   delete participants.meta;
+
+  let users = await db.queryAllUsers();
+  if (participants.length == 0) {
+    res.render("export/export",  {
+      title: "Export",
+      users: users,
+      error: "No participants were found."
+    });
+    return;
+  }
 
   // Grabs the names of all the columns from database table for use in creating the csv file header
   let cols = await db.queryAllCols('participants');
