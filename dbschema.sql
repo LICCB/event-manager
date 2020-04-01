@@ -1,10 +1,13 @@
 DROP TABLE IF EXISTS LICCB.participants, LICCB.events, LICCB.eventTypes, LICCB.users;
 
 CREATE TABLE LICCB.users(
-    userID      CHAR(36) NOT NULL PRIMARY KEY,
+    userID      CHAR(36) NOT NULL,
+    email       VARCHAR(36) NOT NULL,
+    googleID    VARCHAR(36) NOT NULL,
     firstName   VARCHAR(30) NOT NULL,
     lastName    VARCHAR(30) NOT NULL,
-    userEnabled BOOLEAN NOT NULL
+    userEnabled BOOLEAN NOT NULL,
+    PRIMARY KEY (userID)
 );
 
 CREATE TABLE LICCB.eventTypes(
