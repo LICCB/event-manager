@@ -1,3 +1,11 @@
+.strategySelected {
+  color: #45a049 !important;
+}
+
+.strategyRejected {
+  color: crimson ! important;
+}
+
 div {
     text-align: center;
 }

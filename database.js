@@ -120,14 +120,33 @@ async function queryParticipantByID(participantID) {
   return participants;
 }
 
-async function selectParticipant(participantID, eventID) {
+async function changeParticipantStatus(participantID, eventID, statusToChange) {
   let conn = await pool.getConnection();
   let updateParticipant = await conn.query("UPDATE LICCB.participants " +
-                                           "SET regStatus = 'Selected' " +
+                                           `SET regStatus = '${statusToChange}' ` +
                                            "WHERE LICCB.participants.participantID = '" + participantID + "' " +
                                            "AND LICCB.participants.eventID = '" + eventID + "'");
   conn.release();
-  return updateParticipant;
+  return "success";
+}
+
+async function queryParticipantsByParticpantAttr(eventID, participantAttrs) {
+  let conn = await pool.getConnection();
+  let queryString = `SELECT P.participantID FROM LICCB.events as E, LICCB.participants as P WHERE `;
+
+  // Add all selected attributes to query
+  let attrKeys = Object.keys(participantAttrs);
+  for (let i = 0; i < attrKeys.length; i++) {
+    if (participantAttrs[attrKeys[i]] != '') {
+      queryString += `P.${attrKeys[i]} = '${participantAttrs[attrKeys[i]]}' AND `
+    }
+  }
+  // Join events table with participants table to get participant data
+  queryString += `E.eventID = P.eventID AND E.eventID='${eventID}'`
+  console.log(queryString);
+  let participants = await conn.query(queryString);
+  conn.release();
+  return participants;
 }
 
 async function resetParticipantsStatus(eventID) {
@@ -182,15 +201,14 @@ async function runSelectionDefault(eventID) {
   return returnSelectedRegistrants;
 }
 // initializes run selection process
-async function runSelectionRandom(eventID, maxCapacity) {
+async function runSelectionRandom(eventID) {
   let conn = await pool.getConnection();
   let returnSelectedRegistrants = await conn.query("SELECT * " +
                                                     " FROM LICCB.participants" +  
                                                     " WHERE eventID = '" + eventID + "'" +
                                                     " AND regStatus='Registered'" +
                                                     " AND isAdult='1'" +
-                                                    " ORDER BY regTime" +
-                                                    " LIMIT " + maxCapacity
+                                                    " ORDER BY regTime"
                                                     );
   conn.release();
   return returnSelectedRegistrants;
@@ -527,6 +545,7 @@ module.exports.runSelectionRandom = runSelectionRandom;
 module.exports.getCapacityFromEventID = getCapacityFromEventID;
 module.exports.queryParticipantsNotReady = queryParticipantsNotReady;
 module.exports.queryEventStatusByID = queryEventStatusByID;
-module.exports.selectParticipant = selectParticipant;
+module.exports.changeParticipantStatus = changeParticipantStatus;
 module.exports.resetParticipantsStatus = resetParticipantsStatus;
 module.exports.selectAllParticipantStatus = selectAllParticipantStatus;
+module.exports.queryParticipantsByParticpantAttr = queryParticipantsByParticpantAttr;

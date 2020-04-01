@@ -22,18 +22,33 @@
       </thead>
       <tbody>
         <% for(i = 0; i < participants.length; i++){ %>
-          <tr>
-            <% var vals = Object.values(participants[i]) %> 
-            <% for(j = 0; j < vals.length; j++){ %>
-            <td> <%=  vals[j] %> </td>
-            <% } %>
-          </tr>
+
+          <% if (i<=capacity) { %>
+            <tr class="strategySelected">
+              <% var vals = Object.values(participants[i]) %> 
+              <% for(j = 0; j < vals.length; j++){ %>
+              <td> <%=  vals[j] %> </td>
+              <% } %>
+            </tr> 
+          <% } %>
+          
+          <% if (i>capacity) { %>
+            <tr class="strategyRejected">
+              <% var vals = Object.values(participants[i]) %> 
+              <% for(j = 0; j < vals.length; j++){ %>
+              <td> <%=  vals[j] %> </td>
+              <% } %>
+            </tr>
+          <% } %>
+
         <% } %>
 
       </tbody>
     </table>
 
-    <button type="button">Confirm Selection!</button>
+    <form action="/updateSelectedParticipantsStrategy/<%= event.eventID %>" method="POST">
+      <input type="submit" value="Confirm Selection">
+    </form>
 
     <footer>
       <%- include('../partials/footer') %>

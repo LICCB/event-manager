@@ -239,6 +239,7 @@ app.get('/export', async (req, res) => {
 app.get('/lottery/', async (req, res) => {
   res.render('lottery/lotteryLanding', {title:"Lottery Landing Page", events: (await db.queryAllEventNames())});
 });
+// MANUAL
 app.get('/lottery/:id', async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
   test2 = (await db.queryParticipantsNotReady(req.params.id));
@@ -248,6 +249,7 @@ app.get('/lottery/:id', async (req, res) => {
     res.render('lottery/lotteryEvent', {title: "Manual Selection", participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
   }
 });
+// STRATEGY
 app.get('/lottery/random/:id', async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
   test2 = (await db.queryParticipantsNotReady(req.params.id));
@@ -257,14 +259,57 @@ app.get('/lottery/random/:id', async (req, res) => {
     res.redirect('/events');
   } else {
     capacity = await db.getCapacityFromEventID(req.params.id);
-    res.render('lottery/lotteryEventLocked', {title: "Run Strategy",participants: await db.runSelectionRandom(req.params.id, Object.values(capacity[0])), event: (await db.queryEventByID(req.params.id))[0]})
+    getParticipants = await db.runSelectionRandom(req.params.id);
+    if (getParticipants.length == 0) {
+      res.redirect('/events');
+      console.log("No Participants are eligible for selection");
+    } else {
+      res.render('lottery/lotteryEventLocked', {title: "Run Strategy",participants: getParticipants, capacity: Object.values(capacity[0]), event: (await db.queryEventByID(req.params.id))[0]})
+    }
   }
 });
 
+app.post('/updateSelectedParticipantsStrategy/:id', async (req, res) => {
+  selectedParticipants = await db.runSelectionRandom(req.params.id);
+  delete selectedParticipants.meta;
 
-app.get('/updateSelectedParticipants', async (req, res) => {
+  for (let i=0; i<selectedParticipants.length; i++) {
+    let output = await db.changeParticipantStatus(selectedParticipants[i].participantID, req.params.id, 'Selected');
+    if (output != "success") {
+      console.log(`failed to select participantID: ${selectedParticipants[i].participantID} in event: ${eventID}`)
+    }
+  }
   res.redirect('/events');
-  // selectTheParticipants = await db.selectParticipant();
+});
+
+
+app.post('/updateSelectedParticipants/:id', async (req, res) => {
+  
+
+  filterParticipants = {
+    "regStatus" : req.body.regStatus == "on" ? "Registered" : "",
+    "isAdult" : req.body.isAdult == "on" ? 1 : "",
+    "canSwim" : req.body.canSwim == "on" ? 1 : "",
+    "hasCPRCert" : req.body.hasCPRCert == "on" ? 1 : "",
+    "boatExperience" : req.body.boatExperience == "on" ? 1 : "",
+    "priorVolunteer" : req.body.priorVolunteer == "on" ? 1 : "",
+    "roleFamiliarity": req.body.roleFamiliarity == "on" ? 1 : "",
+    "volunteer" : req.body.volunteer == "on" ? 1 : "",
+  }
+  console.log(filterParticipants);
+
+  let eventID = req.params.id;
+  let selectedParticipants = await db.queryParticipantsByParticpantAttr(eventID, filterParticipants);
+  delete selectedParticipants.meta;
+  console.log(selectedParticipants);
+  for (let i=0; i<selectedParticipants.length; i++) {
+    let output = await db.changeParticipantStatus(selectedParticipants[i].participantID, eventID, 'Selected');
+    if (output != "success") {
+      console.log(`failed to select participantID: ${selectedParticipants[i].participantID} in event: ${eventID}`)
+    }
+  }
+
+  res.redirect('/events');
 });
 
 app.get('/lottery/resetSelection/:id', async (req, res) => {

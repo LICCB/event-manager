@@ -135,6 +135,7 @@ function updateCheckbox(checkbox) {
     $('.Standby').show();
     $('.Canceled').show();
     $('.Same').show();
+    $('.Selected').show();
   }
   if (code.charAt(1) == "0") {
     $('.child').show();
@@ -165,6 +166,7 @@ function updateCheckbox(checkbox) {
     $('.Standby').hide();
     $('.Canceled').hide();
     $('.Same').hide();
+    $('.Selected').hide();
   }
   if (code.charAt(1) == "1") {
     $('.child').hide();
