@@ -94,7 +94,6 @@ app.get('/event/:id', authCheck, async (req, res) => {
   });
 });
 
-//Unify Signup start
 app.get('/signup', function (req, res) {
   res.render('signup/volunteer');
 });
@@ -125,43 +124,7 @@ app.get('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
 
 app.post('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
   await db.insertParty(req.body, req.params.eventID, req.params.volunteerStatus);
-  res.redirect('/signupThanks');
-});
-
-//Unified Signup End
-
-app.get('/publicSignup', async (req, res) => {
-  res.render('signup/publicSignup', {
-    title: "Public Signup",
-    events: await db.queryAllEvents()
-  });
-});
-
-/**
- * Update to redirect to THANKS page
- */
-app.post('/publicSignup', async (req, res) => {
-  await db.insertParty(req.body);
-  res.redirect('/signupThanks');
-});
-
-app.get('/privateSignup', async (req, res) => {
-  res.render('signup/privateSignup', {
-    title: "PrivateSingup",
-    events: await db.queryAllEvents()
-  });
-});
-
-app.get('/volunteerSignup', async (req, res) => {
-  res.render('signup/volunteerSignup', {
-    title: "VolunteerSingup",
-    events: await db.queryAllEvents()
-  });
-});
-
-app.post('/volunteerSignup', async (req, res) => {
-  await db.insertVolunteerParty(req.body);
-  res.redirect('/signupThanks');
+  res.redirect('/signup/signupThanks');
 });
          
 app.post('/signup', async (req, res) => {
@@ -173,10 +136,6 @@ app.post('/signup', async (req, res) => {
 
 app.get('/signup/signupThanks', function(req, res) {
   res.render('signup/signupThanks')
-});
-
-app.get('/signupThanks', function(req, res) {
-  res.render('signup/signupThanks');
 });
 
 /**
