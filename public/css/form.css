@@ -1,6 +1,3 @@
-div {
-    text-align: center;
-}
 input[type=text], select, input[type=time] {
     width: 30%;
     padding: 12px 20px;
@@ -22,6 +19,7 @@ input[type=text], select, input[type=time] {
     cursor: pointer;
     font-style: bold;
     font-family: Verdana, Arial, sans-serif;
+    font-size: 14px;
   }
 
   input[type=submit]:hover {
@@ -29,40 +27,30 @@ input[type=text], select, input[type=time] {
   }
 
   div {
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 16px;
+    text-align: center;
     border-radius: 5px;
-    background-color: #fff;
-    padding: 20px;
+    background-color: transparent;
+    margin: auto;
   }
 
   div2 {
     border-radius: 5px;
-    background-color: #fff;
+    background-color: transparent;
+  }
+
+
+  body {
+    background-image: linear-gradient(#0c306a, #082b47, #082b47);
+    background-repeat: no-repeat;
+  }
+
+  html {
+    min-height: 100%;
   }
 
   * {box-sizing:border-box}
-
-  div-left {
-    width: 50%;
-    height: 40%;
-    text-align: right;
-    float: left;
-    padding-right: 50px;
-  }
-
-  div-right {
-    width: 50%;
-    height: 40%;
-    float: right;
-    padding-right: 350px;
-    text-align: right;
-  }
-
-  div-center {
-    width: 50%;
-    height: 40%;
-    text-align: right;
-    float: center;
-  }
 
 /*Add/Remove participants button*/
 .button {
@@ -78,19 +66,57 @@ input[type=text], select, input[type=time] {
   background-color: #fff9d7;
 }
 
-/* Slideshow container */
+.container {
+  max-width: 80%;
+  position: relative;
+  margin: auto;
+  background-color: transparent;
+}
+
+.note {
+  max-width: 70%;
+  position: relative;
+  background-color: transparent;
+  color: #eef4fd;
+  font-family: Verdana, Arial, sans-serif;
+  padding: 5px;
+}
+
+.header {
+  height: 150px;
+  color: #fff;
+  position: relative;
+  padding-top: 5%;
+  padding-left: 5%;
+  background-color: transparent;
+  background-image: url("/images/img1.png");
+  background-size: contain;
+  background-position: 10%;
+  background-repeat: no-repeat;
+}
+
+.fieldset {
+  position: relative;
+  max-width: 55%;
+  margin: auto;
+  background-color: rgba(220, 232, 251, 0.9);
+  border-radius: 10px;
+  border-color: #082b47;
+}
+
+/* Slideshow container 
 .slideshow-container {
   max-width: 1000px;
   position: relative;
   margin: auto;
 }
 
-/* Hide the images by default */
+
 .mySlides {
   display: none;
 }
 
-/* Next & previous buttons */
+/* Next & previous buttons
 .prev, .next {
   cursor: pointer;
   position: absolute;
@@ -106,16 +132,17 @@ input[type=text], select, input[type=time] {
   user-select: none;
 }
 
-/* Position the "next button" to the right */
+/* Position the "next button" to the right
 .next {
   right: 0;
   border-radius: 3px 0 0 3px;
 }
 
-/* On hover, add a black background color with a little bit see-through */
+/* On hover, add a black background color with a little bit see-through
 .prev:hover, .next:hover {
   background-color: rgba(0,0,0,0.8);
 }
+*/
 
 /* Caption text */
 .text {
