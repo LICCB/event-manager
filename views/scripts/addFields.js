@@ -4,8 +4,8 @@ $("#addfield").click(function () {
     var fieldWrapper = $(`<div class="fieldwrapper" id="field${intId}" />`);
     fieldWrapper.data("idx", intId);
     var fLabel = $(`<label for="field${intId}">Field:</label>`);
-    var fName = $(`<input type="text" id="field${intId}" name="field${intId}" class="fieldname" form="eventform" />`);
-    var fType = $(`<select class="fieldtype" name="type${intId}" form="eventform"><option value="checkbox">Checked</option><option value="textbox">Text</option><option value="textarea">Paragraph</option></select>`);
+    var fName = $(`<input type="text" id="field${intId}" name="field${intId}" class="fieldname" />`);
+    var fType = $(`<select class="fieldtype" name="type${intId}" ><option value="checkbox">Checked</option><option value="textbox">Text</option></select>`);
     var removeButton = $(`<input type="button" class="remove" value="X" />`);
     removeButton.click(function () {
         $(this).parent().remove();

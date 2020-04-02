@@ -8,16 +8,63 @@
 <body class="bg-gray">
     <%- include('../partials/header', {title: title}) %>
     <div class="container content">
+        <% if (error) { %>
+        <div class="alert alert-danger" role="alert">
+            <%= error %>
+        </div>
+        <% } %>
 
         <fieldset>
             <form action="exportData" method="POST" id="exportForm">
-                <label for="eventID">Enter EventID:</label>
-                <input type="text" id="eventID" name="eventID" placeholder="eventID">
-                <label for="fileName"></label>
-                <input type="text" id="fileName" name="fileName" placeholder="fileName">
-                <select id="fileType" name="fileType">
-                    <option value="csv">.csv</option>
+                <h3>Choose which attributes to filter events by.</h3>
+
+                <label for="eventNameCheck">Event Name</label>
+                <input type="checkbox" id="eventNameCheck" name="eventNameCheck">
+                <br>
+                <input type="text" id="eventNameVal" name="eventNameVal" class="optAttr">
+                <br>
+
+                <label for="eventStatusCheck">Event Status</label>
+                <input type="checkbox" id="eventStatusCheck" name="eventStatusCheck">
+                <br>
+                <select id="eventStatusVal" name="eventStatusVal" class="optAttr">
+                    <option value="Unpublished">Unpublished</option>
+                    <option value="Registration Open">Registration Open</option>
+                    <option value="Registration Closed">Registration Closed</option>
+                    <option value="Cancelled">Cancelled</option>
+                    <option value="Selection Finished">Selection Finished</option>
+                    <option value="Archived">Archived</option>
                 </select>
+                <br>
+                
+                <label for="eventTypeCheck">Event Type</label>
+                <input type="checkbox" id="eventTypeCheck" name="eventTypeCheck">
+                <br>
+                <input type="text" id="eventTypeVal" name="eventTypeVal" class="optAttr">
+                <br>
+
+                <label for="managerNameCheck">Manager Name</label>
+                <input type="checkbox" id="managerNameCheck" name="managerNameCheck">
+                <br>
+                <select id="managerNameVal" name="managerNameVal" class="optAttr">
+                    <% for(i = 0; i < users.length; i++) { %>
+                        <option value=<%= users[i].userID %>> <%= users[i].firstName + ' ' + users[i].lastName %> </option>
+                      <% } %>
+                </select>
+                <br>
+
+                <label for="creatorNameCheck">Creator Name</label>
+                <input type="checkbox" id="creatorNameCheck" name="creatorNameCheck">
+                <br>
+                <select id="creatorNameVal" name="creatorNameVal" class="optAttr">
+                    <% for(i = 0; i < users.length; i++) { %>
+                        <option value=<%= users[i].userID %>> <%= users[i].firstName + ' ' + users[i].lastName %> </option>
+                      <% } %>
+                </select>
+                <br>
+
+                <label for="fileName">Name the output File:</label>
+                <input type="text" id="fileName" name="fileName" placeholder="fileName">
                 <br>
                 <button class="button" id="export" type="submit" value="Export">Export</button>
             </form>
@@ -30,6 +77,7 @@
     </div>
 
     <%- include('../partials/scripts') %>
+    <script src="../scripts/exportPage.js"></script>
 </body>
 
 </html>
