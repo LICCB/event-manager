@@ -1,10 +1,15 @@
-INSERT INTO LICCB.users (userID, firstName, lastName, userEnabled)
-    VALUES('1b671a64-40d5-491e-99b0-da01ff1f3341', 'Allan', 'Harper', 1),
-    ('858603fb-4980-430b-970c-c80159666dae', 'Charlie', 'Harper', 1),
-    ('e382d3ee-392d-42c1-a453-5c97806be39d', 'Britney', 'Spears', 1);
+INSERT INTO LICCB.users (userID, googleID, email, firstName, lastName, userEnabled)
+    VALUES('1b671a64-40d5-491e-99b0-da01ff1f3341', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'jhandwer@stevens.edu', 'Jordan', 'Handwerger', 1),
+    ('f679a992-3b44-40f3-839f-2c5f43a5ac47', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'barnwell9@gmail.com', 'Corey', 'Barnwell', 1),
+    ('3c17760d-9589-4db6-8110-34ec9dda457f', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'kmorel1339@gmail.com', 'K', 'M', 1),
+    ('44a94c19-11df-495f-9351-b31f90459afc', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'cjlando3297@gmail.com', 'C', 'L', 1),
+    ('1ed00f27-029a-4431-9e26-969c70b1d387', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'senholmes.21@gmail.com', 'S', 'H', 1),
+    ('b4e4c282-2dcc-4731-8448-f1f8ec9e39bf', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'ankdave97@gmail.com', 'A', 'D', 1),
+    ('858603fb-4980-430b-970c-c80159666dae', '858603fb-4980-430b-970c-c80159666dae', 'charlie.harper@gmail.com', 'Charlie', 'Harper', 1),
+    ('e382d3ee-392d-42c1-a453-5c97806be39d', 'e382d3ee-392d-42c1-a453-5c97806be39d', 'britney.spears@gmail.com', 'Britney', 'Spears', 1);
 
 INSERT INTO LICCB.eventTypes (typeID, typeMetadata, typeName)
-    VALUES('6d4776ef-2d92-4f8a-ae4f-6b61d568031b', '#extraCarSeats: 4', 'test');
+    VALUES('6d4776ef-2d92-4f8a-ae4f-6b61d568031b', '{"extraCarSeats": 4}', 'test');
 
 INSERT INTO LICCB.events (eventID, managerID, creatorID, eventName, maxPartySize, privateEvent, startTime, endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata, eventType)
     VALUES('123e4567-e89b-12d3-a456-556642440000', 'e382d3ee-392d-42c1-a453-5c97806be39d', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'July Outting', 2, 0, '2020-7-10 12:00:00', '2020-7-10 18:00:00', 'Registration Open', 15, 0.5, 'Annual July boating adventure!', NULL, NULL, '6d4776ef-2d92-4f8a-ae4f-6b61d568031b');

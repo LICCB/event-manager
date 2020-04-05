@@ -35,7 +35,7 @@
           <% for(i = 0; i < participants.length; i++){ %>
             <tr>
               <td>
-                <a class="btn btn-primary" href="/participant/<%= participants[i].participantID %>" role="button">
+                <a class="tb-button" href="/participant/<%= participants[i].participantID %>" role="button">
                   View
                 </a>
               </td>
@@ -58,7 +58,7 @@
               <td> <%= participants[i].volunteer %> </td>
               <td> <%= participants[i].regTime %> </td>
               <td>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#comments<%= participants[i].participantID %>">
+                <button type="button" class="tb-button" data-toggle="modal" data-target="#comments<%= participants[i].participantID %>">
                   Comments
                 </button>
               </td>
@@ -96,7 +96,7 @@
         </div>
       <% } %>
 
-      <a href="/participants/checkin/<%= event.eventID %>">Check In Participants</a>
+      <a class="button" href="/participants/checkin/<%= event.eventID %>">Check In Participants</a>
 
       <footer class="footer">
         <%- include('../partials/footer') %>

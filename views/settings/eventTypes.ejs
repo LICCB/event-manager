@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head', {title: title}) %>
+</head>
+
+<body class="bg-gray">
+  <%- include('../partials/header', {title: title}) %>
+  <div class="content">
+    <button class="button-left"><a href="/settings/createEventType">Create New Event Type</a></button>
+    <table class="table" id="eventTypesTable">
+      <thead>
+        <% var keys = Object.keys(types[0]) %>
+        <tr>
+            <th></th>
+            <th scope="col">Name</th>
+            <th scope="col">Metadata</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(i = 0; i < types.length; i++){ %>
+        <tr <%= `class=${types[i].typeID}` %>>
+          <td>
+          <% if(!types[i].inUse){ %>
+            <a href=<%= `/settings/deleteEventType/${types[i].typeID}` %> >Delete</a> |
+          <% } %>
+            <a href=<%= `/settings/editEventType/${types[i].typeID}` %> >Edit</a>
+          </td>
+            <td> <%=  types[i].typeName %> </td>
+            <td> <%=  types[i].typeMetadata %> </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <footer class="footer">
+      <%- include('../partials/footer') %>
+    </footer>
+  </div>
+  <br>
+  <%- include('../partials/scripts') %>
+  <script src="/scripts/filterEvents.js"></script>
+  <script src="/scripts/tableSorter.js"></script>
+  <script src="/scripts/jQueryDataTables.js"></script>
+</body>
+
+</html>
