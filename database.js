@@ -89,12 +89,20 @@ async function queryParticipantByID(participantID) {
   return participants;
 }
 
+/*
+ * Select all participants that haven't participated in any event that the
+ * given participant has participated in.
+ */
 async function queryParticipantsByNotID(participantID) {
   let conn = await pool.getConnection();
   let participants = await conn.query("SELECT * FROM " +
-                                      "(SELECT * FROM LICCB.participants WHERE participantID <> ?) AS p " +
+                                        "(SELECT * FROM LICCB.participants " +
+                                        "WHERE NOT participantID = ? AND " +
+                                          "participantID NOT IN (SELECT participantID FROM LICCB.participants " +
+                                                                "WHERE eventID IN (SELECT eventID FROM LICCB.participants " +
+                                                                                  "WHERE participantID = ?))) AS p " +
                                       "JOIN LICCB.events ON p.eventID=LICCB.events.eventID",
-                                      [participantID]);
+                                      [participantID, participantID]);
   conn.release();
   return participants;
 }
