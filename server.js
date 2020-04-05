@@ -239,7 +239,7 @@ app.get('/participants/tie/:id', async (req, res) => {
  */
 app.get('/participants/tie/:id/:idwith', async (req, res) => {
   await db.tieParticipants(req.params.id, req.params.idwith);
-  res.render('participants/allParticipants');
+  res.redirect('/participants');
 });
 
 /**
