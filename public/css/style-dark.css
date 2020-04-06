@@ -1,3 +1,7 @@
+html {
+  min-height: 100%;
+}
+
 input[type=text], select, input[type=time] {
     width: 30%;
     padding: 10px 10px;
@@ -27,29 +31,15 @@ input[type=text], select, input[type=time] {
   div {
     text-align: center;
     border-radius: 5px;
-    background-color: #fff;
+    background-color: transparent;
     padding: 10px;
+    color: #fff !important;
   }
 
   * {box-sizing:border-box}
 /*needs clean up in header.ejs*/
-.header {
-  width: 100%;
-  color: #082B47;
-  text-align: left;
-  position: relative;
-  padding-left: 33%;
-  padding-top: 40px;
-  font-family: Verdana, Arial, sans-serif;
-  background-color: transparent;
-  background-image: url("/images/img1.png");
-  background-size: 180px 180px;
-  background-position: 20% 50%;
-  background-repeat: no-repeat;
-  height: 190px;
-}
 
-/*dark header
+/*dark header*/
 .header {
   width: 100%;
   color: #fff;
@@ -64,19 +54,7 @@ input[type=text], select, input[type=time] {
   background-position: 20% 50%;
   background-repeat: no-repeat;
   height: 190px;
-}*/
-
-/* Slideshow container
-.slideshow-container {
-  max-width: 1000px;
-  position: relative;
-  margin: auto;
 }
-
-Hide the images by default
-.mySlides {
-  display: none;
-} */
 
 /*Next & previous buttons */
 .prev, .next {
@@ -88,28 +66,17 @@ Hide the images by default
   font-size: 16px;
   transition: 0.5s ease;
   user-select: none;
-  /*border-radius: 0 3px 3px 0;*/
-  /*top: 50%;*/
-  /*font-weight: bold;*/
-  /*margin-top: -22px;*/
-  /*width: auto;
-  height: auto;*/
 }
-
-/* Position the "next button" to the right
-.next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
-} */
 
 /* On hover, add a black background color with a little bit see-through */
 .prev:hover, .next:hover {
-  background-color: #082B47;
+  background-color: #fff;
+  color: #fff !important;
 }
 
 /* Caption text */
 .text {
-  color: #f2f2f2;
+  color: #fff;
   font-size: 15px;
   padding: 8px 12px;
   position: absolute;
@@ -120,7 +87,7 @@ Hide the images by default
 
 /* Number text (1/3 etc) */
 .numbertext {
-  color: #f2f2f2;
+  color: #fff;
   font-size: 12px;
   padding: 8px 12px;
   position: absolute;
@@ -140,7 +107,7 @@ Hide the images by default
 }
 
 .active, .dot:hover {
-  background-color: #717171;
+  background-color: #fff;
 }
 
 /* Fading animation */
@@ -168,6 +135,7 @@ Hide the images by default
   float: left;
   padding-right: 50px;
   background-color: transparent; /*gainsboro*/
+  color: #fff;
 }
 
 .right {
@@ -177,6 +145,7 @@ Hide the images by default
   padding-left: 50px;
   text-align: left;
   background-color: transparent; /*gainsboro*/
+  color: #fff;
 }
 
 .wrapper {
@@ -191,10 +160,13 @@ Hide the images by default
   left: 0;
   height: 100vh;
   z-index: 999;
-  background: #082b47;
+  /*background: #082b47;*/
   color: #fff;
   transition: all 0.3s;
   border-radius: 0px;
+  border-right: 2px solid #082b47;
+  background-image: linear-gradient(#0c306a, #0c306a, #082b47, #082b47, #082b47);
+  background-repeat: no-repeat;
 }
 
 .content {
@@ -205,6 +177,7 @@ Hide the images by default
   padding-right: 0%;
   margin-right: 0px;
   background-color: transparent;
+  color: #fff;
 }
 
 .table {
@@ -212,31 +185,38 @@ Hide the images by default
   position: relative;
   padding-right: 5px;
   background-color: transparent;
+  color: #fff;
 }
 
 .table tr {
-  background-image: repeating-linear-gradient(#fff, #fff, #eef2fd);
+  background-image: repeating-linear-gradient(#eef2fd, #a7bff5, #a7bff5);
   color: #000;
 }
 
 .table td {
-    border: 1px solid #000;
+    border: 1px solid #fff;
 }
 
 .table th {
   text-align: center;
-  background-color: #082B47;
+  background-color: #0c306a;
   color: #fff;
-  border: 1px solid #000;
+  border: 1px solid #fff;
 }
 
 .table tr:hover {
-  background-image: linear-gradient(#fff, #fff,  #fff6c3);
+  background-image: linear-gradient(#fff,  #fff6c3, #fff6c3);
 }
 
 body {
     font-family: Verdana, Arial, sans-serif;
-    background: #fff;
+    /*background: #082b47;*/
+    background-image: linear-gradient(#0c306a, #082b47, #082b47);
+    background-repeat: no-repeat;
+}
+
+label {
+  color: #fff;
 }
 
 div {
@@ -255,6 +235,7 @@ a, a:hover, a:focus {
     color: inherit;
     text-decoration: none;
     transition: all 0.3s;
+    color: #000;
 }
 
 #sidebar {
@@ -266,7 +247,6 @@ a, a:hover, a:focus {
 
 #sidebar ul li {
   background: transparent; /*212529*/
-  border-bottom: .5px solid #082B47;
 }
 #sidebar ul.components {
     padding: 20px 0;
@@ -282,6 +262,7 @@ a, a:hover, a:focus {
     padding: 10px;
     font-size: 1.1em;
     display: block;
+    color: #fff;
 }
 #sidebar ul li a:hover {
   color: #082B47; /*fff*/
@@ -298,23 +279,13 @@ ul ul a {
     padding-left: 30px !important;
     background: #6d7fcc;
 }
-/* #sidebar {
-  min-width: 250px;
-  max-width: 250px;
-  height: 100%;
-} */
-
-/*#options {
-  display: none;
-}*/
 
 .button-left {
   float: left;
   color: #082b47;
-  padding: 5px;
+  padding: 6px;
   margin: 5px;
   background-color: #fff6c3;
-  border-color: #082b47;
   border-radius: 4px;
 }
 
@@ -363,11 +334,12 @@ ul ul a {
   max-width: 85%;
   float: center;
   table-layout: fixed;
+  color: #fff;
 }
 
 ::placeholder {
   font-size: small;
-  color: gainsboro;
+  color: #fff;
 }
 
 /*Modal for Participants Comments*/
@@ -376,12 +348,14 @@ ul ul a {
   background-color: rgba(0,0,0,0.4);
 }
 
+
+
 .footer {
   padding-top: 15px;
   position: relative;
   width: 100%;
   text-align: center;
-  color: #10368e;
+  color: #cbd9f9;
   background-color: transparent;
   font-family: Verdana, Arial, sans-serif;
 }
