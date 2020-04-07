@@ -53,6 +53,7 @@ router.get('/deleteUser/:id', authCheck, async (req, res) => {
 
 router.get('/users', authCheck, async (req, res) => {
     const users = await db.queryAllUsers();
+    console.log(users);
     res.render('settings/users', {
       user: req.user,
       title: "All Users",

@@ -20,7 +20,11 @@ async function queryAllCols(tableName) {
 
 async function queryAllUsers() {
   let conn = await pool.getConnection();
-  let users = await conn.query("SELECT * FROM LICCB.users");
+  const query = 'SELECT DISTINCT users.*, IF(e1.managerID IS NULL, FALSE, TRUE) as isManager, IF(e2.creatorID IS NULL, FALSE, TRUE) as isCreator ' + 
+                'FROM LICCB.users ' +
+                'LEFT JOIN LICCB.events AS e1 ON users.userID = e1.managerID ' +
+                'LEFT JOIN LICCB.events AS e2 ON users.userID = e2.creatorID;'
+  let users = await conn.query(query)
   conn.release();
   return users;
 }
@@ -490,13 +494,13 @@ async function queryRegistrantEmailsByEventID(eventID){
     emails.slice(0, emails.length - 1)).flat();
 }
 
-async function queryAllUsers(){
-  const query = 'SELECT * FROM LICCB.users;';
-  let conn = await pool.getConnection();
-  let user = await conn.query(query);
-  conn.release();
-  return user;
-}
+// async function queryAllUsers(){
+//   const query = 'SELECT * FROM LICCB.users;';
+//   let conn = await pool.getConnection();
+//   let user = await conn.query(query);
+//   conn.release();
+//   return user;
+// }
 
 async function queryUserByEmail(email){
   const query = `SELECT * FROM LICCB.users WHERE email='${email}';`;
@@ -608,7 +612,6 @@ async function updateEventType(id, type){
   return upd;
 }
 
-module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
