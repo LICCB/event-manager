@@ -56,7 +56,7 @@ app.get('/',function (req, res) {
 /**
  * Renders the createEvent page with the list of possible event managers
  */
-app.get('/createEvent', authcheck, async (req, res) => {
+app.get('/createEvent', authCheck, async (req, res) => {
   res.render('event/createEvent', {
     title: "Create Event",
     users: await db.queryAllUsers(),
@@ -141,7 +141,7 @@ app.get('/signup/signupThanks', function(req, res) {
 /**
  * Renders the editEvent page with the properties of the given event
  */
-app.get('/editEvent/:id', authcheck, async (req, res) => {
+app.get('/editEvent/:id', authCheck, async (req, res) => {
   res.render("event/editEvent", {
     title: "Edit Event",
     event: (await db.queryEventByID(req.params.id))[0],
@@ -154,7 +154,7 @@ app.get('/editEvent/:id', authcheck, async (req, res) => {
 /**
  * Redirects to the events page after updating the event in the database
  */
-app.post('/editEvent/:id', authcheck, async (req, res) => {
+app.post('/editEvent/:id', authCheck, async (req, res) => {
   const {oldStart, oldEnd, newStart, newEnd} = await db.updateEvent(req.body, req.params.id);
   if((oldStart.getTime() !== newStart.getTime()) || (oldEnd.getTime() !== newEnd.getTime())){
     const emails = await db.queryRegistrantEmailsByEventID(req.params.id);
