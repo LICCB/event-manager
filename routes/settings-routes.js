@@ -14,17 +14,21 @@ const authCheck = (req, res, next) => {
 
 router.get('/', authCheck, (req, res) => {
     console.log(req.user);
-    res.render('settings/settings', {title: "Settings"});
+    res.render('settings/settings', {
+      user: req.user,
+      title: "Settings"
+    });
 });
 
 router.get('/addUser', authCheck, (req, res) => {
     console.log(req.user);
-    res.render('settings/addUser', {title: "Add User"});
+    res.render('settings/addUser', {
+      user: req.user,
+      title: "Add User"
+    });
 });
 
 router.post('/addUser', authCheck, async (req, res) => {
-    console.log(req.user);
-    console.log(req.body);
     await db.insertUser(req.body.email, req.body.fname, req.body.lname);
     res.redirect('/settings/users');
 });
@@ -50,45 +54,44 @@ router.get('/deleteUser/:id', authCheck, async (req, res) => {
 });
 
 router.get('/users', authCheck, async (req, res) => {
-    console.log(req.user);
     const users = await db.queryAllUsers();
-    console.log(users);
-    res.render('settings/users', {title: "All Users", users: users});
+    res.render('settings/users', {
+      user: req.user,
+      title: "All Users",
+      users: users});
 });
 
 router.get('/createEventType', authCheck, async (req, res) => {
     res.render("settings/createEventType", {
+      user: req.user,
       title: "Creat Event Type"
     });
   });
   
   router.post('/createEventType', authCheck, async (req, res) => {
-    console.log(req.body);
     await db.insertEventType(req.body);
     res.redirect("/settings/eventTypes");
   });
   
   router.get('/eventTypes', authCheck, async (req, res) => {
-    const ets = await db.queryEventTypes();
-    console.log(ets);
+    const eventTypes = await db.queryEventTypes();
     res.render("settings/eventTypes", {
+      user: req.user,
       title: "Event Types",
-      types: ets
+      types: eventTypes
     });
   });
   
   router.get('/editEventType/:id', authCheck, async (req, res) => {
     const type = await db.queryEventTypeByID(req.params.id);
-    console.log(type);
-    console.log(type[0]);
     res.render("settings/editEventType", {
+      user: req.user,
       title: "Edit Event Type",
       type: type[0]
     });
   });
   
   router.post('/editEventType/:id', authCheck, async (req, res) => {
-    console.log("REQ BODY", req.body);
     await db.updateEventType(req.params.id, req.body);
     res.redirect('/settings/eventTypes');
   });

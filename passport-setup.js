@@ -15,8 +15,6 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    console.log("In deserializeUser");
-    console.log(id);
     if(id != null){
         // error, userID
         db.queryUserByID(id).then((result) => {
@@ -35,21 +33,15 @@ passport.use(
         clientSecret: config.keys.google.clientSecret
     }, (accessToken, refreshToken, profile, done) => {
         // passport callback function
-        console.log('passport callback function fired');
-        console.log(profile);
         db.queryUserByEmail(profile.emails[0].value).then((result) => {
-            console.log(result);
-            console.log(result.length);
             // const valid = !(Object.keys(result).length === 0 && result.constructor === Object);
             const valid = !(result.length === 0);
             if(valid){
-                console.log(profile.emails[0].value + " is a valid user");
                 // error, user
                 db.updateUser(profile.emails[0].value, profile.id, profile.name.givenName, profile.name.familyName).then((upd) => {
                     done(null, result[0]);
                 })
             } else {
-                console.log(profile.emails[0].value + " is not a valid user");
                 done(null, null);
             }
         })

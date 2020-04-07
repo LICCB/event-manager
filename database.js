@@ -493,7 +493,6 @@ async function queryRegistrantEmailsByEventID(eventID){
 
 async function queryAllUsers(){
   const query = 'SELECT * FROM LICCB.users;';
-  console.log(query);
   let conn = await pool.getConnection();
   let user = await conn.query(query);
   conn.release();
@@ -502,7 +501,6 @@ async function queryAllUsers(){
 
 async function queryUserByEmail(email){
   const query = `SELECT * FROM LICCB.users WHERE email='${email}';`;
-  console.log(query);
   let conn = await pool.getConnection();
   let user = await conn.query(query);
   conn.release();
@@ -511,7 +509,6 @@ async function queryUserByEmail(email){
 
 async function queryUserByID(userID){
   const query = `SELECT * FROM LICCB.users WHERE userID='${userID}';`;
-  console.log(query);
   let conn = await pool.getConnection();
   let user = await conn.query(query);
   conn.release();
@@ -522,7 +519,6 @@ async function updateUser(email, googleID, fname, lname){
   const query = 'UPDATE LICCB.users ' +
                 `SET googleID='${googleID}' ` +
                 `WHERE email='${email}';`;
-  console.log(query);
   let conn = await pool.getConnection();
   let upd = await conn.query(query);
   conn.release();
@@ -534,7 +530,6 @@ async function insertUser(email, fName, lName){
   const query = 'INSERT INTO LICCB.users ' +
                 '(userID, email, googleID, firstName, lastName, userEnabled) ' +
                 `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1)`; // set googleID to userID until first login
-  console.log(query);
   let conn = await pool.getConnection();
   let insert = await conn.query(query);
   conn.release();
@@ -543,7 +538,6 @@ async function insertUser(email, fName, lName){
 
 async function disableUser(id){
   const query = `UPDATE LICCB.users SET userEnabled=0 WHERE userID='${id}';`;
-  console.log(query);
   let conn = await pool.getConnection();
   let upd = await conn.query(query);
   conn.release();
@@ -552,7 +546,6 @@ async function disableUser(id){
 
 async function enableUser(id){
   const query = `UPDATE LICCB.users SET userEnabled=1 WHERE userID='${id}';`;
-  console.log(query);
   let conn = await pool.getConnection();
   let upd = await conn.query(query);
   conn.release();
@@ -561,7 +554,6 @@ async function enableUser(id){
 
 async function deleteUser(id){
   const query = `DELETE FROM LICCB.users WHERE userID='${id}';`;
-  console.log(query);
   let conn = await pool.getConnection();
   let del = await conn.query(query);
   conn.release();
@@ -570,12 +562,10 @@ async function deleteUser(id){
 
 async function queryEventTypes(){
   let conn = await pool.getConnection();
-  // const query = "SELECT * FROM LICCB.eventTypes;";
   const query = 'SELECT DISTINCT eventTypes.typeID, eventTypes.typeName, eventTypes.typeMetadata, IF(events.eventType IS NULL, FALSE, TRUE) as inUse ' + 
                 'FROM LICCB.eventTypes ' +
                 'LEFT JOIN LICCB.events ON (eventTypes.typeID = events.eventType)';
   let types = await conn.query(query)
-  // console.log(types);
   conn.release();
   return types;
 }
@@ -594,7 +584,6 @@ async function insertEventType(type){
   const insertStmt = "INSERT INTO LICCB.eventTypes " +
                         "(typeID, typeMetadata, typeName) " + 
                      `VALUES("${typeID}", '${metadata}', "${type.typeName}");`;
-  console.log(insertStmt);
   let conn = await pool.getConnection();
   let insert = await conn.query(insertStmt);
   conn.release();
@@ -610,12 +599,10 @@ async function deleteEventType(typeID){
 }
 
 async function updateEventType(id, type){
-  console.log(type);
   const md = utils.getEventMetadata(type);
   const query = 'UPDATE LICCB.eventTypes ' +
                 `SET typeName='${type.typeName}', typeMetadata='${md}' ` +
                 `WHERE typeID='${id}';`;
-  console.log(query);
   let conn = await pool.getConnection();
   let upd = await conn.query(query);
   conn.release();

@@ -4,6 +4,10 @@
 </h1>
 <div class="wrapper">
 	<nav id="sidebar">
+		<% if(user) { %>
+			<img src="<%= user.profilePicURL %>">
+			<p> <%= `${user.firstName} ${user.lastName}` %> </p>
+		<% } %>
         <ul class="list-unstyled components">
 			<li
 				<% if(title == "Events" || title == "Create Event" || title == "Edit Event" || title == "Event Detail") { %>
