@@ -91,6 +91,14 @@ async function queryEventDetailsByID(eventID) {
   return event;
 }
 
+async function queryEventTypeMetadata(eventID) {
+  let conn = await pool.getConnection();
+  const query = `SELECT typeMetadata FROM LICCB.eventTypes WHERE typeID= (SELECT eventType FROM LICCB.events WHERE eventID = '${eventID}')`;
+  let metadata = await conn.query(query);
+  conn.release();
+  return metadata;
+}
+
 async function queryParticipants() {
   let conn = await pool.getConnection();
   let participants = await conn.query("SELECT * FROM LICCB.participants JOIN LICCB.events ON LICCB.participants.eventID=LICCB.events.eventID");
@@ -272,18 +280,28 @@ async function confirmEmail(eventID, registrantID){
 async function insertParty(signup, eventID, volunteerStatus) {
   console.log(signup);
   const date = utils.getDateTime();
-  const signupkeys = Object.keys(signup).length;
+  var signupkeys = Object.keys(signup).length;
   var partsize = 0;
+  const event = (await queryEventByID(eventID))[0];
+  console.log(event.eventMetadata)
+  const metadataFields = Object.keys(event.eventMetadata).length;
+  signupkeys = signupkeys - metadataFields;
+  if(volunteerStatus) {
+    signupkeys = signupkeys - 2;
+  }
   if(signupkeys > 16) {
     partsize = (signupkeys - 16) / 10;
   }
   let conn = await pool.getConnection();
-  const queryStmt = "SELECT participantID FROM LICCB.participants WHERE participantID NOT IN (SELECT participantID FROM LICCB.participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND eventID = ?";
+  const queryStmt = "SELECT participantID FROM LICCB.participants WHERE participantID NOT IN (SELECT participantID FROM LICCB.participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND eventID = ?)";
   const query = await conn.query(queryStmt, [signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone, eventID]);
   var registrantID = uuidv4();
   if(query[0] != undefined) {
     registrantID = query[0].participantID;
   }
+  //const eventTypeMetadata = utils.eventMetadataWrapper(signup, eventTypeFields);
+  const metadata = utils.eventMetadataWrapper(signup, event.eventMetadata);
+  //const metadata = Object.assign(eventTypeMetadata, eventSpecificMetadata);
   const insertStmt = "INSERT INTO LICCB.participants " +
     "(participantID, partyID, eventID, firstName, " +
     "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
@@ -314,8 +332,9 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "?, " + //volunteer
     "'" + date + "', " + //regTime
     "'', " + //userComments
-    "'');"; //metadata
-  //let insert = await conn.query(insertStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.regadult, signup.regcpr, signup.regswim, signup.regboat, signup.bhdiscovery, signup.eventdiscovery, signup.notes, signup.priorVolunteer, signup.roleFamiliarity, volunteerStatus]);
+    "'?');"; //metadata
+  console.log(signup.priorVolunteer);
+  let insert = await conn.query(insertStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.regadult, signup.regcpr, signup.regswim, signup.regboat, signup.bhdiscovery, signup.eventdiscovery, signup.notes, signup.priorVolunteer, signup.roleFamiliarity, volunteerStatus, metadata]);
 
   for(i = 1; i <= partsize; i++) {
     const queryStmt = "SELECT participantID FROM LICCB.participants WHERE participantID NOT IN (SELECT participantID FROM LICCB.participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND eventID = ?";
@@ -324,7 +343,6 @@ async function insertParty(signup, eventID, volunteerStatus) {
     if(query[0] != undefined) {
       registrantID = query[0].participantID;
     }
-    var newParticipantID = uuidv4();
     var insertStmt1 = "INSERT INTO LICCB.participants " +
       "(participantID, partyID, eventID, firstName, " +
       "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
@@ -355,8 +373,8 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "?, " + //volunteer
       "'" + date + "', " + //regTime
       "'', " + //userComments
-      "'');"; //metadata
-    //let insert = await conn.query(insertStmt1, [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup[`part${i}age`], signup[`part${i}cpr`], signup[`part${i}swim`], signup[`part${i}boat`], signup.bhdiscovery, signup.eventdiscovery, signup.notes, signup.priorVolunteer, signup.roleFamiliarity, volunteerStatus]);
+      "'?');"; //metadata
+    let insert = await conn.query(insertStmt1, [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup[`part${i}age`], signup[`part${i}cpr`], signup[`part${i}swim`], signup[`part${i}boat`], signup.bhdiscovery, signup.eventdiscovery, signup.notes, signup.priorVolunteer, signup.roleFamiliarity, volunteerStatus, metadata]);
   }
   console.log(eventID);
   console.log(registrantID);
@@ -660,3 +678,4 @@ module.exports.queryEventTypes = queryEventTypes;
 module.exports.queryEventTypeByID = queryEventTypeByID;
 module.exports.deleteEventType = deleteEventType;
 module.exports.updateEventType = updateEventType;
+module.exports.queryEventTypeMetadata = queryEventTypeMetadata;
