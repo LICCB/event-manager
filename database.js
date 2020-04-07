@@ -520,7 +520,7 @@ async function queryUserByID(userID){
 
 async function updateUser(email, googleID, fname, lname){
   const query = 'UPDATE LICCB.users ' +
-                `SET googleID='${googleID}', firstName='${fname}', lastName='${lname}' ` +
+                `SET googleID='${googleID}' ` +
                 `WHERE email='${email}';`;
   console.log(query);
   let conn = await pool.getConnection();
