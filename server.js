@@ -265,10 +265,13 @@ app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
  * Redirects to the export page where the user can export participant data based on certain attributes
  */
 app.get('/export', authCheck, async (req, res) => {
+  let events = await db.queryAllEvents();;
+  delete events.meta;
   let users = await db.queryAllUsers();
   delete users.meta;
   res.render("export/export", {
     title: "Export",
+    events: events,
     users: users,
     error: null
   });
@@ -301,10 +304,14 @@ app.post('/export/exportData', authCheck, async (req, res) => {
 
   delete participants.meta;
 
-  let users = await db.queryAllUsers();
   if (participants.length == 0) {
+    let events = await db.queryAllEvents();
+    delete events.meta;
+    let users = await db.queryAllUsers();
+    delete users.meta;
     res.render("export/export",  {
       title: "Export",
+      events: events,
       users: users,
       error: "No participants were found."
     });
