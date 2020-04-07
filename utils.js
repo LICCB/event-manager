@@ -71,7 +71,6 @@ function getEventMetadata(event) {
         }
     }
     md += "}";
-    console.log(md);
     return JSON.stringify(JSON.parse(md));
 }
 

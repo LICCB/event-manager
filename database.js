@@ -220,7 +220,6 @@ async function updateEvent(event, id) {
   const dateTimeQuery = "Select startTime, endTime " + 
                         "From LICCB.events " + 
                         `WHERE eventID='${id}';`;
-  console.log(dateTimeQuery);
   const startTime = event.startDate + " " + event.startTime + ":00";
   const endTime = event.endDate + " " + event.endTime + ":00";
   const update = "UPDATE LICCB.events " + 
@@ -515,9 +514,9 @@ async function queryUserByID(userID){
   return user;
 }
 
-async function updateUser(email, googleID, fname, lname){
+async function updateUser(email, googleID, pictureURL){
   const query = 'UPDATE LICCB.users ' +
-                `SET googleID='${googleID}' ` +
+                `SET googleID='${googleID}', pictureURL='${pictureURL}' ` +
                 `WHERE email='${email}';`;
   let conn = await pool.getConnection();
   let upd = await conn.query(query);
@@ -528,8 +527,8 @@ async function updateUser(email, googleID, fname, lname){
 async function insertUser(email, fName, lName){
   const userID = uuidv4();
   const query = 'INSERT INTO LICCB.users ' +
-                '(userID, email, googleID, firstName, lastName, userEnabled) ' +
-                `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1)`; // set googleID to userID until first login
+                '(userID, email, googleID, pictureURL, firstName, lastName, userEnabled) ' +
+                `VALUES('${userID}', '${email}', '${userID}', 'pictureURL', '${fName}', '${lName}', 1)`; // set googleID to userID until first login
   let conn = await pool.getConnection();
   let insert = await conn.query(query);
   conn.release();

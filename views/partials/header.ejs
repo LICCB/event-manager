@@ -5,7 +5,7 @@
 <div class="wrapper">
 	<nav id="sidebar">
 		<% if(user) { %>
-			<img src="<%= user.profilePicURL %>">
+			<img src="<%= user.pictureURL %>" class="img-thumbnail rounded-circle">
 			<p> <%= `${user.firstName} ${user.lastName}` %> </p>
 		<% } %>
         <ul class="list-unstyled components">

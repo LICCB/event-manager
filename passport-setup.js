@@ -4,8 +4,6 @@ const config = require('./config.json');
 const db = require('./database');
 
 passport.serializeUser((user, done) => {
-    console.log("In serializeUser");
-    console.log(user);
     if(user != null){
         // error, userID
         done(null, user.userID);
@@ -38,7 +36,7 @@ passport.use(
             const valid = !(result.length === 0);
             if(valid){
                 // error, user
-                db.updateUser(profile.emails[0].value, profile.id, profile.name.givenName, profile.name.familyName).then((upd) => {
+                db.updateUser(profile.emails[0].value, profile.id, profile.photos[0].value).then((upd) => {
                     done(null, result[0]);
                 })
             } else {
