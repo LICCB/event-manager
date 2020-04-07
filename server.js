@@ -220,14 +220,14 @@ app.get('/participant/:id', authCheck, async (req, res) => {
 /**
  * Renders the participant list to tie with the selected participant
  */
-app.get('/participants/tie/:id', async (req, res) => {
+app.get('/participants/tie/:id', authCheck, async (req, res) => {
   res.render('participants/tieParticipants', {selected: (await db.queryParticipantByID(req.params.id))[0], participants: await db.queryParticipantsByNotID(req.params.id)})
 });
 
 /**
  * Ties two participants together and renders the all participants view with a success alert
  */
-app.get('/participants/tie/:id/:idwith', async (req, res) => {
+app.get('/participants/tie/:id/:idwith', authCheck, async (req, res) => {
   await db.tieParticipants(req.params.id, req.params.idwith);
   res.redirect('/participants');
 });
