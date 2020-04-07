@@ -103,6 +103,7 @@
             </tbody>
           </table>
 
+          <!-- Edit participant comments modal -->
           <% for(i = 0; i < participants.length; i++){ %>
             <div class="modal" id="comments<%= participants[i].participantID %>">
               <div class="modal-dialog">
@@ -131,6 +132,7 @@
             </div>
           <% } %>
 
+          <!-- View Party modal -->
           <% for(i = 0; i < participants.length; i++) { %>
             <div class="modal" id="party<%= participants[i].participantID %>-<%= participants[i].eventID %>">
               <div class="modal-dialog">
