@@ -5,10 +5,34 @@
 .strategyRejected {
   color: crimson ! important;
 }
-.manualChanges {
+/* .manualChanges {
   font-size: x-small;
   color: #6d7fcc;
-}
+} */
+
+.checkboxes {
+  text-align:center;
+ }
+
+.checkboxes input{
+  margin: 0px 0px 0px 0px;
+ }
+
+ .checkboxes label{
+   margin: 0px 20px 0px 3px;
+   color: #082B47;
+ }
+
+ .lotteryTable {
+  max-width: 85%;
+  float: right;
+  table-layout: fixed;
+  padding-top: 10%;
+  padding-left: 0%;
+  padding-right: 0%;
+  margin-right: 0px;
+  background-color: #fff; /*gainsboro*/
+ }
 
 div {
     text-align: center;
