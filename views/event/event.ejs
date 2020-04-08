@@ -11,7 +11,7 @@
     <div class="content">
       <div class="top">
           <div class="left">
-            <p>Event Name: <%= event.eventName %></p>  
+            <p>Event Name: <%= event.eventName %></p>
             <p>Event Type: <%= event.typeName %></p>
             <p>Manager: <%= `${event.firstName} ${event.lastName}` %></p>
             <p>Max Party Size: <%= event.maxPartySize %></p>
@@ -125,7 +125,7 @@
             </div>
           <% } %>
 
-          <a href="/participants/checkin/<%= event.eventID %>">Check In Participants</a>
+          <a class="button" href="/participants/checkin/<%= event.eventID %>">Check In Participants</a>
         <footer>
             <%- include('../partials/footer') %>
         </footer>

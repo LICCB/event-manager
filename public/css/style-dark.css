@@ -57,21 +57,20 @@ input[type=text], select, input[type=time] {
 }
 
 /*Next & previous buttons */
-.prev, .next {
+.previous, .next {
   cursor: pointer;
   position: relative; /*absolute;*/
   padding-top: 20px;
-  color: #fff;
+  color: white !important;
   font-family: Verdana, Arial, sans-serif;
   font-size: 16px;
   transition: 0.5s ease;
   user-select: none;
+  border-radius: 0 3px 3px 0;
 }
 
-/* On hover, add a black background color with a little bit see-through */
-.prev:hover, .next:hover {
-  background-color: #fff;
-  color: #fff !important;
+.paginate_button {
+  background-color: white;
 }
 
 /* Caption text */
@@ -228,7 +227,7 @@ p {
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
-    color: #999;
+    color: #fff;
 }
 
 a, a:hover, a:focus {
@@ -293,6 +292,18 @@ ul ul a {
   background-color: #fff9d7;
 }
 
+.theme-button {
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+  transition-duration: 0.3s;
+}
+
+.theme-button:hover {
+  background-color: white;
+  color: black;
+}
+
 /*buttons inside the events table*/
 .tb-button {
   color: #fff6c3;
@@ -348,7 +359,9 @@ ul ul a {
   background-color: rgba(0,0,0,0.4);
 }
 
-
+.email {
+  color: white;
+}
 
 .footer {
   padding-top: 15px;

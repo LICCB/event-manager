@@ -5,7 +5,6 @@ function switchTheme() {
 
   var element = document.getElementById('theme_css');
 
-
   if (check) {
    element.href = '/css/style-dark.css';
    element.classList.remove('style')

@@ -3,13 +3,12 @@
 
 <head>
     <%- include('../partials/head', {title: title}) %>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 
-<body class="bg-gray">
+<body>
     <%- include('../partials/header', {title: title}) %>
     <% if(event !== null && users !== null){%>
-    <div class="content container">
+    <div class="container content">
         <fieldset>
             <form action=<%= "/editEvent/" + event.eventID %> method="post" id="eventform">
                 <div class="left">
@@ -22,7 +21,7 @@
                         <option value=<%= users[i].userID %> <% if(event.managerID == users[i].userID){ %> <%= "selected" %> <% } %>> <%= users[i].firstName + " " + users[i].lastName %>
                         </option>
                         <% } %>
-                    </select>
+                    </select> <br>
                     <label for="type">Event Type:</label>
                     <select name="typeID" form="eventform">
                       <% for(i = 0; i < eventTypes.length; i++) { %>
@@ -50,11 +49,13 @@
                 <div class="right">
                     <label for="stime">Start Time:</label>
                     <input type="time" id="stime" name="startTime" value=<%= utils.getTime(event.startTime) %> required>
+                    <br>
                     <label for="sdate">Start Date:</label>
                     <input type="date" id="sdate" name="startDate" value=<%= utils.getDate(event.startTime) %> required>
                     <br>
                     <label for="etime">End Time:</label>
                     <input type="time" id="etime" name="endTime" value=<%= utils.getTime(event.endTime) %> required>
+                    <br>
                     <label for="edate">End Date:</label>
                     <input type="date" id="edate" name="endDate" value=<%= utils.getDate(event.endTime) %> required>
                     <br>
@@ -97,7 +98,7 @@
                 </div>
             </form>
         </fieldset>
-    </div>
+
     <% } %>
   <footer class="footer">
         <%- include('../partials/footer') %>

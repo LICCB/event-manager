@@ -5,7 +5,7 @@
     <%- include('../partials/head', {title: title}) %>
 </head>
 
-<body class="bg-gray">
+<body>
     <%- include('../partials/header', {title: title}) %>
     <div class="container content">
         <% if (error) { %>
@@ -36,7 +36,7 @@
                     <option value="Archived">Archived</option>
                 </select>
                 <br>
-                
+
                 <label for="eventTypeCheck">Event Type</label>
                 <input type="checkbox" id="eventTypeCheck" name="eventTypeCheck">
                 <br>
