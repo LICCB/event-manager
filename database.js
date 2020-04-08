@@ -143,9 +143,13 @@ async function queryParticipantsByNotID(participantID) {
 async function tieParticipants(participantID, tieWithParticipantID) {
   let conn = await pool.getConnection();
   let result = await conn.query("UPDATE LICCB.participants " +
-                                "SET participantID = ?" +
-                                "WHERE LICCB.participants.participantID = ?",
-                                [participantID, tieWithParticipantID]);
+                                "SET partyID = ?" +
+                                "WHERE LICCB.participants.partyID = ?",
+                                [tieWithParticipantID, participantID]);
+  result = await conn.query("UPDATE LICCB.participants " +
+                            "SET participantID = ?" +
+                            "WHERE LICCB.participants.participantID = ?",
+                            [tieWithParticipantID, participantID]);
   conn.release();
   return result;
 }
