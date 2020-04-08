@@ -122,6 +122,34 @@ async function queryParticipantByID(participantID) {
   return participants;
 }
 
+/*
+ * Select all participants that haven't participated in any event that the
+ * given participant has participated in.
+ */
+async function queryParticipantsByNotID(participantID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query("SELECT * FROM " +
+                                        "(SELECT * FROM LICCB.participants " +
+                                        "WHERE NOT participantID = ? AND " +
+                                          "participantID NOT IN (SELECT participantID FROM LICCB.participants " +
+                                                                "WHERE eventID IN (SELECT eventID FROM LICCB.participants " +
+                                                                                  "WHERE participantID = ?))) AS p " +
+                                      "JOIN LICCB.events ON p.eventID=LICCB.events.eventID",
+                                      [participantID, participantID]);
+  conn.release();
+  return participants;
+}
+
+async function tieParticipants(participantID, tieWithParticipantID) {
+  let conn = await pool.getConnection();
+  let result = await conn.query("UPDATE LICCB.participants " +
+                                "SET participantID = ?" +
+                                "WHERE LICCB.participants.participantID = ?",
+                                [participantID, tieWithParticipantID]);
+  conn.release();
+  return result;
+}
+
 async function checkinParticipant(participantID, eventID) {
   let conn = await pool.getConnection();
   let participant = await conn.query("UPDATE LICCB.participants " +
@@ -629,6 +657,8 @@ module.exports.queryEventByID = queryEventByID;
 module.exports.queryEventDetailsByID = queryEventDetailsByID;
 module.exports.queryParticipants = queryParticipants;
 module.exports.queryParticipantByID = queryParticipantByID;
+module.exports.queryParticipantsByNotID = queryParticipantsByNotID;
+module.exports.tieParticipants = tieParticipants;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
 module.exports.checkinParticipant = checkinParticipant;
 module.exports.editUserComments = editUserComments;
