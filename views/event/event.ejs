@@ -39,6 +39,7 @@
             <thead>
               <tr>
                 <th scope="col"> History </th>
+                <th scope="col"> Party </th>
                 <th scope="col"> First Name </th>
                 <th scope="col"> Last Name </th>
                 <th scope="col"> Phone # </th>
@@ -67,6 +68,11 @@
                     <a class="tb-button" href="/participant/<%= participants[i].participantID %>" role="button">
                       View
                     </a>
+                  </td>
+                  <td>
+                    <button type="button" class="tb-button" data-toggle="modal" data-target="#party<%= participants[i].participantID %>-<%= participants[i].eventID %>">
+                      View
+                    </button>
                   </td>
                   <td> <%= participants[i].firstName %> </td>
                   <td> <%= participants[i].lastName %> </td>
@@ -97,6 +103,7 @@
             </tbody>
           </table>
 
+          <!-- Edit participant comments modal -->
           <% for(i = 0; i < participants.length; i++){ %>
             <div class="modal" id="comments<%= participants[i].participantID %>">
               <div class="modal-dialog">
@@ -125,7 +132,101 @@
             </div>
           <% } %>
 
-          <a href="/participants/checkin/<%= event.eventID %>">Check In Participants</a>
+          <!-- View Party modal -->
+          <% for(i = 0; i < participants.length; i++) { %>
+            <div class="modal" id="party<%= participants[i].participantID %>-<%= participants[i].eventID %>">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+    
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <h4 class="modal-title">Party for <%= participants[i].firstName + " " + participants[i].lastName %></h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+    
+                  <!-- Modal body -->
+                  <div class="modal-body">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th scope="col"> First Name </th>
+                          <th scope="col"> Last Name </th>
+                          <th scope="col"> Phone # </th>
+                          <th scope="col"> Email </th>
+                          <th scope="col"> Zipcode </th>
+                          <th scope="col"> Is Adult </th>
+                          <th scope="col"> Is CPR Certified </th>
+                          <th scope="col"> Can Swim </th>
+                          <th scope="col"> Has Boat Experience </th>
+                          <th scope="col"> Boathouse Discovery </th>
+                          <th scope="col"> Event Discovery </th>
+                          <th scope="col"> Registration Comments </th>
+                          <th scope="col"> Registration Status </th>
+                          <th scope="col"> Check In Status </th>
+                          <th scope="col"> Is Volunteer </th>
+                          <th scope="col"> Registration Time </th>
+                          <th scope="col"> User Comments </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if (participants[i].partyID != null) { %>
+                          <% participants.filter(function(p){return (p.eventID == participants[i].eventID && p.partyID == participants[i].partyID)}).forEach((participant) => { %>
+                            <tr>
+                              <td> <%= participant.firstName %> </td>
+                              <td> <%= participant.lastName %> </td>
+                              <td> <%= participant.phone %> </td>
+                              <td> <%= participant.email %> </td>
+                              <td> <%= participant.zip %> </td>
+                              <td> <%= participant.isAdult %> </td>
+                              <td> <%= participant.hasCPRCert %> </td>
+                              <td> <%= participant.canSwim %> </td>
+                              <td> <%= participant.boatExperience %> </td>
+                              <td> <%= participant.boathouseDisc %> </td>
+                              <td> <%= participant.eventDisc %> </td>
+                              <td> <%= participant.regComments %> </td>
+                              <td> <%= participant.regStatus %> </td>
+                              <td> <%= participant.checkinStatus %> </td>
+                              <td> <%= participant.volunteer %> </td>
+                              <td> <%= participant.regTime %> </td>
+                              <td> <%= participant.userComments %> </td>
+                            </tr>
+                          <% }) %> 
+                        <% } else { %>
+                          <tr>
+                            <td> <%= participants[i].firstName %> </td>
+                            <td> <%= participants[i].lastName %> </td>
+                            <td> <%= participants[i].phone %> </td>
+                            <td> <%= participants[i].email %> </td>
+                            <td> <%= participants[i].zip %> </td>
+                            <td> <%= participants[i].isAdult %> </td>
+                            <td> <%= participants[i].hasCPRCert %> </td>
+                            <td> <%= participants[i].canSwim %> </td>
+                            <td> <%= participants[i].boatExperience %> </td>
+                            <td> <%= participants[i].boathouseDisc %> </td>
+                            <td> <%= participants[i].eventDisc %> </td>
+                            <td> <%= participants[i].regComments %> </td>
+                            <td> <%= participants[i].regStatus %> </td>
+                            <td> <%= participants[i].checkinStatus %> </td>
+                            <td> <%= participants[i].volunteer %> </td>
+                            <td> <%= participants[i].regTime %> </td>
+                            <td> <%= participants[i].userComments %> </td>
+                          </tr>
+                        <% } %>  
+                      </tbody>
+                    </table>
+                  </div>
+    
+                  <!-- Modal footer -->
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                      Close
+                    </button>
+                  </div>
+    
+                </div>
+              </div>
+            </div>
+          <% } %>
         <footer>
             <%- include('../partials/footer') %>
         </footer>
