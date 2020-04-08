@@ -5,6 +5,10 @@
 .strategyRejected {
   color: crimson ! important;
 }
+.manualChanges {
+  font-size: x-small;
+  color: #6d7fcc;
+}
 
 div {
     text-align: center;

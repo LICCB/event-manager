@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <%- include('../partials/head', {title: title}) %>
+    <!-- <%- include('../partials/head', {title: title}) %> -->
     <title>Event: <%= event.eventName %>-Select Participants</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
  
@@ -40,30 +40,63 @@
 
         <label for="volunteer">volunteer</label>
         <input type="checkbox" name="volunteer" id="volunteer">
+        
+        <div>
 
-        <table class="table table-striped table-dark table-bordered table-hover">
-          <thead>
-            <% var keys = Object.keys(participants[0]) %> 
-              <tr>
-                <% for(i = 0; i < keys.length; i++){ %>
-                <th scope="col"> <%=  keys[i].charAt(0).toUpperCase() + keys[i].substring(1) %> </th>
-                <% } %>
-              </tr>
-          </thead>
-          <tbody>
-            
-    
-            <% for(i = 0; i < participants.length; i++){ %>
-              <tr  class="<%=`${participants[i].regStatus} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
-                <% var vals = Object.values(participants[i]) %> 
-                <% for(j = 0; j < vals.length; j++){ %>
-                <td> <%=  vals[j] %> </td>
-                <% } %>
-              </tr>
-            <% } %>
-    
-          </tbody>
-        </table>
+          <table class="table table-striped table-dark table-bordered table-hover">
+            <thead>   
+              <% var keys = Object.keys(participants[0]) %> 
+                <tr>
+                  <th> Individual Selection  </th>
+                  <% for(i = 0; i < keys.length; i++){ %>
+                  <th scope="col"> <%=  keys[i].charAt(0).toUpperCase() + keys[i].substring(1) %> </th>
+                  <% } %>
+                  
+                </tr>
+            </thead>
+            <tbody>
+              
+      
+              <% for(i = 0; i < participants.length; i++){ %>
+                <tr  class="<%=`${participants[i].regStatus} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
+                  <td class="manualChanges">  
+                    <div>
+                      <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/select/` +participants[i].participantID %>">Select</a>
+                    </div>  
+                    <div>
+                      <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/reject/` +participants[i].participantID %>">Reject</a>  
+                    </div>
+                    <div>
+                      <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/standby/` +participants[i].participantID %>">Standby</a> 
+                    </div>
+                    <!-- <div>
+                      <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/awaitingConfirmation/` +participants[i].participantID %>">Awaiting Confirmation</a> 
+                    </div>
+                    <div>
+                      <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/notConfirmed/` +participants[i].participantID %>">Not Confirmed</a> 
+                    </div>
+                    <div>
+                      <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/registered/` +participants[i].participantID %>">Registered</a> 
+                    </div>
+                    <div>
+                      <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/cancelled/` +participants[i].participantID %>">Cancelled</a> 
+                    </div>
+                    <div>
+                      <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/sameDayCancel/` +participants[i].participantID %>">Same Day Cancel</a> 
+                    </div> -->
+                  </td>
+                  <% var vals = Object.values(participants[i]) %> 
+                  <% for(j = 0; j < vals.length; j++){ %>
+                  <td> <%=  vals[j] %> </td>
+                  <% } %>
+                  
+                </tr>
+              <% } %>
+      
+            </tbody>
+          </table>
+
+        </div>
         
         <input type="submit" value="Select Participants">
       </form>
@@ -71,11 +104,12 @@
 
     <!-- <button onclick="selectRegistrantsForEvent()">Confirm Selection</button>     -->
 
+  </body>
 
-
-    <footer>
-      <%- include('../partials/footer') %>
+  <footer>
+    <%- include('../partials/footer') %>
   </footer>
+
     <%- include('../partials/scripts') %>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -84,5 +118,6 @@
     <script src="/scripts/tableSorter.js"></script>
     <script src="/scripts/jQueryDataTables.js"></script>
     <script src="/scripts/hideOnSlider.js"></script>
-  </body>
+  
+
 </html>

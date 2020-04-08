@@ -312,6 +312,43 @@ app.post('/updateSelectedParticipants/:id', async (req, res) => {
   res.redirect('/events');
 });
 
+app.get('/lottery/:eventid/changeStatusIndividualUser/:status/:userid', async (req, res) => {
+  res.redirect('back');
+  status = ""
+  if (req.params.status == "select") {
+    status = "Selected"
+  }
+  switch (req.params.status) {
+    case "select": 
+      status = "Selected";
+      break;
+    case "reject":
+      status = "Not Selected";
+      break;
+    case "standby":
+      status = "Standby";
+      break;
+    case "awaitingConfirmation":
+      status = "Awaiting Confirmation";
+      break;
+    case "notConfirmed":
+      status = "Not Confirmed";
+      break;
+    case "registered":
+      status = "Registered";
+      break;
+    case "cancelled":
+      status = "Cancelled";
+      break;
+    case "sameDayCancel":
+      status = "Same Day Cancel";
+      break;
+    default:
+      return;
+  }
+  let selectIndividualUser = await db.changeParticipantStatus(req.params.userid, req.params.eventid, status)
+});
+
 app.get('/lottery/resetSelection/:id', async (req, res) => {
   res.redirect('/events');
   resetParticipants = await db.resetParticipantsStatus(req.params.id);
