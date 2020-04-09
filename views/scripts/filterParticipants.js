@@ -83,15 +83,24 @@ function volunteerFunction() {
   }
   updateCheckbox(value);
 }
-// $('#regStatus').click(function(){
-//   var value = "";
-//   if ($(this).prop("checked") == true) {
-//     value = "regStatusCheckedYes";
-//   } else {
-//     value = "regStatusCheckedNo";
-//   }
-//   updateCheckbox(value);
-// });
+$('#regStatus').click(function(){
+  var value = "";
+  if ($(this).prop("checked") == true) {
+    value = "regStatusCheckedYes";
+  } else {
+    value = "regStatusCheckedNo";
+  }
+  updateCheckbox(value);
+});
+$('#regStatusStandby').click(function(){
+  var value = "";
+  if ($(this).prop("checked") == true) {
+    value = "regStatusStandbyCheckedYes";
+  } else {
+    value = "regStatusStandbyCheckedNo";
+  }
+  updateCheckbox(value);
+});
 // $('#isAdult').click(function(){
 //   var value = "";
 //   if ($(this).prop("checked") == true) {
@@ -156,57 +165,63 @@ function volunteerFunction() {
 // });
 
 // regStatus, isAdult, canSwim, hasCPRCert, boatExperience, priorVolunteer, roleFamiliarity, volunteer
-var code = "00000000"
+var code = "000000000"
 function updateCheckbox(checkbox) {
   // code builder
   switch (checkbox) {
+    case "regStatusStandbyCheckedYes":
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7) + "1";
+      break;
+    case "regStatusStandbyCheckedNo":
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7) + "0";
+      break;
    case "regStatusCheckedYes":
-      code = "1" + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7);
+      code = "1" + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "regStatusCheckedNo":
-      code = "0" + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7);
+      code = "0" + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "isAdultCheckedYes":
-      code = code.charAt(0) + "1" + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7);
+      code = code.charAt(0) + "1" + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "isAdultCheckedNo":
-      code = code.charAt(0) + "0" + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7);
+      code = code.charAt(0) + "0" + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "canSwimCheckedYes":
-      code = code.charAt(0) + code.charAt(1) + "1" + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7);
+      code = code.charAt(0) + code.charAt(1) + "1" + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "canSwimCheckedNo":
-      code = code.charAt(0) + code.charAt(1) + "0" + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7);
+      code = code.charAt(0) + code.charAt(1) + "0" + code.charAt(3) + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "hasCPRCertCheckedYes":
-      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + "1" + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7);
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + "1" + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "hasCPRCertCheckedNo":
-      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + "0" + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7);
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + "0" + code.charAt(4) + code.charAt(5) + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "boatExperienceCheckedYes":
-      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + "1" + code.charAt(5) + code.charAt(6) + code.charAt(7);
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + "1" + code.charAt(5) + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "boatExperienceCheckedNo":
-      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + "0" + code.charAt(5) + code.charAt(6) + code.charAt(7);
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + "0" + code.charAt(5) + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "priorVolunteerCheckedYes":
-      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + "1" + code.charAt(6) + code.charAt(7);
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + "1" + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "priorVolunteerCheckedNo":
-      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + "0" + code.charAt(6) + code.charAt(7);
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + "0" + code.charAt(6) + code.charAt(7) + code.charAt(8);
       break;
     case "roleFamiliarityCheckedYes":
-      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + "1" + code.charAt(7);
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + "1" + code.charAt(7) + code.charAt(8);
       break;
     case "roleFamiliarityCheckedNo":
-      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + "0" + code.charAt(7);
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) + "0" + code.charAt(7) + code.charAt(8);
       break;
     case "volunteerCheckedYes":
-      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) +  code.charAt(6) + "1";
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) +  code.charAt(6) + "1" + code.charAt(8);
       break;
     case "volunteerCheckedNo":
-      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) +  code.charAt(6) + "0";
+      code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) +  code.charAt(6) + "0" + code.charAt(8);
       break;
     default:
       console.log(checkbox)  
@@ -218,9 +233,19 @@ function updateCheckbox(checkbox) {
     $('.Awaiting').show();
     $('.Not').show();
     $('.Standby').show();
-    $('.Canceled').show();
+    $('.Cancel').show();
     $('.Same').show();
     $('.Selected').show();
+    $('.Registered').show();
+  }
+  if (code.charAt(8) == "0") {
+    $('.Awaiting').show();
+    $('.Not').show();
+    $('.Standby').show();
+    $('.Cancel').show();
+    $('.Same').show();
+    $('.Selected').show();
+    $('.Registered').show();
   }
   if (code.charAt(1) == "0") {
     $('.child').show();
@@ -245,13 +270,22 @@ function updateCheckbox(checkbox) {
   }
 
   // hide after bringing everything back
-  if (code.charAt(0) == "1") {
+  if (code.charAt(0) == "1" || code.charAt(8) == "1") {
     $('.Awaiting').hide();
     $('.Not').hide();
     $('.Standby').hide();
-    $('.Canceled').hide();
+    $('.Cancel').hide();
     $('.Same').hide();
     $('.Selected').hide();
+    $('.Registered').hide();
+  }
+  // registered
+  if (code.charAt(0) == "1") {
+    $('.Registered').show();
+  }
+  // standby
+  if (code.charAt(8) == "1") {
+    $('.Standby').show();
   }
   if (code.charAt(1) == "1") {
     $('.child').hide();
