@@ -34,7 +34,7 @@
                     <div style="text-align:right; padding-right:25%;" name = "Volunteer Info">
                       <h2>Volunteer Information</h2>
                         <label for="priorVolunteer">Have you been a volunteer before?</label>
-                        <select name="priorVolunteer" form="eventSignupForm"  >
+                        <select name="priorVolunteer" form="eventSignupForm" class="volunteer"  >
                             <option selected disabled hidden style='display: none' value=''></option>
                             <option value=0>No</option>
                             <option value=1>Yes</option>
@@ -42,7 +42,7 @@
                         <br>
 
                         <label for="roleFamiliarity">Are you familiar with the role?</label>
-                        <select name="roleFamiliarity" form="eventSignupForm"  >
+                        <select name="roleFamiliarity" form="eventSignupForm" class="volunteer" >
                             <option selected disabled hidden style='display: none' value=''></option>
                             <option value=0>No</option>
                             <option value=1>Yes</option>
@@ -70,7 +70,7 @@
                     <br>
 
                     <label for="regename">Registrant Emergency Contact Name:</label>
-                    <input type="text" id="regename" name="regename" class = "name" placeholder="Emergency Contact Name"  >
+                    <input type="text" id="regename" name="regename" class = "eContactName" placeholder="Emergency Contact Name"  >
                     <br>
 
                     <label for="regephone">Registrant Emergency Contact Phone Number:</label>
