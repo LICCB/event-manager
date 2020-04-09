@@ -286,7 +286,7 @@ app.post('/updateSelectedParticipantsStrategy/:id', async (req, res) => {
 app.post('/updateSelectedParticipants/:id', async (req, res) => {
 
   filterParticipants = {
-    "regStatus" : req.body.regStatus == "on" ? "Registered" : "",
+    "regStatus" : req.body.regStatus == "Registered" ? "Registered" : "",
     "isAdult" : req.body.isAdult == "yes" ? 1 : "",
     "canSwim" : req.body.canSwim == "yes" ? 1 : "",
     "hasCPRCert" : req.body.hasCPRCert == "yes" ? 1 : "",

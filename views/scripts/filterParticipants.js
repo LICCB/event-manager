@@ -1,12 +1,12 @@
-$('#regStatus').click(function(){
-  var value = "";
-  if ($(this).prop("checked") == true) {
+function regStatusFunction() {
+  var x = document.getElementById("regStatus").value;
+  if (x == "Registered") {
     value = "regStatusCheckedYes";
   } else {
     value = "regStatusCheckedNo";
   }
   updateCheckbox(value);
-});
+}
 function isAdultFunction() {
   var x = document.getElementById("isAdult").value;
   if (x == "yes") {
@@ -70,6 +70,15 @@ function volunteerFunction() {
   }
   updateCheckbox(value);
 }
+// $('#regStatus').click(function(){
+//   var value = "";
+//   if ($(this).prop("checked") == true) {
+//     value = "regStatusCheckedYes";
+//   } else {
+//     value = "regStatusCheckedNo";
+//   }
+//   updateCheckbox(value);
+// });
 // $('#isAdult').click(function(){
 //   var value = "";
 //   if ($(this).prop("checked") == true) {

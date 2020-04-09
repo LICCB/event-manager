@@ -20,8 +20,12 @@
 
         <div class="checkboxes">
           <span>
-            <label for="regStatus" >Registered Only</label>
-            <input type="checkbox" name="regStatus" id="regStatus"> 
+            <!-- <input type="checkbox" name="regStatus" id="regStatus">  -->
+            <label for="regStatus" >Registration Status</label>
+            <select name="regStatus" id="regStatus" onchange="regStatusFunction()" style="max-width:8%";> 
+              <option value="default">default</option>
+              <option value="Registered">Registered</option>
+            </select>
             
             <!-- <input type="checkbox" name="isAdult" id="isAdult" > <label for="isAdult" >isAdult</label> -->
             <label for="isAdult" >Over 18?</label> 
