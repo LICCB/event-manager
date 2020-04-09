@@ -124,13 +124,23 @@
                 <!--Insert Dynamic Fields-->
                 <!--Insert Event Type Specific Fields-->
                 <div id="newfields" form="eventSignupForm">
-                    <% if(event.eventMetadata != null) { %>
+                    <% if(event.eventMetadata != null || eventType.typeMetadata != null) { %>
                         <h2>Additional Questions:</h2>
                         <% var md = JSON.parse(event.eventMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
                         <% for(i=0; i < keys.length; i++){ %>
                             <label for="<%= keys[i] %>"> <%= keys[i] %></label>
                             <% if(vals[i] == "checkbox") { %>
-                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "1">
+                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true">
+                            <% } %>
+                            <% if(vals[i] == "textbox") { %>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required>
+                            <% } %>
+                        <% } %>
+                        <% var md = JSON.parse(eventType.typeMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
+                        <% for(i=0; i < keys.length; i++){ %>
+                            <label for="<%= keys[i] %>"> <%= keys[i] %></label>
+                            <% if(vals[i] == "checkbox") { %>
+                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true">
                             <% } %>
                             <% if(vals[i] == "textbox") { %>
                                 <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required>
