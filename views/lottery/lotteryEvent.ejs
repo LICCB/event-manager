@@ -20,14 +20,58 @@
 
         <div class="checkboxes">
           <span>
-            <input type="checkbox" name="regStatus" id="regStatus"> <label for="regStatus" >regStatus</label>
-            <input type="checkbox" name="isAdult" id="isAdult" > <label for="isAdult" >isAdult</label>
-            <input type="checkbox" name="canSwim" id="canSwim" > <label for="canSwim" >canSwim</label>
-            <input type="checkbox" name="hasCPRCert" id="hasCPRCert">  <label for="hasCPRCert">hasCPRCert</label>
-            <input type="checkbox" name="boatExperience" id="boatExperience"> <label for="boatExperience">boatExperience</label>
-            <input type="checkbox" name="priorVolunteer" id="priorVolunteer"> <label for="priorVolunteer">priorVolunteer</label>
-            <input type="checkbox" name="roleFamiliarity" id="roleFamiliarity"> <label for="roleFamiliarity">roleFamiliarity</label>
-            <input type="checkbox" name="volunteer" id="volunteer"> <label for="volunteer">volunteer</label>
+            <label for="regStatus" >Registered Only</label>
+            <input type="checkbox" name="regStatus" id="regStatus"> 
+            
+            <!-- <input type="checkbox" name="isAdult" id="isAdult" > <label for="isAdult" >isAdult</label> -->
+            <label for="isAdult" >Over 18?</label> 
+            <select id="isAdult" onchange="isAdultFunction()" style="max-width:8%";> 
+              <option value="default">default</option>
+              <option value="yes">Yes</option>
+            </select>
+
+            <!-- <input type="checkbox" name="canSwim" id="canSwim" > <label for="canSwim" >canSwim</label> -->
+            <label for="canSwim" >canSwim</label> 
+            <select id="canSwim" onchange="canSwimFunction()" style="max-width:8%";> 
+              <option value="default">default</option>
+              <option value="yes">Yes</option>
+            </select>   
+
+            <!-- <input type="checkbox" name="hasCPRCert" id="hasCPRCert">  <label for="hasCPRCert">hasCPRCert</label> -->
+            <label for="hasCPRCert">hasCPRCert</label>
+            <select id="hasCPRCert" onchange="hasCPRCertFunction()" style="max-width:8%";> 
+              <option value="default">default</option>
+              <option value="yes">Yes</option>
+            </select> 
+
+            <!-- <input type="checkbox" name="boatExperience" id="boatExperience"> <label for="boatExperience">boatExperience</label> -->
+            <label for="boatExperience">boatExperience</label>
+            <select id="boatExperience" onchange="boatExperienceFunction()" style="max-width:8%";> 
+              <option value="default">default</option>
+              <option value="yes">Yes</option>
+            </select> 
+
+            <!-- <input type="checkbox" name="priorVolunteer" id="priorVolunteer"> <label for="priorVolunteer">priorVolunteer</label> -->
+            <label for="priorVolunteer">priorVolunteer</label>
+            <select id="priorVolunteer" onchange="priorVolunteerFunction()" style="max-width:8%";> 
+              <option value="default">default</option>
+              <option value="yes">Yes</option>
+            </select> 
+            
+            <!-- <input type="checkbox" name="roleFamiliarity" id="roleFamiliarity"> <label for="roleFamiliarity">roleFamiliarity</label> -->
+            <label for="roleFamiliarity">roleFamiliarity</label>
+            <select id="roleFamiliarity" onchange="roleFamiliarityFunction()" style="max-width:8%";> 
+              <option value="default">default</option>
+              <option value="yes">Yes</option>
+            </select>
+
+            <!-- <input type="checkbox" name="volunteer" id="volunteer"> <label for="volunteer">volunteer</label> -->
+            <label for="volunteer">volunteer</label>
+            <select id="volunteer" onchange="volunteerFunction()" style="max-width:8%";> 
+              <option value="default">default</option>
+              <option value="yes">Yes</option>
+            </select>
+
           </span>
         </div>
       
@@ -78,7 +122,6 @@
                   <% var vals = Object.values(participants[i]) %> 
                   <% for(j = 0; j < vals.length; j++){ %>
                   <td> <%=  vals[j] %> </td>
-                      <!-- <%= console.log(vals[j]); %> -->
                   <% } %>
                   
                 </tr>

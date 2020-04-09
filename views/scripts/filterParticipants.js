@@ -7,68 +7,131 @@ $('#regStatus').click(function(){
   }
   updateCheckbox(value);
 });
-$('#isAdult').click(function(){
-  var value = "";
-  if ($(this).prop("checked") == true) {
+function isAdultFunction() {
+  var x = document.getElementById("isAdult").value;
+  if (x == "yes") {
     value = "isAdultCheckedYes";
   } else {
     value = "isAdultCheckedNo";
   }
   updateCheckbox(value);
-});
-$('#canSwim').click(function(){
-  var value = "";
-  if ($(this).prop("checked") == true) {
+}
+function canSwimFunction() {
+  var x = document.getElementById("canSwim").value;
+  if (x == "yes") {
     value = "canSwimCheckedYes";
   } else {
     value = "canSwimCheckedNo";
   }
   updateCheckbox(value);
-});
-$('#hasCPRCert').click(function(){
-  var value = "";
-  if ($(this).prop("checked") == true) {
+}
+function hasCPRCertFunction() {
+  var x = document.getElementById("hasCPRCert").value;
+  if (x == "yes") {
     value = "hasCPRCertCheckedYes";
   } else {
     value = "hasCPRCertCheckedNo";
   }
   updateCheckbox(value);
-});
-$('#boatExperience').click(function(){
-  var value = "";
-  if ($(this).prop("checked") == true) {
+}
+function boatExperienceFunction() {
+  var x = document.getElementById("boatExperience").value;
+  if (x == "yes") {
     value = "boatExperienceCheckedYes";
   } else {
     value = "boatExperienceCheckedNo";
   }
   updateCheckbox(value);
-});
-$('#priorVolunteer').click(function(){
-  var value = "";
-  if ($(this).prop("checked") == true) {
+}
+function priorVolunteerFunction() {
+  var x = document.getElementById("priorVolunteer").value;
+  if (x == "yes") {
     value = "priorVolunteerCheckedYes";
   } else {
     value = "priorVolunteerCheckedNo";
   }
   updateCheckbox(value);
-});
-$('#roleFamiliarity').click(function(){
-  var value = "";
-  if ($(this).prop("checked") == true) {
+}
+function roleFamiliarityFunction() {
+  var x = document.getElementById("roleFamiliarity").value;
+  if (x == "yes") {
     value = "roleFamiliarityCheckedYes";
   } else {
     value = "roleFamiliarityCheckedNo";
   }
   updateCheckbox(value);
-});$('#volunteer').click(function(){
-  var value = "";
-  if ($(this).prop("checked") == true) {
+}
+function volunteerFunction() {
+  var x = document.getElementById("volunteer").value;
+  if (x == "yes") {
     value = "volunteerCheckedYes";
   } else {
     value = "volunteerCheckedNo";
   }
   updateCheckbox(value);
-});
+}
+// $('#isAdult').click(function(){
+//   var value = "";
+//   if ($(this).prop("checked") == true) {
+//     value = "isAdultCheckedYes";
+//   } else {
+//     value = "isAdultCheckedNo";
+//   }
+//   updateCheckbox(value);
+// });
+// $('#canSwim').click(function(){
+//   var value = "";
+//   if ($(this).prop("checked") == true) {
+//     value = "canSwimCheckedYes";
+//   } else {
+//     value = "canSwimCheckedNo";
+//   }
+//   updateCheckbox(value);
+// });
+// $('#hasCPRCert').click(function(){
+//   var value = "";
+//   if ($(this).prop("checked") == true) {
+//     value = "hasCPRCertCheckedYes";
+//   } else {
+//     value = "hasCPRCertCheckedNo";
+//   }
+//   updateCheckbox(value);
+// });
+// $('#boatExperience').click(function(){
+//   var value = "";
+//   if ($(this).prop("checked") == true) {
+//     value = "boatExperienceCheckedYes";
+//   } else {
+//     value = "boatExperienceCheckedNo";
+//   }
+//   updateCheckbox(value);
+// });
+// $('#priorVolunteer').click(function(){
+//   var value = "";
+//   if ($(this).prop("checked") == true) {
+//     value = "priorVolunteerCheckedYes";
+//   } else {
+//     value = "priorVolunteerCheckedNo";
+//   }
+//   updateCheckbox(value);
+// });
+// $('#roleFamiliarity').click(function(){
+//   var value = "";
+//   if ($(this).prop("checked") == true) {
+//     value = "roleFamiliarityCheckedYes";
+//   } else {
+//     value = "roleFamiliarityCheckedNo";
+//   }
+//   updateCheckbox(value);
+// });$('#volunteer').click(function(){
+//   var value = "";
+//   if ($(this).prop("checked") == true) {
+//     value = "volunteerCheckedYes";
+//   } else {
+//     value = "volunteerCheckedNo";
+//   }
+//   updateCheckbox(value);
+// });
 
 // regStatus, isAdult, canSwim, hasCPRCert, boatExperience, priorVolunteer, roleFamiliarity, volunteer
 var code = "00000000"
