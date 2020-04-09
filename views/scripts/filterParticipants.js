@@ -1,3 +1,20 @@
+// Listen for click on toggle checkbox
+$('#select-all').click(function(event) {   
+  if(this.checked) {
+      // Iterate each checkbox
+      $(':checkbox').each(function() {
+        if ( $(this).is(':visible') ){
+          this.checked = true;         
+        }               
+      });
+  } else {
+      $(':checkbox').each(function() {
+        if ( $(this).is(':visible') ){
+          this.checked = false;         
+        }                      
+      });
+  }
+});
 function regStatusFunction() {
   var x = document.getElementById("regStatus").value;
   if (x == "Registered") {

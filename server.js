@@ -65,8 +65,8 @@ app.get('/events', async (req, res) => {
 
 app.get('/event/:id', async (req, res) => {
   const e = await db.queryEventDetailsByID(req.params.id);
-  console.log(e);
-  console.log(e.startTime);
+  // console.log(e);
+  // console.log(e.startTime);
   res.render('event/event', {
     title: "Event Detail",
     event: e[0],
@@ -285,28 +285,55 @@ app.post('/updateSelectedParticipantsStrategy/:id', async (req, res) => {
 
 app.post('/updateSelectedParticipants/:id', async (req, res) => {
 
-  filterParticipants = {
-    "regStatus" : req.body.regStatus == "Registered" ? "Registered" : "",
-    "isAdult" : req.body.isAdult == "yes" ? 1 : "",
-    "canSwim" : req.body.canSwim == "yes" ? 1 : "",
-    "hasCPRCert" : req.body.hasCPRCert == "yes" ? 1 : "",
-    "boatExperience" : req.body.boatExperience == "yes" ? 1 : "",
-    "priorVolunteer" : req.body.priorVolunteer == "yes" ? 1 : "",
-    "roleFamiliarity": req.body.roleFamiliarity == "yes" ? 1 : "",
-    "volunteer" : req.body.volunteer == "yes" ? 1 : "",
-  }
-  console.log(filterParticipants);
+  // console.log(req);
 
-  let eventID = req.params.id;
-  let selectedParticipants = await db.queryParticipantsByParticpantAttr(eventID, filterParticipants);
-  delete selectedParticipants.meta;
-  console.log(selectedParticipants);
-  for (let i=0; i<selectedParticipants.length; i++) {
-    let output = await db.changeParticipantStatus(selectedParticipants[i].participantID, eventID, 'Selected');
-    if (output != "success") {
-      console.log(`failed to select participantID: ${selectedParticipants[i].participantID} in event: ${eventID}`)
+  individuallySelectedUsers = [];
+
+  for (var key in req.body) {
+    if (req.body.hasOwnProperty(key)) {
+      let value = req.body[key];
+      // console.log( `value for ${key} is ${value}` )
+      if (String(key).includes("selectUser")) {
+        str = String(key);
+        str = str.replace('selectUser-','');
+        individuallySelectedUsers.push(str);
+      }
     }
   }
+  console.log(individuallySelectedUsers)
+    // update inidividually selected users
+
+  for (let i=0; i<individuallySelectedUsers.length; i++) {
+    let output = await db.changeParticipantStatus(individuallySelectedUsers[i], req.params.id, 'Selected');
+    if (output != "success") {
+      console.log(`failed to select participantID: ${individuallySelectedUsers[i]} in event: ${eventID}`)
+    }
+  }  
+
+  // filterParticipants = {
+  //   "regStatus" : req.body.regStatus == "Registered" ? "Registered" : "",
+  //   "isAdult" : req.body.isAdult == "yes" ? 1 : "",
+  //   "canSwim" : req.body.canSwim == "yes" ? 1 : "",
+  //   "hasCPRCert" : req.body.hasCPRCert == "yes" ? 1 : "",
+  //   "boatExperience" : req.body.boatExperience == "yes" ? 1 : "",
+  //   "priorVolunteer" : req.body.priorVolunteer == "yes" ? 1 : "",
+  //   "roleFamiliarity": req.body.roleFamiliarity == "yes" ? 1 : "",
+  //   "volunteer" : req.body.volunteer == "yes" ? 1 : "",
+  // }
+  // console.log(filterParticipants);
+
+  // let eventID = req.params.id;
+  // let selectedParticipants = await db.queryParticipantsByParticpantAttr(eventID, filterParticipants);
+  // delete selectedParticipants.meta;
+  // console.log(selectedParticipants);
+
+  // // update filtered users
+  // for (let i=0; i<selectedParticipants.length; i++) {
+  //   let output = await db.changeParticipantStatus(selectedParticipants[i].participantID, eventID, 'Selected');
+  //   if (output != "success") {
+  //     console.log(`failed to select participantID: ${selectedParticipants[i].participantID} in event: ${eventID}`)
+  //   }
+  // }
 
   res.redirect('/events');
 });
