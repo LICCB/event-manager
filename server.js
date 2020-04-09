@@ -284,17 +284,16 @@ app.post('/updateSelectedParticipantsStrategy/:id', async (req, res) => {
 
 
 app.post('/updateSelectedParticipants/:id', async (req, res) => {
-  
 
   filterParticipants = {
     "regStatus" : req.body.regStatus == "on" ? "Registered" : "",
-    "isAdult" : req.body.isAdult == "on" ? 1 : "",
-    "canSwim" : req.body.canSwim == "on" ? 1 : "",
-    "hasCPRCert" : req.body.hasCPRCert == "on" ? 1 : "",
-    "boatExperience" : req.body.boatExperience == "on" ? 1 : "",
-    "priorVolunteer" : req.body.priorVolunteer == "on" ? 1 : "",
-    "roleFamiliarity": req.body.roleFamiliarity == "on" ? 1 : "",
-    "volunteer" : req.body.volunteer == "on" ? 1 : "",
+    "isAdult" : req.body.isAdult == "yes" ? 1 : "",
+    "canSwim" : req.body.canSwim == "yes" ? 1 : "",
+    "hasCPRCert" : req.body.hasCPRCert == "yes" ? 1 : "",
+    "boatExperience" : req.body.boatExperience == "yes" ? 1 : "",
+    "priorVolunteer" : req.body.priorVolunteer == "yes" ? 1 : "",
+    "roleFamiliarity": req.body.roleFamiliarity == "yes" ? 1 : "",
+    "volunteer" : req.body.volunteer == "yes" ? 1 : "",
   }
   console.log(filterParticipants);
 

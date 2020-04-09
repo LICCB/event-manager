@@ -25,49 +25,49 @@
             
             <!-- <input type="checkbox" name="isAdult" id="isAdult" > <label for="isAdult" >isAdult</label> -->
             <label for="isAdult" >Over 18?</label> 
-            <select id="isAdult" onchange="isAdultFunction()" style="max-width:8%";> 
+            <select name="isAdult" id="isAdult" onchange="isAdultFunction()" style="max-width:8%";> 
               <option value="default">default</option>
               <option value="yes">Yes</option>
             </select>
 
             <!-- <input type="checkbox" name="canSwim" id="canSwim" > <label for="canSwim" >canSwim</label> -->
             <label for="canSwim" >canSwim</label> 
-            <select id="canSwim" onchange="canSwimFunction()" style="max-width:8%";> 
+            <select name="canSwim" id="canSwim" onchange="canSwimFunction()" style="max-width:8%";> 
               <option value="default">default</option>
               <option value="yes">Yes</option>
             </select>   
 
             <!-- <input type="checkbox" name="hasCPRCert" id="hasCPRCert">  <label for="hasCPRCert">hasCPRCert</label> -->
             <label for="hasCPRCert">hasCPRCert</label>
-            <select id="hasCPRCert" onchange="hasCPRCertFunction()" style="max-width:8%";> 
+            <select name="hasCPRCert" id="hasCPRCert" onchange="hasCPRCertFunction()" style="max-width:8%";> 
               <option value="default">default</option>
               <option value="yes">Yes</option>
             </select> 
 
             <!-- <input type="checkbox" name="boatExperience" id="boatExperience"> <label for="boatExperience">boatExperience</label> -->
             <label for="boatExperience">boatExperience</label>
-            <select id="boatExperience" onchange="boatExperienceFunction()" style="max-width:8%";> 
+            <select name="boatExperience" id="boatExperience" onchange="boatExperienceFunction()" style="max-width:8%";> 
               <option value="default">default</option>
               <option value="yes">Yes</option>
             </select> 
 
             <!-- <input type="checkbox" name="priorVolunteer" id="priorVolunteer"> <label for="priorVolunteer">priorVolunteer</label> -->
             <label for="priorVolunteer">priorVolunteer</label>
-            <select id="priorVolunteer" onchange="priorVolunteerFunction()" style="max-width:8%";> 
+            <select name="priorVolunteer" id="priorVolunteer" onchange="priorVolunteerFunction()" style="max-width:8%";> 
               <option value="default">default</option>
               <option value="yes">Yes</option>
             </select> 
             
             <!-- <input type="checkbox" name="roleFamiliarity" id="roleFamiliarity"> <label for="roleFamiliarity">roleFamiliarity</label> -->
             <label for="roleFamiliarity">roleFamiliarity</label>
-            <select id="roleFamiliarity" onchange="roleFamiliarityFunction()" style="max-width:8%";> 
+            <select name="roleFamiliarity" id="roleFamiliarity" onchange="roleFamiliarityFunction()" style="max-width:8%";> 
               <option value="default">default</option>
               <option value="yes">Yes</option>
             </select>
 
             <!-- <input type="checkbox" name="volunteer" id="volunteer"> <label for="volunteer">volunteer</label> -->
             <label for="volunteer">volunteer</label>
-            <select id="volunteer" onchange="volunteerFunction()" style="max-width:8%";> 
+            <select name="volunteer" id="volunteer" onchange="volunteerFunction()" style="max-width:8%";> 
               <option value="default">default</option>
               <option value="yes">Yes</option>
             </select>
@@ -94,6 +94,9 @@
               <% for(i = 0; i < participants.length; i++){ %>
                 <tr  class="<%=`${participants[i].regStatus} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
                   <td class="manualChanges">  
+                    <div>
+                      <input type="checkbox" name="selectUser" id="selectUser">
+                    </div>
                     <div>
                       <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/select/` +participants[i].participantID %>">Select</a>
                     </div>  
