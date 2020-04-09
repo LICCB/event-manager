@@ -92,7 +92,7 @@
               <% var keys = Object.keys(participants[0]) %> 
                 <tr>
                   <th> Individual Selection 
-                    <input type="checkbox" name="select-all" id="select-all" />
+                    <input type="checkbox" name="select-all" id="select-all" checked="checked" />
                   </th>
                   <% for(i = 0; i < keys.length; i++){ %>
                   <th scope="col"> <%=  keys[i].charAt(0).toUpperCase() + keys[i].substring(1) %> </th>
@@ -107,7 +107,7 @@
                 <tr  class="<%=`${participants[i].regStatus} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
                   <td class="manualChanges">  
                     <div>
-                      <input type="checkbox" name="<%=`selectUser-${participants[i].participantID}`%>" id="selectUser">
+                      <input type="checkbox" name="<%=`selectUser-${participants[i].participantID}`%>" id="selectUser" checked="checked">
                     </div>
                     <div>
                       <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/select/` +participants[i].participantID %>">Select</a>
