@@ -2,16 +2,12 @@
 $('#select-all').click(function(event) {   
   if(this.checked) {
       // Iterate each checkbox
-      $(':checkbox').each(function() {
-        if ( $(this).is(':visible') ){
-          this.checked = true;         
-        }               
+      $(':checkbox:visible').each(function() {
+          this.checked = true;                        
       });
   } else {
-      $(':checkbox').each(function() {
-        if ( $(this).is(':visible') ){
-          this.checked = false;         
-        }                      
+      $(':checkbox:visible').each(function() {
+          this.checked = false;                       
       });
   }
 });
@@ -278,4 +274,14 @@ function updateCheckbox(checkbox) {
   if (code.charAt(7) == "1") {
     $('.noVolunteer').hide();
   }
+
+  // uncheck all hidden checkboxes
+  $(':checkbox:hidden').each(function() {
+    this.checked = false;                        
+  });
+
+  
+  $("#select-all").prop("checked", false);
+
+
 }

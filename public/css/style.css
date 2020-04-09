@@ -5,6 +5,9 @@
 .strategyRejected {
   color: crimson ! important;
 }
+.note {
+  text-align: left ! important;
+}
 /* .manualChanges {
   font-size: x-small;
   color: #6d7fcc;
