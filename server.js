@@ -117,6 +117,8 @@ app.get('/signupEventList/:volunteerStatus', async (req, res) => {
 app.get('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
   res.render('signup/eventSignup', {
     title: "Public Signup",
+    event: (await db.queryEventByID(req.params.eventID))[0],
+    eventType: (await db.queryEventTypeMetadata(req.params.eventID))[0],
     eventID: req.params.eventID,
     volunteerStatus: req.params.volunteerStatus
   });
@@ -258,8 +260,8 @@ app.get('/participants/checkin/:eventid/:participantid', authCheck, async (req, 
 app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
   res.render("signup/editRegistration", {
     title: "Edit Public Signup",
-    events: await db.queryAllEvents(),
     event: (await db.queryEventByID(req.params.eventid))[0],
+    eventType: (await db.queryEventTypeMetadata(event.eventType))[0],
     participants: await db.queryParticipantsByEventAndParty(req.params.eventid, req.params.partyid),
     utils: utils
   });
