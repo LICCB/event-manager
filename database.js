@@ -1,56 +1,60 @@
 const config = require('./config.json');
-const mariadb = require('mariadb');
+const Sequelize = require('sequelize');
 const utils = require('./utils');
-const pool = mariadb.createPool({
-  host: config.database.host, 
-  user: config.database.user,
-  password: config.database.password,
-  connectionLimit: 10,
-  connectTimeout: 100000
+
+// Initiate Sequelize with production database and connection pool
+const sequelize = new Sequelize('LICCB', config.database.user, config.database.password, {
+  host: config.database.host,
+  dialect: 'mariadb',
+  pool: {
+    max: 10,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
 });
+
+// Verify database connection
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Database connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database: ', err);
+  });
 
 const uuidv4 = require('uuid/v4');
 
 async function queryAllCols(tableName) {
-  let conn = await pool.getConnection();
-  let cols = await conn.query(`SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='${tableName}'`);
-  conn.release();
+  let cols = await sequelize.query(`SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='${tableName}'`, {type: sequelize.QueryTypes.SELECT});
   return cols;
 }
 
 async function queryAllUsers() {
-  let conn = await pool.getConnection();
-  let users = await conn.query("SELECT * FROM LICCB.users");
-  conn.release();
+  let users = await sequelize.query("SELECT * FROM LICCB.users", {type: sequelize.QueryTypes.SELECT});
   return users;
 }
 
 async function queryAllEvents() {
-  let conn = await pool.getConnection();
-  let events = await conn.query("SELECT * FROM LICCB.events");
-  conn.release();
+  let events = await sequelize.query("SELECT * FROM LICCB.events", {type: sequelize.QueryTypes.SELECT});
   return events;
 }
 
 async function queryEventsTableData(){
-  let conn = await pool.getConnection();
   const query = "SELECT eventID, eventName, firstName, lastName, eventStatus, privateEvent, startTime, endTime " +
                 "FROM (LICCB.events AS e) JOIN (LICCB.users AS u) on " +
                       "e.managerID=u.userID;";
-  let events = await conn.query(query);
-  conn.release();
+  let events = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return events;
 }
 
 async function queryParticipantsByEventID(eventID) {
-  let conn = await pool.getConnection();
-  let participants = await conn.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}'`);
-  conn.release();
+  let participants = await sequelize.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}'`, {type: sequelize.QueryTypes.SELECT});
   return participants;
 }
 
 async function queryParticipantsByEventAttr(eventAttrs) {
-  let conn = await pool.getConnection();
   let queryString = `SELECT * FROM LICCB.events as E, LICCB.participants as P WHERE `;
 
   // Add all selected attributes to query
@@ -62,71 +66,72 @@ async function queryParticipantsByEventAttr(eventAttrs) {
   }
   // Join events table with participants table to get participant data
   queryString += "E.eventID = P.eventID"
-  let participants = await conn.query(queryString);
-  conn.release();
+  let participants = await sequelize.query(queryString, {type: sequelize.QueryTypes.SELECT});
   return participants;
 }
 
 async function queryEventTypeIDByName(eventTypeName) {
-  let conn = await pool.getConnection();
-  let participants = await conn.query(`SELECT typeID FROM LICCB.eventTypes WHERE typeName='${eventTypeName}'`);
-  conn.release();
+  let participants = await sequelize.query(`SELECT typeID FROM LICCB.eventTypes WHERE typeName='${eventTypeName}'`, {type: sequelize.QueryTypes.SELECT});
   return participants;
 }
 
 async function queryEventByID(eventID) {
-  let conn = await pool.getConnection();
-  let event = await conn.query("SELECT * FROM LICCB.events WHERE eventID= ?", [eventID]);
-  conn.release();
+  let event = await sequelize.query("SELECT * FROM LICCB.events WHERE eventID= ?",
+  {
+    replacements: [eventID],
+    type: sequelize.QueryTypes.SELECT
+  });
   return event;
 }
 
 async function queryEventDetailsByID(eventID) {
-  let conn = await pool.getConnection();
   const query = "SELECT * " + 
                 `FROM (SELECT * FROM LICCB.events WHERE eventID='${eventID}') as E JOIN (SELECT * FROM LICCB.users) AS U on E.managerID=U.userID ` +
                       `JOIN (SELECT * FROM LICCB.eventTypes) AS T on E.eventType=T.typeID;`
-  let event = await conn.query(query);
-  conn.release();
+  let event = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return event;
 }
 
 async function queryEventTypeMetadata(eventID) {
-  let conn = await pool.getConnection();
   const query = `SELECT typeMetadata FROM LICCB.eventTypes WHERE typeID= (SELECT eventType FROM LICCB.events WHERE eventID = '${eventID}')`;
-  let metadata = await conn.query(query);
-  conn.release();
+  let metadata = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return metadata;
 }
 
 async function queryParticipants() {
-  let conn = await pool.getConnection();
-  let participants = await conn.query("SELECT * FROM LICCB.participants JOIN LICCB.events ON LICCB.participants.eventID=LICCB.events.eventID");
-  conn.release();
+  let participants = await sequelize.query("SELECT * FROM LICCB.participants JOIN LICCB.events ON LICCB.participants.eventID=LICCB.events.eventID",
+  {
+    type: sequelize.QueryTypes.SELECT
+  });
   return participants;
 }
 
 async function queryParticipantsByEventID(eventID) {
-  let conn = await pool.getConnection();
-  let participants = await conn.query("SELECT * FROM LICCB.participants WHERE eventID = ?", [eventID]);
-  conn.release();
+  let participants = await sequelize.query("SELECT * FROM LICCB.participants WHERE eventID = ?", 
+  {
+    replacements: [eventID],
+    type: sequelize.QueryTypes.SELECT
+  });
   return participants;
 }
 
 async function queryParticipantsByEventAndParty(eventID, partyID) {
-  let conn = await pool.getConnection();
-  let participants = await conn.query("SELECT * FROM LICCB.participants WHERE eventID = ? AND partyID = ? ORDER BY regTime", [eventID, partyID]);
-  conn.release();
+  let participants = await sequelize.query("SELECT * FROM LICCB.participants WHERE eventID = ? AND partyID = ? ORDER BY regTime",
+  {
+    replacements: [eventID, partyID],
+    type: sequelize.QueryTypes.SELECT
+  });
   return participants;
 }
 
 async function queryParticipantByID(participantID) {
-  let conn = await pool.getConnection();
-  let participants = await conn.query("SELECT * FROM " +
-                                      "(SELECT * FROM LICCB.participants WHERE participantID = ?) AS p " +
-                                      "JOIN LICCB.events ON p.eventID=LICCB.events.eventID",
-                                      [participantID]);
-  conn.release();
+  let participants = await sequelize.query("SELECT * FROM " +
+                                           "(SELECT * FROM LICCB.participants WHERE participantID = ?) AS p " +
+                                           "JOIN LICCB.events ON p.eventID=LICCB.events.eventID",
+  {
+    replacements: [participantID],
+    type: sequelize.QueryTypes.SELECT
+  });
   return participants;
 }
 
@@ -135,55 +140,60 @@ async function queryParticipantByID(participantID) {
  * given participant has participated in.
  */
 async function queryParticipantsByNotID(participantID) {
-  let conn = await pool.getConnection();
-  let participants = await conn.query("SELECT * FROM " +
-                                        "(SELECT * FROM LICCB.participants " +
-                                        "WHERE NOT participantID = ? AND " +
-                                          "participantID NOT IN (SELECT participantID FROM LICCB.participants " +
-                                                                "WHERE eventID IN (SELECT eventID FROM LICCB.participants " +
-                                                                                  "WHERE participantID = ?))) AS p " +
-                                      "JOIN LICCB.events ON p.eventID=LICCB.events.eventID",
-                                      [participantID, participantID]);
-  conn.release();
+  let participants = await sequelize.query("SELECT * FROM " +
+                                           "(SELECT * FROM LICCB.participants " +
+                                           "WHERE NOT participantID = ? AND " +
+                                             "participantID NOT IN (SELECT participantID FROM LICCB.participants " +
+                                                                   "WHERE eventID IN (SELECT eventID FROM LICCB.participants " +
+                                                                                     "WHERE participantID = ?))) AS p " +
+                                           "JOIN LICCB.events ON p.eventID=LICCB.events.eventID",
+  {
+    replacements: [participantID, participantID],
+    type: sequelize.QueryTypes.SELECT
+  });
   return participants;
 }
 
 async function tieParticipants(participantID, tieWithParticipantID) {
-  let conn = await pool.getConnection();
-  let result = await conn.query("UPDATE LICCB.participants " +
-                                "SET participantID = ?" +
-                                "WHERE LICCB.participants.participantID = ?",
-                                [participantID, tieWithParticipantID]);
-  conn.release();
+  let result = await sequelize.query("UPDATE LICCB.participants " +
+                                     "SET participantID = ?" +
+                                     "WHERE LICCB.participants.participantID = ?",
+  {
+    replacements: [participantID, tieWithParticipantID],
+    type: sequelize.QueryTypes.UPDATE
+  });
   return result;
 }
 
 async function checkinParticipant(participantID, eventID) {
-  let conn = await pool.getConnection();
-  let participant = await conn.query("UPDATE LICCB.participants " +
-                                     "SET checkinStatus = 'Checked In' " +
-                                     "WHERE LICCB.participants.participantID = ? " +
-                                           "AND LICCB.participants.eventID = ?",
-                                     [participantID, eventID]);
-  conn.release();
+  let participant = await sequelize.query("UPDATE LICCB.participants " +
+                                          "SET checkinStatus = 'Checked In' " +
+                                          "WHERE LICCB.participants.participantID = ? " +
+                                                "AND LICCB.participants.eventID = ?",
+  {
+    replacements: [participantID, eventID],
+    type: sequelize.QueryTypes.UPDATE
+  });
   return participant;
 }
 
 async function editUserComments(participantID, eventID, comment) {
-  let conn = await pool.getConnection();
-  let participant = await conn.query("UPDATE LICCB.participants " +
-                                     "SET userComments = ? " +
-                                     "WHERE LICCB.participants.participantID = ? " +
-                                           "AND LICCB.participants.eventID = ?",
-                                     [comment, participantID, eventID]);
-  conn.release();
+  let participant = await sequelize.query("UPDATE LICCB.participants " +
+                                          "SET userComments = ? " +
+                                          "WHERE LICCB.participants.participantID = ? " +
+                                                "AND LICCB.participants.eventID = ?",
+  {
+    replacements: [comment, participantID, eventID],
+    type: sequelize.QueryTypes.UPDATE
+  });
   return participant;
 }
 
 async function deleteEvent(id) {
-  let conn = await pool.getConnection();
-  let del = await conn.query("DELETE FROM LICCB.events WHERE eventID='" + id + "'");
-  conn.release();
+  let del = await sequelize.query("DELETE FROM LICCB.events WHERE eventID='" + id + "'",
+  {
+    type: sequelize.QueryTypes.DELETE
+  });
   return del;
 }
 
@@ -211,42 +221,34 @@ async function insertEvent(event) {
                     "'" + event.eventNotes + "', " +
                     "'" + eventMetadata + "'," + 
                     "'" + event.typeID + "');";
-  let conn = await pool.getConnection();
-  let insert = await conn.query(insertStmt);
-  conn.release();
+  let insert = await sequelize.query(insertStmt, {type: sequelize.QueryTypes.INSERT});
   return eventID;
 }
 
 async function archiveEvent(id) {
-  let conn = await pool.getConnection();
   const archive = "UPDATE LICCB.events " + 
                   "SET " +
                     "eventStatus='Archived'" +              
                   "WHERE eventID='" + id + "';";
-  let arc = await conn.query(archive);
-  conn.release();
+  let arc = await sequelize.query(archive, {type: sequelize.QueryTypes.UPDATE});
   return arc;
 }
 
 async function cancelEvent(id) {
-  let conn = await pool.getConnection();
   const cancel = "UPDATE LICCB.events " + 
                   "SET " +
                     "eventStatus='Cancelled'" +              
                   "WHERE eventID='" + id + "';";
-  let canc = await conn.query(cancel);
-  conn.release();
+  let canc = await sequelize.query(cancel, {type: sequelize.QueryTypes.UPDATE});
   return canc;
 }
 
 async function publishEvent(id) {
-  let conn = await pool.getConnection();
   const publish = "UPDATE LICCB.events " + 
                   "SET " +
                     "eventStatus='Registration Open'" +              
                   "WHERE eventID='" + id + "';";
-  let pub = await conn.query(publish);
-  conn.release();
+  let pub = await sequelize.query(publish, {type: sequelize.QueryTypes.UPDATE});
   return pub;
 }
 
@@ -275,10 +277,8 @@ async function updateEvent(event, id) {
                   "eventMetadata='" + eventMetadata + "', " +                  
                   "eventType='" + event.typeID + "' " +                  
                 "WHERE eventID='" + id + "';"
-  let conn = await pool.getConnection();
-  let oldDateTimes = await conn.query(dateTimeQuery);
-  let upd = await conn.query(update);
-  conn.release();
+  let oldDateTimes = await sequelize.query(dateTimeQuery, {type: sequelize.QueryTypes.SELECT});
+  let upd = await sequelize.query(update, {type: sequelize.QueryTypes.UPDATE});
   return {
           oldStart : oldDateTimes[0].startTime,
           oldEnd : oldDateTimes[0].endTime,
@@ -298,10 +298,8 @@ async function confirmEmail(eventID, registrantID){
                  "JOIN " + 
                         `(SELECT * FROM LICCB.events WHERE eventID='${eventID}') AS e on ` + 
                         "p.eventID = e.eventID;";
-  let conn = await pool.getConnection();
-  let update = await conn.query(confirm);
-  let vals = await conn.query(query);
-  conn.release();
+  let update = await sequelize.query(confirm, {type: sequelize.QueryTypes.UPDATE});
+  let vals = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return vals[0];
 }
 
@@ -325,9 +323,12 @@ async function insertParty(signup, eventID, volunteerStatus) {
     partsize = (signupkeys - 14) / 10;
   }
   console.log("partysize:" + partsize);
-  let conn = await pool.getConnection();
   const queryStmt = "SELECT participantID FROM LICCB.participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
-  const query = await conn.query(queryStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone]);
+  const query = await sequelize.query(queryStmt,
+  {
+    replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone],
+    type: sequelize.QueryTypes.SELECT
+  });
   var registrantID = uuidv4();
   console.log(query[0]);
   if(query[0] != undefined) {
@@ -377,11 +378,19 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "'', " + //userComments
     "'?');"; //metadata
   console.log(registrantID);
-  let insert = await conn.query(insertStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata]);
+  let insert = await sequelize.query(insertStmt,
+  {
+    replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
+    type: sequelize.QueryTypes.INSERT
+  });
 
   for(i = 1; i <= partsize; i++) {
     const queryStmt = "SELECT participantID FROM LICCB.participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
-    const query = await conn.query(queryStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone]);
+    const query = await sequelize.query(queryStmt,
+    {
+      replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone],
+      type: sequelize.QueryTypes.SELECT
+    });
     var newParticipantID = uuidv4();
     if(query[0] != undefined) {
       newParticipantID = query[0].participantID;
@@ -422,10 +431,13 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "'" + date + "', " + //regTime
       "'', " + //userComments
       "'?');"; //metadata
-    let insert = await conn.query(insertStmt1, [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata]);
+    let insert = await sequelize.query(insertStmt1,
+    {
+      replacements: [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
+      type: sequelize.QueryTypes.INSERT
+    });
   console.log(eventID);
   console.log(registrantID);
-  conn.release();
   return registrantID;
   }
 }
@@ -457,8 +469,11 @@ async function updateParty(signup, eventID, partyID) {
     "eventDisc=?, " + //event discvoery
     "regComments=? " + //regComments
     "WHERE eventID=? AND partyID=? AND participantID=?;";
-  let conn = await pool.getConnection();
-  let insert = await conn.query(update, [signup.eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.regadult, signup.regcpr, signup.regboat, signup.bhdiscovery, signup.eventdiscovery, signup.notes, eventID, partyID, partyID]);
+  let insert = await sequelize.query(update,
+  {
+    replacements: [signup.eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.regadult, signup.regcpr, signup.regboat, signup.bhdiscovery, signup.eventdiscovery, signup.notes, eventID, partyID, partyID],
+    type: sequelize.QueryTypes.UPDATE
+  });
 
   var partIds = signup.partIDs;
   for(i = 1; i <= partsize; i++) {
@@ -508,7 +523,10 @@ async function updateParty(signup, eventID, partyID) {
       "'" + date + "', " + //regTime
       "'', " + //userComments
       "''); END IF;"; //metadata
-    let insert = await conn.query(updateStmt, [eventID, partyID, signup[`part${i}ID`], signup[`part${i}fname`], signup[`part${i}lname`], signup.eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup[`part${i}age`], signup[`part${i}cpr`], signup[`part${i}swim`], signup[`part${i}boat`], signup.bhdiscovery, signup.eventdiscovery, signup.notes, eventID, partyID, signup[`part${i}ID`], partyID, signup.eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup[`part${i}age`], signup[`part${i}cpr`], signup[`part${i}swim`], signup[`part${i}boat`], signup.bhdiscovery, signup.eventdiscovery, signup.notes]);
+    let insert = await sequelize.query(updateStmt,
+    {
+      replacements: [eventID, partyID, signup[`part${i}ID`], signup[`part${i}fname`], signup[`part${i}lname`], signup.eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup[`part${i}age`], signup[`part${i}cpr`], signup[`part${i}swim`], signup[`part${i}boat`], signup.bhdiscovery, signup.eventdiscovery, signup.notes, eventID, partyID, signup[`part${i}ID`], partyID, signup.eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup[`part${i}age`], signup[`part${i}cpr`], signup[`part${i}swim`], signup[`part${i}boat`], signup.bhdiscovery, signup.eventdiscovery, signup.notes],
+    });
   }
   if(partsize < signup.partIDs.length) {
     //loop through participants who need to be deleted
@@ -519,10 +537,13 @@ async function updateParty(signup, eventID, partyID) {
       "SET " +
       "partyID='' " + 
       "WHERE eventID=? AND partyID=? AND participantID=?;";
-    let insert = await conn.query(deleteStmt, [eventID, partyID, partIds[i]]);
+    let insert = await sequelize.query(deleteStmt,
+    {
+      replacements: [eventID, partyID, partIds[i]],
+      type: sequelize.QueryTypes.UPDATE
+    });
     }
   }
-  conn.release();
   return partyID;
 }
 
@@ -538,9 +559,7 @@ async function querySpecificEvents(choice) {
                 "WHERE eventStatus = 'Registration Open' AND privateEvent = 0;";
   }
   
-  let conn = await pool.getConnection();
-  let events = await conn.query(query);
-  conn.release();
+  let events = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return events;
 }
 
@@ -548,9 +567,7 @@ async function queryRegistrantEmailsByEventID(eventID){
   const query = "SELECT email " + 
                 "FROM LICCB.participants " +
                 `WHERE eventID='${eventID}' and email !='';`; 
-  let conn = await pool.getConnection();
-  let emails = await conn.query(query);
-  conn.release();
+  let emails = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return emails.map(function (x) {
     return Object.values(x);
     },
@@ -560,27 +577,21 @@ async function queryRegistrantEmailsByEventID(eventID){
 async function queryAllUsers(){
   const query = 'SELECT * FROM LICCB.users;';
   console.log(query);
-  let conn = await pool.getConnection();
-  let user = await conn.query(query);
-  conn.release();
+  let user = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return user;
 }
 
 async function queryUserByEmail(email){
   const query = `SELECT * FROM LICCB.users WHERE email='${email}';`;
   console.log(query);
-  let conn = await pool.getConnection();
-  let user = await conn.query(query);
-  conn.release();
+  let user = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return user;
 }
 
 async function queryUserByID(userID){
   const query = `SELECT * FROM LICCB.users WHERE userID='${userID}';`;
   console.log(query);
-  let conn = await pool.getConnection();
-  let user = await conn.query(query);
-  conn.release();
+  let user = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return user;
 }
 
@@ -589,9 +600,7 @@ async function updateUser(email, googleID, fname, lname){
                 `SET googleID='${googleID}', firstName='${fname}', lastName='${lname}' ` +
                 `WHERE email='${email}';`;
   console.log(query);
-  let conn = await pool.getConnection();
-  let upd = await conn.query(query);
-  conn.release();
+  let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
 
@@ -601,56 +610,44 @@ async function insertUser(email, fName, lName){
                 '(userID, email, googleID, firstName, lastName, userEnabled) ' +
                 `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1)`; // set googleID to userID until first login
   console.log(query);
-  let conn = await pool.getConnection();
-  let insert = await conn.query(query);
-  conn.release();
+  let insert = await conn.query(query, {type: sequelize.QueryTypes.INSERT});
   return insert;
 }
 
 async function disableUser(id){
   const query = `UPDATE LICCB.users SET userEnabled=0 WHERE userID='${id}';`;
   console.log(query);
-  let conn = await pool.getConnection();
-  let upd = await conn.query(query);
-  conn.release();
+  let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
 
 async function enableUser(id){
   const query = `UPDATE LICCB.users SET userEnabled=1 WHERE userID='${id}';`;
   console.log(query);
-  let conn = await pool.getConnection();
-  let upd = await conn.query(query);
-  conn.release();
+  let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
 
 async function deleteUser(id){
   const query = `DELETE FROM LICCB.users WHERE userID='${id}';`;
   console.log(query);
-  let conn = await pool.getConnection();
-  let del = await conn.query(query);
-  conn.release();
+  let del = await sequelize.query(query, {type: sequelize.QueryTypes.DELETE});
   return del;
 }
 
 async function queryEventTypes(){
-  let conn = await pool.getConnection();
   // const query = "SELECT * FROM LICCB.eventTypes;";
   const query = 'SELECT DISTINCT eventTypes.typeID, eventTypes.typeName, eventTypes.typeMetadata, IF(events.eventType IS NULL, FALSE, TRUE) as inUse ' + 
                 'FROM LICCB.eventTypes ' +
                 'LEFT JOIN LICCB.events ON (eventTypes.typeID = events.eventType)';
-  let types = await conn.query(query)
+  let types = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT})
   // console.log(types);
-  conn.release();
   return types;
 }
 
 async function queryEventTypeByID(id){
-  let conn = await pool.getConnection();
   const query = `SELECT * FROM LICCB.eventTypes WHERE typeID='${id}';`;
-  let types = await conn.query(query)
-  conn.release();
+  let types = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT})
   return types;
 }
 
@@ -661,17 +658,13 @@ async function insertEventType(type){
                         "(typeID, typeMetadata, typeName) " + 
                      `VALUES("${typeID}", '${metadata}', "${type.typeName}");`;
   console.log(insertStmt);
-  let conn = await pool.getConnection();
-  let insert = await conn.query(insertStmt);
-  conn.release();
+  let insert = await sequelize.query(insertStmt, {type: sequelize.QueryTypes.INSERT});
   return typeID;
 }
 
 async function deleteEventType(typeID){
   const delStmt = `DELETE FROM LICCB.eventTypes WHERE typeID='${typeID}'`;
-  let conn = await pool.getConnection();
-  let del = await conn.query(delStmt);
-  conn.release();
+  let del = await sequelize.query(delStmt, {type: sequelize.QueryTypes.DELETE});
   return del;
 }
 
@@ -682,9 +675,7 @@ async function updateEventType(id, type){
                 `SET typeName='${type.typeName}', typeMetadata='${md}' ` +
                 `WHERE typeID='${id}';`;
   console.log(query);
-  let conn = await pool.getConnection();
-  let upd = await conn.query(query);
-  conn.release();
+  let upd = await conn.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
 
