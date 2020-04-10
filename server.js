@@ -1,17 +1,29 @@
+console.log("TESTING = " + process.env.TESTING);
+var config;
+var passportSetup;
+var passport;
+var mailer;
+if (process.env.TESTING !== undefined) {
+  console.log("RUNNING IN TEST MODE")
+  config = require('./test-config.json');
+} else {
+  config = require('./config.json');
+  passportSetup = require('./passport-setup');
+  passport = require('passport');
+  mailer = require('./email');
+}
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./database');
 const utils = require('./utils');
-const mailer = require('./email');
 const app = express();
 const fs = require('fs');
 const { Parser } = require('json2csv');
 const authRoutes = require('./routes/auth-routes');
 const settingsRoutes = require('./routes/settings-routes');
-const passportSetup = require('./passport-setup');
 const cookieSession = require('cookie-session');
-const passport = require('passport');
-const config = require('./config.json');
+
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/views'));
@@ -22,25 +34,29 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
-// cookies
-app.use(cookieSession({
-  maxAge: 24 * 60 * 60 * 1000,
-  keys: [config.keys.session.cookieKey]
-}));
+if (process.env.TESTING == undefined) {
+  // cookies
+  app.use(cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: [config.keys.session.cookieKey]
+  }));
 
-// initialize passport
-app.use(passport.initialize());
-app.use(passport.session());
+  // initialize passport
+  app.use(passport.initialize());
+  app.use(passport.session());
+}
 
 // setup routes
 app.use('/auth', authRoutes);
 app.use('/settings', settingsRoutes);
 
 const authCheck = (req, res, next) => {
-  if(!req.user){
+  if(!req.user && process.env.TESTING == undefined){
       // if not logged in
+      console.log('bouncing');
       res.redirect('/auth/google');
   } else {
+      console.log('success');
       // if logged in
       next();
   }
