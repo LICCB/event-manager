@@ -19,11 +19,20 @@
 
         <div class="checkboxes">
           <span>
-            <label for="regStatus" >Registered</label>
-            <input type="checkbox" name="regStatus" id="regStatus"> 
+            <select name="testexample" id="testexample" class="testexample" multiple="multiple" onchange="applyRegStatusFilters()">
+              <option value="Awaiting Confirmation">Awaiting Confirmation</option>
+              <option value="Registered">Registered</option>
+              <option value="Not Confirmed">Not Confirmed</option>
+              <option value="Not Selected">Not Selected</option>
+              <option value="Standby">Standby</option>
+              <option value="Selected">Selected</option>
+              <option value="Cancelled">Cancelled</option>
+              <option value="Same Day Cancel">Same Day Cancel</option>
+            </select>
+            <!-- <input type="checkbox" name="regStatus" id="regStatus">  -->
 
-            <label for="regStatusStandby" >Standby</label>
-            <input type="checkbox" name="regStatusStandby" id="regStatusStandby"> 
+            <!-- <label for="regStatusStandby" >Standby</label>
+            <input type="checkbox" name="regStatusStandby" id="regStatusStandby">  -->
             <!-- <select name="regStatus" id="regStatus" onchange="regStatusFunction()" style="max-width:8%";> 
               <option value="default">default</option>
               <option value="Registered">Registered</option>
@@ -106,7 +115,18 @@
               
       
               <% for(i = 0; i < participants.length; i++){ %>
-                <tr  class="<%=`${participants[i].regStatus} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
+                <% if (participants[i].regStatus == 'Awaiting Confirmation') { %>
+                  <tr  class="<%=`awaitingConfirmation ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
+                <% } else if (participants[i].regStatus == 'Not Confirmed') { %>    
+                  <tr  class="<%=`notConfirmed ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">  
+                <% } else if (participants[i].regStatus == 'Not Selected') { %>    
+                  <tr  class="<%=`notSelected ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">  
+                <% } else if (participants[i].regStatus == 'Same Day Cancel') { %>
+                  <tr  class="<%=`sameDayCancel ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">  
+                <% } else { %>
+                  <tr  class="<%=`${participants[i].regStatus} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
+                <% } %>
+                
                   <td class="manualChanges">  
                     <div>
                         <% if(participants[i].regStatus == 'Awaiting Confirmation' || participants[i].regStatus == 'Cancelled' || participants[i].regStatus == 'Same Day Cancel') { %>
@@ -173,6 +193,8 @@
     <script src="/scripts/tableSorter.js"></script>
     <script src="/scripts/jQueryDataTables.js"></script>
     <script src="/scripts/hideOnSlider.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
   
 
 </html>
