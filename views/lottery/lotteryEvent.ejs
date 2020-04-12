@@ -6,7 +6,6 @@
     <%- include('../partials/head', {title: title}) %>
     <title>Event: <%= event.eventName %>-Select Participants</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
- 
   </head>
   <body>
     <%- include('../partials/header', {title: title}) %>
@@ -110,7 +109,11 @@
                 <tr  class="<%=`${participants[i].regStatus} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
                   <td class="manualChanges">  
                     <div>
-                      <input type="checkbox" name="<%=`selectUser-${participants[i].participantID}`%>" id="selectUser" checked="checked">
+                        <% if(participants[i].regStatus == 'Awaiting Confirmation' || participants[i].regStatus == 'Cancelled' || participants[i].regStatus == 'Same Day Cancel') { %>
+                          <input type="checkbox" name="<%=`selectUser-${participants[i].participantID}`%>" id="selectUser" disabled="disabled">
+                        <% } else { %>
+                          <input type="checkbox" name="<%=`selectUser-${participants[i].participantID}`%>" id="selectUser" checked="checked">
+                        <% } %>
                     </div>
                     <!-- <div>
                       <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/select/` +participants[i].participantID %>">Select</a>
@@ -120,8 +123,8 @@
                     </div>
                     <div>
                       <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/standby/` +participants[i].participantID %>">Standby</a> 
-                    </div> -->
-                    <!-- <div>
+                    </div>
+                    <div>
                       <a href="<%= `/lottery/${event.eventID}/changeStatusIndividualUser/awaitingConfirmation/` +participants[i].participantID %>">Awaiting Confirmation</a> 
                     </div>
                     <div>

@@ -2,11 +2,11 @@
 $('#select-all').click(function(event) {   
   if(this.checked) {
       // Iterate each checkbox
-      $(':checkbox:visible').each(function() {
+      $(':checkbox:visible:enabled').each(function() {
           this.checked = true;                        
       });
   } else {
-      $(':checkbox:visible').each(function() {
+      $(':checkbox:visible:enabled').each(function() {
           this.checked = false;                       
       });
   }
