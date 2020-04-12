@@ -274,7 +274,7 @@ function updateCheckbox(checkbox) {
     $('.Awaiting').hide();
     $('.Not').hide();
     $('.Standby').hide();
-    $('.Cancel').hide();
+    $('.Cancelled').hide();
     $('.Same').hide();
     $('.Selected').hide();
     $('.Registered').hide();
