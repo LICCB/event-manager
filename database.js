@@ -325,8 +325,8 @@ async function insertParty(signup, eventID, volunteerStatus) {
     signupkeys = signupkeys - 2;
   }
   console.log("final:" + signupkeys);
-  if(signupkeys > 14) {
-    partsize = (signupkeys - 14) / 10;
+  if(signupkeys > 15) {
+    partsize = (signupkeys - 15) / 11;
   }
   console.log("partysize:" + partsize);
   let conn = await pool.getConnection();
