@@ -51,39 +51,40 @@ CREATE TABLE LICCB.events(
 
 CREATE TABLE LICCB.participants(
     -- IDs
-    participantID   CHAR(36) NOT NULL,
-    partyID         CHAR(36) DEFAULT NULL,  -- 'participantID' of the party leader
-    eventID         CHAR(36) NOT NULL,      -- Event the participant is registered for
+    participantID       CHAR(36) NOT NULL,
+    partyID             CHAR(36) DEFAULT NULL,  -- 'participantID' of the party leader
+    eventID             CHAR(36) NOT NULL,      -- Event the participant is registered for
 
     -- Contact Info and Details
-    firstName       VARCHAR(30) NOT NULL,
-    lastName        VARCHAR(30) NOT NULL,
-    phone           VARCHAR(30),
-    email           VARCHAR(75),
-    emergencyPhone  VARCHAR(30) NOT NULL,
-    emergencyName   VARCHAR(60) NOT NULL,
-    zip             CHAR(5),
+    firstName           VARCHAR(30) NOT NULL,
+    lastName            VARCHAR(30) NOT NULL,
+    phone               VARCHAR(30),
+    email               VARCHAR(75),
+    emergencyPhone      VARCHAR(30) NOT NULL,
+    emergencyName       VARCHAR(60) NOT NULL,
+    emergencyRelation   VARCHAR(60) NOT NULL,
+    zip                 CHAR(5),
 
     -- User Submitted Selection Information
-    isAdult         BOOLEAN NOT NULL,
-    hasCPRCert      BOOLEAN NOT NULL,
-    canSwim         BOOLEAN NOT NULL,
-    boatExperience  BOOLEAN NOT NULL,
-    boathouseDisc   VARCHAR(100),
-    eventDisc       VARCHAR(100),
-    regComments     TEXT,
-    priorVolunteer  BOOLEAN,
-    roleFamiliarity BOOLEAN,
+    isAdult             BOOLEAN NOT NULL,
+    hasCPRCert          BOOLEAN NOT NULL,
+    canSwim             BOOLEAN NOT NULL,
+    boatExperience      BOOLEAN NOT NULL,
+    boathouseDisc       VARCHAR(100),
+    eventDisc           VARCHAR(100),
+    regComments         TEXT,
+    priorVolunteer      BOOLEAN,
+    roleFamiliarity     BOOLEAN,
 
     -- Backend (Not filled by participant)
-    regStatus       ENUM('Awaiting Confirmation', 'Registered', 'Not Confirmed', 'Not Selected', 'Standby', 'Selected', 'Cancelled', 'Same Day Cancel'),
-    checkinStatus   ENUM('Pending', 'Checked In', 'No Show'),
-    volunteer       BOOLEAN DEFAULT 0,
-    regTime         DATETIME(4) NOT NULL,
-    userComments    TEXT,
+    regStatus           ENUM('Awaiting Confirmation', 'Registered', 'Not Confirmed', 'Not Selected', 'Standby', 'Selected', 'Cancelled', 'Same Day Cancel'),
+    checkinStatus       ENUM('Pending', 'Checked In', 'No Show'),
+    volunteer           BOOLEAN DEFAULT 0,
+    regTime             DATETIME(4) NOT NULL,
+    userComments        TEXT,
 
     -- Storage Dynamic Fields
-    metadata        TEXT,
+    metadata            TEXT,
 
     -- Primary Key (Based on participantID and eventID due to repetition of participantIDs)
     PRIMARY KEY (participantID, eventID),
