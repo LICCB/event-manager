@@ -25,8 +25,8 @@ function add_function(event) {
         var pPhone = $(`<input type="text" id="part${intId}phone" name="part${intId}phone" class="phone" placeholder="Party Member Phone Number Here"/><br>`);
         var pENameLabel = $(`<label for="part${intId}ename" >Participant ${intId} Emergency Contact Name: </label>`);
         var pEName = $(`<input required type="text" id="part${intId}ename" name="part${intId}ename" class="name" placeholder="Party Member Emergency Contact Name Here"/><br>`);
-        var pERelationshipLabel = $(`<label for="part${intId}erelationship" >Participant ${intId} Emergency Contact Relationship: </label>`);
-        var pERelationship = $(`<select id="regerelationship" name="regerelationship" class = "relationship" form = "eventSignupForm" required><option selected disabled hidden style='display: none' value=''></option><option value="parent">Parent/Guardian</option><option value="spouse">Spouse</option><option value="relative">Relative</option><option value="friend">Friend</option><br>`);
+        var pERelationLabel = $(`<label for="part${intId}erelation" >Participant ${intId} Emergency Contact Relationship: </label>`);
+        var pERelation = $(`<select id="part${intId}erelation" name="part${intId}erelation" class = "relation" form = "eventSignupForm" required><option selected disabled hidden style='display: none' value=''></option><option value="parent">Parent/Guardian</option><option value="spouse">Spouse</option><option value="relative">Relative</option><option value="friend">Friend</option><br>`);
         var pEPhoneLabel = $(`<label for="part${intId}ephone" >Participant ${intId} Emergency Contact Phone Number: </label>`);
         var pEPhone = $(`<input required type="text" id="part${intId}ephone" name="part${intId}ephone" class="phone" placeholder="Party Member Emergency Contact Phone Number Here"/><br>`);
 
@@ -41,8 +41,8 @@ function add_function(event) {
         partWrapper.append(pPhone);
         partWrapper.append(pENameLabel);
         partWrapper.append(pEName);
-        partWrapper.append(pERelationshipLabel);
-        partWrapper.append(pERelationship);
+        partWrapper.append(pERelationLabel);
+        partWrapper.append(pERelation);
         partWrapper.append(pEPhoneLabel);
         partWrapper.append(pEPhone);
         partWrapper.append(pAgeLabel);

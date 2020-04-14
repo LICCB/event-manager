@@ -346,7 +346,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
   metadata = Object.assign(eventTypeFields, eventTypeMetadata);
   var insertStmt = "INSERT INTO LICCB.participants " +
     "(participantID, partyID, eventID, firstName, " +
-    "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
+    "lastName, phone, email, emergencyPhone, emergencyName, emergencyRelation, zip, " +
     "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
     "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
     "VALUES(" +
@@ -359,6 +359,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "?, " + //email
     "?, " + //emergencyPhone
     "?, " + //emergencyName
+    "?, " + //emergencyRelation
     "?, " + //zipcode
     signup.regadult + ", " + //isAdult
     signup.regcpr + ", " + //CPR
@@ -381,7 +382,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "'', " + //userComments
     "'?');"; //metadata
   console.log(registrantID);
-  let insert = await conn.query(insertStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata]);
+  let insert = await conn.query(insertStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.regerelation, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata]);
 
   for(i = 1; i <= partsize; i++) {
     const queryStmt = "SELECT participantID FROM LICCB.participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
@@ -392,7 +393,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     }
     var insertStmt1 = "INSERT INTO LICCB.participants " +
       "(participantID, partyID, eventID, firstName, " +
-      "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
+      "lastName, phone, email, emergencyPhone, emergencyName, emergencyRelation, zip, " +
       "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
       "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
       "VALUES(" +
@@ -405,6 +406,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "?, " + //email
       "?, " + //emergencyPhone
       "?, " + //emergencyName
+      "?, " + //emergencyRelation
       "?, " + //zipcode
       signup[`part${i}age`] + ", " + //isAdult
       signup[`part${i}cpr`] + ", " + //CPR
@@ -426,7 +428,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "'" + date + "', " + //regTime
       "'', " + //userComments
       "'?');"; //metadata
-    let insert = await conn.query(insertStmt1, [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata]);
+    let insert = await conn.query(insertStmt1, [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup[`part${i}erelation`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata]);
   console.log(eventID);
   console.log(registrantID);
   conn.release();
