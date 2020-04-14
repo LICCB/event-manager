@@ -179,6 +179,18 @@ input[type=text], select, input[type=time] {
   color: #fff;
 }
 
+/*white text for a*/
+.wt {
+  color: white;
+}
+
+.wt:hover {
+  background-color: #fff9d7;
+  color: black;
+  padding: 4px;
+  border-radius: 5px;
+}
+
 .table {
   width: 100%;
   position: relative;
