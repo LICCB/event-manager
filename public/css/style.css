@@ -1,4 +1,4 @@
-input[type=text], select, input[type=time] {
+input[type=text], select, input[type=time], span.select2 {
     width: 30%;
     padding: 10px 10px;
     margin: 7px 0;

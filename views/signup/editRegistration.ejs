@@ -24,23 +24,18 @@
                     Selected registrants will receive email notification before the start of the trip. The first round
                     of selections will usually take place 3 to 2 days ahead of the trip. A final round of selections are
                     usually made the day before, along with the Declines.</p>
-                <label for="ename">Event:</label>
-                <select name="eventID" form="publicSignupform" value = <%= participants[0].eventID %> required>
-                    <% for(i = 0; i < events.length; i++) { %>
-                        <% if(events[i].eventStatus == "Registration Open" && !events[i].privateEvent) {%>
-                            <option value=<%= events[i].eventID %>> <%= events[i].eventName%> </option>
-                        <% } %>
-                      <% } %>
-                </select>
-
                 <br>
+
+                <%if(event.eventNotes != null) { %>
+                    <h1><%=event.eventNotes%></h1>
+                <% } %>
 
                 <div class="reginfo">
                     <label for="regfirstname">Registrant First Name:</label>
-                    <input type="text" id="regfirstname" name="regfirstname" class = "fname " value=<%= participants[0].firstName %> readonly>
+                    <input type="text" id="regfirstname" name="regfirstname" class = "fname " value=<%= participants[0].firstName %> required>
                     
                     <label for="reglastname">Registrant Last Name:</label>
-                    <input type="text" id="reglastname" name="reglastname" class = "lname" value=<%= participants[0].lastName %> readonly>
+                    <input type="text" id="reglastname" name="reglastname" class = "lname" value=<%= participants[0].lastName %> required>
 
                     <label for="regadult">Over 18?</label>
                     <select name="regadult" form="publicSignupform" required>
@@ -92,28 +87,28 @@
                         <input required type="text" id="part<%= i %>fname" name="part<%= i %>fname" class="fname" value=<%= participants[i].firstName %> readonly>
                         
                         <label for="part<%= i %>lname" >Participant <%= i %> Last Name:</label>
-                        <input required type="text" id="part<%= i %>lname" name="part<%= i %>lname" class="lname" value=<%= participants[i].lastName %>readonly>
+                        <input required type="text" id="part<%= i %>lname" name="part<%= i %>lname" class="lname" value=<%= participants[i].lastName %> readonly>
                         
                         <label for="part<%= i %>age" >Over 18?</label>
-                        <select required name= "part<%= i %>age" required>
+                        <select required name= "part<%= i %>age">
                             <option value="false" <% if(participants[i].isAdult == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].isAdult == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         
                         <label for="part<%= i %>swim" >Can they swim?</label>
-                        <select required name="part<%= i %>swim" required>
+                        <select required name="part<%= i %>swim">
                             <option value="false" <% if(participants[i].canSwim == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].canSwim == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         
                         <label for="part<%= i %>boat" >Prior boating experience?</label>
-                        <select required name="part<%= i %>boat" required>
+                        <select required name="part<%= i %>boat">
                             <option value="false" <% if(participants[i].boatExperience == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].boatExperience == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         
                         <label for="part<%= i %>cpr" >Do they know CPR?</label>
-                        <select required name="part<%= i %>cpr" required>
+                        <select required name="part<%= i %>cpr">
                             <option value="false" <% if(participants[i].hasCPRCert == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].hasCPRCert == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
@@ -125,10 +120,10 @@
                         <input type="text" id="part<%= i %>phone" name="part<%= i %>phone" class="phone" value=<%= participants[i].phone %>>
                         
                         <label for="part<%= i %>ename" >Participant <%= i %> Emergencey Contact Name:</label>
-                        <input required type="text" id="part<%= i %>ename" name="part<%= i %>ename" class="name" value=<%= participants[i].emergencyName %> required>
+                        <input required type="text" id="part<%= i %>ename" name="part<%= i %>ename" class="name" value=<%= participants[i].emergencyName %>>
                         
                         <label for="part<%= i %>ephone" >Participant <%= i %> Emergency Contact Phone Number:</label>
-                        <input required type="text" id="part<%= i %>ephone" name="part<%= i %>ephone" class="phone" value=<%= participants[i].emergencyPhone %> required>
+                        <input required type="text" id="part<%= i %>ephone" name="part<%= i %>ephone" class="phone" value=<%= participants[i].emergencyPhone %>>
                         <% partIDs.push(participants[i].participantID); %>
                         <input type="hidden" id="part<%=i%>ID" name="part<%=i%>ID" value=<%= participants[i].participantID%>>
                     </div>
@@ -139,6 +134,33 @@
                 <br>
                 <input type="hidden" id="partIDs" name="partIDs" value=<%= partIDs%>>
                 <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/>
+                <!--Check how to do metadata-->
+                <div id="newfields" form="eventSignupForm">
+                    <% if(event.eventMetadata != null or eventType != null) { %>
+                        <h2>Additional Questions:</h2>
+                        <% var md = JSON.parse(event.eventMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
+                        <% for(i=0; i < keys.length; i++){ %>
+                            <label for="<%= keys[i] %>"> <%= keys[i] %></label>
+                            <% if(vals[i] == "checkbox") { %>
+                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "1">
+                            <% } %>
+                            <% if(vals[i] == "textbox") { %>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required>
+                            <% } %>
+                        <% } %>
+                        <% var md = JSON.parse(eventType); var keys = Object.keys(md); var vals = Object.values(md); %>
+                        <% for(i=0; i < keys.length; i++){ %>
+                            <label for="<%= keys[i] %>"> <%= keys[i] %></label>
+                            <% if(vals[i] == "checkbox") { %>
+                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "1">
+                            <% } %>
+                            <% if(vals[i] == "textbox") { %>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required>
+                            <% } %>
+                        <% } %>
+                    <% } %>
+                </div>
+
                 <div class="discinfo">
                     <label for="zip">Zip Code:</label>
                     <input type="text" id="zip" name="zipcode" class ="zip" value=<%= participants[0].zip %> required>
