@@ -156,10 +156,17 @@ async function queryParticipantsByNotID(participantID) {
 
 async function tieParticipants(participantID, tieWithParticipantID) {
   let result = await sequelize.query("UPDATE participants " +
+                                     "SET partyID = ?" +
+                                     "WHERE participants.partyID = ?",
+  {
+    replacements: [tieWithParticipantID, participantID],
+    type: sequelize.QueryTypes.UPDATE
+  });
+  result = await sequelize.query("UPDATE participants " +
                                      "SET participantID = ?" +
                                      "WHERE participants.participantID = ?",
   {
-    replacements: [participantID, tieWithParticipantID],
+    replacements: [tieWithParticipantID, participantID],
     type: sequelize.QueryTypes.UPDATE
   });
   return result;
