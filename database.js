@@ -617,7 +617,7 @@ async function insertUser(email, fName, lName){
                 '(userID, email, googleID, firstName, lastName, userEnabled) ' +
                 `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1)`; // set googleID to userID until first login
   console.log(query);
-  let insert = await conn.query(query, {type: sequelize.QueryTypes.INSERT});
+  let insert = await sequelize.query(query, {type: sequelize.QueryTypes.INSERT});
   return insert;
 }
 
@@ -682,7 +682,7 @@ async function updateEventType(id, type){
                 `SET typeName='${type.typeName}', typeMetadata='${md}' ` +
                 `WHERE typeID='${id}';`;
   console.log(query);
-  let upd = await conn.query(query, {type: sequelize.QueryTypes.UPDATE});
+  let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
 
