@@ -56,7 +56,7 @@ app.get('/',function (req, res) {
 /**
  * Renders the createEvent page with the list of possible event managers
  */
-app.get('/createEvent', async (req, res) => {
+app.get('/createEvent', authCheck, async (req, res) => {
   res.render('event/createEvent', {
     title: "Create Event",
     users: await db.queryAllUsers(),
@@ -117,6 +117,8 @@ app.get('/signupEventList/:volunteerStatus', async (req, res) => {
 app.get('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
   res.render('signup/eventSignup', {
     title: "Public Signup",
+    event: (await db.queryEventByID(req.params.eventID))[0],
+    eventType: (await db.queryEventTypeMetadata(req.params.eventID))[0],
     eventID: req.params.eventID,
     volunteerStatus: req.params.volunteerStatus
   });
@@ -141,7 +143,7 @@ app.get('/signup/signupThanks', function(req, res) {
 /**
  * Renders the editEvent page with the properties of the given event
  */
-app.get('/editEvent/:id', async (req, res) => {
+app.get('/editEvent/:id', authCheck, async (req, res) => {
   res.render("event/editEvent", {
     title: "Edit Event",
     event: (await db.queryEventByID(req.params.id))[0],
@@ -154,7 +156,7 @@ app.get('/editEvent/:id', async (req, res) => {
 /**
  * Redirects to the events page after updating the event in the database
  */
-app.post('/editEvent/:id', async (req, res) => {
+app.post('/editEvent/:id', authCheck, async (req, res) => {
   const {oldStart, oldEnd, newStart, newEnd} = await db.updateEvent(req.body, req.params.id);
   if((oldStart.getTime() !== newStart.getTime()) || (oldEnd.getTime() !== newEnd.getTime())){
     const emails = await db.queryRegistrantEmailsByEventID(req.params.id);
@@ -218,6 +220,21 @@ app.get('/participant/:id', authCheck, async (req, res) => {
 });
 
 /**
+ * Renders the participant list to tie with the selected participant
+ */
+app.get('/participants/tie/:id', authCheck, async (req, res) => {
+  res.render('participants/tieParticipants', {selected: (await db.queryParticipantByID(req.params.id))[0], participants: await db.queryParticipantsByNotID(req.params.id)})
+});
+
+/**
+ * Ties two participants together and renders the all participants view with a success alert
+ */
+app.get('/participants/tie/:id/:idwith', authCheck, async (req, res) => {
+  await db.tieParticipants(req.params.id, req.params.idwith);
+  res.redirect('/participants');
+});
+
+/**
  * Updates the userCommets for the participant
  */
 app.post('/participant/comment/:eventID/:participantID', authCheck, async (req, res) => {
@@ -243,8 +260,8 @@ app.get('/participants/checkin/:eventid/:participantid', authCheck, async (req, 
 app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
   res.render("signup/editRegistration", {
     title: "Edit Public Signup",
-    events: await db.queryAllEvents(),
     event: (await db.queryEventByID(req.params.eventid))[0],
+    eventType: (await db.queryEventTypeMetadata(event.eventType))[0],
     participants: await db.queryParticipantsByEventAndParty(req.params.eventid, req.params.partyid),
     utils: utils
   });
@@ -265,10 +282,13 @@ app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
  * Redirects to the export page where the user can export participant data based on certain attributes
  */
 app.get('/export', authCheck, async (req, res) => {
+  let events = await db.queryAllEvents();;
+  delete events.meta;
   let users = await db.queryAllUsers();
   delete users.meta;
   res.render("export/export", {
     title: "Export",
+    events: events,
     users: users,
     error: null
   });
@@ -301,10 +321,14 @@ app.post('/export/exportData', authCheck, async (req, res) => {
 
   delete participants.meta;
 
-  let users = await db.queryAllUsers();
   if (participants.length == 0) {
+    let events = await db.queryAllEvents();
+    delete events.meta;
+    let users = await db.queryAllUsers();
+    delete users.meta;
     res.render("export/export",  {
       title: "Export",
+      events: events,
       users: users,
       error: "No participants were found."
     });

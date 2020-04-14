@@ -72,8 +72,8 @@ CREATE TABLE LICCB.participants(
     boathouseDisc   VARCHAR(100),
     eventDisc       VARCHAR(100),
     regComments     TEXT,
-    priorVolunteer  BOOLEAN NOT NULL,
-    roleFamiliarity BOOLEAN NOT NULL,
+    priorVolunteer  BOOLEAN,
+    roleFamiliarity BOOLEAN,
 
     -- Backend (Not filled by participant)
     regStatus       ENUM('Awaiting Confirmation', 'Registered', 'Not Confirmed', 'Not Selected', 'Standby', 'Selected', 'Cancelled', 'Same Day Cancel'),

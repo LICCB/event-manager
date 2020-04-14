@@ -75,6 +75,20 @@ function getEventMetadata(event) {
     return JSON.stringify(JSON.parse(md));
 }
 
+function eventMetadataWrapper(signup, metadata) {
+    var md = '{';
+    metadata = JSON.parse(metadata);
+    const extraFields = Object.keys(metadata);
+    for (i = 0; i < extraFields.length; i++) {
+        md += `"${extraFields[i]}": "${signup[extraFields[i]]}"`;
+        if (i < extraFields.length - 1) {
+            md += ",";
+        }
+    }
+    md += "}";
+    return JSON.stringify(JSON.parse(md));
+}
+
 function cleanupEventData(events){
     for(i = 0; i < events.length; i++){
         events[i].startTime = trimTime(events[i].startTime);
@@ -97,3 +111,4 @@ module.exports.getDate = getDate;
 module.exports.getEventMetadata = getEventMetadata;
 module.exports.cleanupEventData = cleanupEventData;
 module.exports.getDateTime = getDateTime;
+module.exports.eventMetadataWrapper = eventMetadataWrapper;

@@ -86,9 +86,17 @@ async function queryEventDetailsByID(eventID) {
   const query = "SELECT * " + 
                 `FROM (SELECT * FROM LICCB.events WHERE eventID='${eventID}') as E JOIN (SELECT * FROM LICCB.users) AS U on E.managerID=U.userID ` +
                       `JOIN (SELECT * FROM LICCB.eventTypes) AS T on E.eventType=T.typeID;`
-  let event = await conn.query(query)
+  let event = await conn.query(query);
   conn.release();
   return event;
+}
+
+async function queryEventTypeMetadata(eventID) {
+  let conn = await pool.getConnection();
+  const query = `SELECT typeMetadata FROM LICCB.eventTypes WHERE typeID= (SELECT eventType FROM LICCB.events WHERE eventID = '${eventID}')`;
+  let metadata = await conn.query(query);
+  conn.release();
+  return metadata;
 }
 
 async function queryParticipants() {
@@ -120,6 +128,38 @@ async function queryParticipantByID(participantID) {
                                       [participantID]);
   conn.release();
   return participants;
+}
+
+/*
+ * Select all participants that haven't participated in any event that the
+ * given participant has participated in.
+ */
+async function queryParticipantsByNotID(participantID) {
+  let conn = await pool.getConnection();
+  let participants = await conn.query("SELECT * FROM " +
+                                        "(SELECT * FROM LICCB.participants " +
+                                        "WHERE NOT participantID = ? AND " +
+                                          "participantID NOT IN (SELECT participantID FROM LICCB.participants " +
+                                                                "WHERE eventID IN (SELECT eventID FROM LICCB.participants " +
+                                                                                  "WHERE participantID = ?))) AS p " +
+                                      "JOIN LICCB.events ON p.eventID=LICCB.events.eventID",
+                                      [participantID, participantID]);
+  conn.release();
+  return participants;
+}
+
+async function tieParticipants(participantID, tieWithParticipantID) {
+  let conn = await pool.getConnection();
+  let result = await conn.query("UPDATE LICCB.participants " +
+                                "SET partyID = ?" +
+                                "WHERE LICCB.participants.partyID = ?",
+                                [tieWithParticipantID, participantID]);
+  result = await conn.query("UPDATE LICCB.participants " +
+                            "SET participantID = ?" +
+                            "WHERE LICCB.participants.participantID = ?",
+                            [tieWithParticipantID, participantID]);
+  conn.release();
+  return result;
 }
 
 async function checkinParticipant(participantID, eventID) {
@@ -272,19 +312,39 @@ async function confirmEmail(eventID, registrantID){
 async function insertParty(signup, eventID, volunteerStatus) {
   console.log(signup);
   const date = utils.getDateTime();
-  const signupkeys = Object.keys(signup).length;
+  var signupkeys = Object.keys(signup).length;
   var partsize = 0;
-  if(signupkeys > 16) {
-    partsize = (signupkeys - 16) / 10;
+  const event = (await queryEventByID(eventID))[0];
+  var eventTypeFields = (await queryEventTypeMetadata(eventID))[0].typeMetadata;
+  const metadataFields = Object.keys(JSON.parse(event.eventMetadata)).length + Object.keys(JSON.parse(eventTypeFields)).length;
+  console.log("signupKeys:" + signupkeys);
+  console.log("metadataFields:" + metadataFields);
+  signupkeys = signupkeys - metadataFields;
+  console.log("adjusted:" + signupkeys);
+  if(volunteerStatus == 1) {
+    signupkeys = signupkeys - 2;
   }
+  console.log("final:" + signupkeys);
+  if(signupkeys > 14) {
+    partsize = (signupkeys - 14) / 10;
+  }
+  console.log("partysize:" + partsize);
   let conn = await pool.getConnection();
-  const queryStmt = "SELECT participantID FROM LICCB.participants WHERE participantID NOT IN (SELECT participantID FROM LICCB.participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND eventID = ?";
-  const query = await conn.query(queryStmt, [signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone, eventID]);
+  const queryStmt = "SELECT participantID FROM LICCB.participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
+  const query = await conn.query(queryStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone]);
   var registrantID = uuidv4();
+  console.log(query[0]);
   if(query[0] != undefined) {
     registrantID = query[0].participantID;
   }
-  const insertStmt = "INSERT INTO LICCB.participants " +
+  var eventSpecificMetadata = utils.eventMetadataWrapper(signup, event.eventMetadata);
+  var eventTypeMetadata = utils.eventMetadataWrapper(signup, eventTypeFields);
+  eventTypeFields = JSON.parse(eventSpecificMetadata);
+  eventTypeFields = Object.assign({}, eventTypeFields);
+  eventTypeMetadata = JSON.parse(eventTypeMetadata);
+  eventTypeMetadata = Object.assign({}, eventTypeMetadata);
+  metadata = Object.assign(eventTypeFields, eventTypeMetadata);
+  var insertStmt = "INSERT INTO LICCB.participants " +
     "(participantID, partyID, eventID, firstName, " +
     "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
     "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
@@ -300,31 +360,36 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "?, " + //emergencyPhone
     "?, " + //emergencyName
     "?, " + //zipcode
-    "?, " + //isAdult
-    "?, " + //CPR
-    "?, " + //swim
-    "?, " + //boat
+    signup.regadult + ", " + //isAdult
+    signup.regcpr + ", " + //CPR
+    signup.regswim + ", " + //swim
+    signup.regswim + ", " +//boat
     "?, " + //boathouse discovery
     "?, " + //event discvoery
-    "?, " + //regComments
-    "?, " + //priorVolunteer
-    "?, " + //roleFamiliarity
-    "'Awaiting Confirmation', " + //regStatus
+    "?, "; //regComments
+    if(volunteerStatus == 1) {
+      insertStmt += signup.priorVolunteer + ", " + //priorVolunteer
+      signup.roleFamiliarity + ", ";//roleFamiliarity
+    } else {
+      insertStmt += "null, " + //priorVolunteer
+      "null, ";//roleFamiliarity
+    }
+    insertStmt += "'Awaiting Confirmation', " + //regStatus
     "'Pending', " + //checkinStatus
     "?, " + //volunteer
     "'" + date + "', " + //regTime
     "'', " + //userComments
-    "'');"; //metadata
-  //let insert = await conn.query(insertStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.regadult, signup.regcpr, signup.regswim, signup.regboat, signup.bhdiscovery, signup.eventdiscovery, signup.notes, signup.priorVolunteer, signup.roleFamiliarity, volunteerStatus]);
+    "'?');"; //metadata
+  console.log(registrantID);
+  let insert = await conn.query(insertStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata]);
 
   for(i = 1; i <= partsize; i++) {
-    const queryStmt = "SELECT participantID FROM LICCB.participants WHERE participantID NOT IN (SELECT participantID FROM LICCB.participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND eventID = ?";
-    const query = await conn.query(queryStmt, [signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}email`], signup[`part${i}phone`], eventID]);
+    const queryStmt = "SELECT participantID FROM LICCB.participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
+    const query = await conn.query(queryStmt, [eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone]);
     var newParticipantID = uuidv4();
     if(query[0] != undefined) {
-      registrantID = query[0].participantID;
+      newParticipantID = query[0].participantID;
     }
-    var newParticipantID = uuidv4();
     var insertStmt1 = "INSERT INTO LICCB.participants " +
       "(participantID, partyID, eventID, firstName, " +
       "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
@@ -341,27 +406,32 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "?, " + //emergencyPhone
       "?, " + //emergencyName
       "?, " + //zipcode
-      "?, " + //isAdult
-      "?, " + //CPR
-      "?, " + //swim
-      "?, " + //boat
+      signup[`part${i}age`] + ", " + //isAdult
+      signup[`part${i}cpr`] + ", " + //CPR
+      signup[`part${i}swim`] + ", " + //swim
+      signup[`part${i}boat`] + ", " + //boat
       "?, " + //boathouse discovery
       "?, " + //event discvoery
-      "?, " + //regComments
-      "?, " + //priorVolunteer
-      "?, " + //roleFamiliarity
-      "'Awaiting Confirmation', " + //regStatus
+      "?, "; //regComments
+      if(volunteerStatus == 1) { //Add volunteer fields if they are a volunteer
+        insertStmt1 += signup.priorVolunteer + ", " + //priorVolunteer
+        signup.roleFamiliarity + ", ";//roleFamiliarity
+      } else { //Make volunteer fields null if they are not
+        insertStmt1 += "NULL, " + //priorVolunteer
+        "NULL, ";//roleFamiliarity
+      }
+      insertStmt1 += "'Awaiting Confirmation', " + //regStatus
       "'Pending', " + //checkinStatus
       "?, " + //volunteer
       "'" + date + "', " + //regTime
       "'', " + //userComments
-      "'');"; //metadata
-    //let insert = await conn.query(insertStmt1, [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup[`part${i}age`], signup[`part${i}cpr`], signup[`part${i}swim`], signup[`part${i}boat`], signup.bhdiscovery, signup.eventdiscovery, signup.notes, signup.priorVolunteer, signup.roleFamiliarity, volunteerStatus]);
-  }
+      "'?');"; //metadata
+    let insert = await conn.query(insertStmt1, [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata]);
   console.log(eventID);
   console.log(registrantID);
   conn.release();
   return registrantID;
+  }
 }
 
 async function updateParty(signup, eventID, partyID) {
@@ -629,6 +699,8 @@ module.exports.queryEventByID = queryEventByID;
 module.exports.queryEventDetailsByID = queryEventDetailsByID;
 module.exports.queryParticipants = queryParticipants;
 module.exports.queryParticipantByID = queryParticipantByID;
+module.exports.queryParticipantsByNotID = queryParticipantsByNotID;
+module.exports.tieParticipants = tieParticipants;
 module.exports.queryParticipantsByEventID = queryParticipantsByEventID;
 module.exports.checkinParticipant = checkinParticipant;
 module.exports.editUserComments = editUserComments;
@@ -660,3 +732,4 @@ module.exports.queryEventTypes = queryEventTypes;
 module.exports.queryEventTypeByID = queryEventTypeByID;
 module.exports.deleteEventType = deleteEventType;
 module.exports.updateEventType = updateEventType;
+module.exports.queryEventTypeMetadata = queryEventTypeMetadata;
