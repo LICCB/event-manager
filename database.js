@@ -24,6 +24,8 @@ sequelize
     console.error('Unable to connect to the database: ', err);
   });
 
+const logger = require('./logger');
+logger.module = 'database';
 const uuidv4 = require('uuid/v4');
 
 async function queryAllCols(tableName) {
@@ -265,7 +267,7 @@ async function updateEvent(event, id) {
   const dateTimeQuery = "Select startTime, endTime " + 
                         "From events " + 
                         `WHERE eventID='${id}';`;
-  console.log(dateTimeQuery);
+  logger.log(dateTimeQuery);
   const startTime = event.startDate + " " + event.startTime + ":00";
   const endTime = event.endDate + " " + event.endTime + ":00";
   const update = "UPDATE events " + 
@@ -311,21 +313,21 @@ async function confirmEmail(eventID, registrantID){
 }
 
 async function insertParty(signup, eventID, volunteerStatus) {
-  console.log(signup);
+  logger.log(signup);
   const date = utils.getDateTime();
   var signupkeys = Object.keys(signup).length;
   var partsize = 0;
   const event = (await queryEventByID(eventID))[0];
   var eventTypeFields = (await queryEventTypeMetadata(eventID))[0].typeMetadata;
   const metadataFields = Object.keys(JSON.parse(event.eventMetadata)).length + Object.keys(JSON.parse(eventTypeFields)).length;
-  console.log("signupKeys:" + signupkeys);
-  console.log("metadataFields:" + metadataFields);
+  logger.log("signupKeys:" + signupkeys);
+  logger.log("metadataFields:" + metadataFields);
   signupkeys = signupkeys - metadataFields;
-  console.log("adjusted:" + signupkeys);
+  logger.log("adjusted:" + signupkeys);
   if(volunteerStatus == 1) {
     signupkeys = signupkeys - 2;
   }
-  console.log("final:" + signupkeys);
+  logger.log("final:" + signupkeys);
   if(signupkeys > 14) {
     partsize = (signupkeys - 14) / 10;
   }
@@ -337,7 +339,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     type: sequelize.QueryTypes.SELECT
   });
   var registrantID = uuidv4();
-  console.log(query[0]);
+  logger.log(query[0]);
   if(query[0] != undefined) {
     registrantID = query[0].participantID;
   }
@@ -384,7 +386,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "'" + date + "', " + //regTime
     "'', " + //userComments
     "'?');"; //metadata
-  console.log(registrantID);
+  logger.log(registrantID);
   let insert = await sequelize.query(insertStmt,
   {
     replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
@@ -443,21 +445,21 @@ async function insertParty(signup, eventID, volunteerStatus) {
       replacements: [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
       type: sequelize.QueryTypes.INSERT
     });
-  console.log(eventID);
-  console.log(registrantID);
+  logger.log(eventID);
+  logger.log(registrantID);
   return registrantID;
   }
 }
 
 async function updateParty(signup, eventID, partyID) {
-  console.log(signup);
+  logger.log(signup);
   const date = utils.getDateTime();
   const signupkeys = Object.keys(signup).length;
   var partsize = 0;
   if(signupkeys > 16) {
     partsize = (signupkeys - 16) / 11;
   }
-  console.log(partsize);
+  logger.log(partsize);
   const update = "UPDATE participants " +
     "SET " +
     "eventID=?, " + //eventID
@@ -485,7 +487,7 @@ async function updateParty(signup, eventID, partyID) {
   var partIds = signup.partIDs;
   for(i = 1; i <= partsize; i++) {
     var newParticipantID = uuidv4();
-    console.log(signup[`part${i}ID`]);
+    logger.log(signup[`part${i}ID`]);
     var updateStmt = "IF EXISTS (SELECT * FROM participants " + 
       "WHERE eventID=? AND partyID=? AND participantID=? AND firstName = ? AND lastName = ?) " +
       "THEN UPDATE participants SET " +
@@ -539,7 +541,7 @@ async function updateParty(signup, eventID, partyID) {
     //loop through participants who need to be deleted
     //CHECK IF THERE IS MORE THAN ONE ENTRY IF NOT DONT LOOP THROUGH DO partIds
     for(i = 0; i < signup.partIDs.length; i++) {
-      console.log(partIds[i]);
+      logger.log(partIds[i]);
       deleteStmt = "UPDATE participants " +
       "SET " +
       "partyID='' " + 
@@ -583,21 +585,21 @@ async function queryRegistrantEmailsByEventID(eventID){
 
 async function queryAllUsers(){
   const query = 'SELECT * FROM users;';
-  console.log(query);
+  logger.log(query);
   let user = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return user;
 }
 
 async function queryUserByEmail(email){
   const query = `SELECT * FROM users WHERE email='${email}';`;
-  console.log(query);
+  logger.log(query);
   let user = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return user;
 }
 
 async function queryUserByID(userID){
   const query = `SELECT * FROM users WHERE userID='${userID}';`;
-  console.log(query);
+  logger.log(query);
   let user = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return user;
 }
@@ -606,7 +608,7 @@ async function updateUser(email, googleID, fname, lname){
   const query = 'UPDATE users ' +
                 `SET googleID='${googleID}', firstName='${fname}', lastName='${lname}' ` +
                 `WHERE email='${email}';`;
-  console.log(query);
+  logger.log(query);
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
@@ -616,28 +618,28 @@ async function insertUser(email, fName, lName){
   const query = 'INSERT INTO users ' +
                 '(userID, email, googleID, firstName, lastName, userEnabled) ' +
                 `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1)`; // set googleID to userID until first login
-  console.log(query);
+  logger.log(query);
   let insert = await sequelize.query(query, {type: sequelize.QueryTypes.INSERT});
   return insert;
 }
 
 async function disableUser(id){
   const query = `UPDATE users SET userEnabled=0 WHERE userID='${id}';`;
-  console.log(query);
+  logger.log(query);
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
 
 async function enableUser(id){
   const query = `UPDATE users SET userEnabled=1 WHERE userID='${id}';`;
-  console.log(query);
+  logger.log(query);
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
 
 async function deleteUser(id){
   const query = `DELETE FROM users WHERE userID='${id}';`;
-  console.log(query);
+  logger.log(query);
   let del = await sequelize.query(query, {type: sequelize.QueryTypes.DELETE});
   return del;
 }
@@ -648,7 +650,7 @@ async function queryEventTypes(){
                 'FROM eventTypes ' +
                 'LEFT JOIN events ON (eventTypes.typeID = events.eventType)';
   let types = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT})
-  // console.log(types);
+  // logger.log(types);
   return types;
 }
 
@@ -664,7 +666,7 @@ async function insertEventType(type){
   const insertStmt = "INSERT INTO eventTypes " +
                         "(typeID, typeMetadata, typeName) " + 
                      `VALUES("${typeID}", '${metadata}', "${type.typeName}");`;
-  console.log(insertStmt);
+  logger.log(insertStmt);
   let insert = await sequelize.query(insertStmt, {type: sequelize.QueryTypes.INSERT});
   return typeID;
 }
@@ -676,12 +678,12 @@ async function deleteEventType(typeID){
 }
 
 async function updateEventType(id, type){
-  console.log(type);
+  logger.log(type);
   const md = utils.getEventMetadata(type);
   const query = 'UPDATE eventTypes ' +
                 `SET typeName='${type.typeName}', typeMetadata='${md}' ` +
                 `WHERE typeID='${id}';`;
-  console.log(query);
+  logger.log(query);
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
