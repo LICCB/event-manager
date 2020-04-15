@@ -21,9 +21,9 @@ $("#addpart").click(function () {
     var pPhoneLabel = $(`<label for="part${intId}phone" >Participant ${intId} Phone Number: </label>`);
     var pPhone = $(`<input type="text" id="part${intId}phone" name="part${intId}phone" class="pphone" placeholder="Party Member Phone Number Here"/><br>`);
     var pENameLabel = $(`<label for="part${intId}ename" >Participant ${intId} Emergency Contact Name: </label>`);
-    var pEName = $(`<input   type="text" id="part${intId}ename" name="part${intId}ename" class="name eContactName" placeholder="Party Member Emergency Contact Name Here"/><br>`);
+    var pEName = $(`<input   type="text" id="part${intId}ename" name="part${intId}ename" class="eContactName" placeholder="Party Member Emergency Contact Name Here"/><br>`);
     var pEPhoneLabel = $(`<label for="part${intId}ephone" >Participant ${intId} Emergency Contact Phone Number: </label>`);
-    var pEPhone = $(`<input   type="text" id="part${intId}ephone" name="part${intId}ephone" class="phone" placeholder="Party Member Emergency Contact Phone Number Here"/><br>`);
+    var pEPhone = $(`<input   type="text" id="part${intId}ephone" name="part${intId}ephone" class="eContactPhone" placeholder="Party Member Emergency Contact Phone Number Here"/><br>`);
 
 
 

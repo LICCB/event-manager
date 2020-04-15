@@ -39,9 +39,21 @@ jQuery.validator.addClassRules({
     eContactName: {
         required: true,
         testEContactName: true
+    },
+    eContactPhone: {
+        required: true,
+        testEContactPhone: true
+    },
+    relation: {
+        required: true
     }
 });
 
+// Custom validation methods
+// https://jqueryvalidation.org/jQuery.validator.addMethod/
+
+// Validates whether all party member names are unique, 
+// e.g. Bob Smith cannot be the registrant and Party member 1
 jQuery.validator.addMethod("testpName", function(value, element) {
     // Grab registrant information as you will always be checking against that
     let regFName = $("#regfirstname").val().toUpperCase().replace(/\s/g,'');
@@ -75,6 +87,8 @@ jQuery.validator.addMethod("testpName", function(value, element) {
     }
 }, 'Participant full name must be unique.');
 
+// Validates whether all emergency contacts aren't also party members or the registrant
+// e.g. Bob Smith cannot be the registrant's emergency contact and Party member 1
 jQuery.validator.addMethod("testEContactName", function(value, element) {
     // First grab registrant information, as you will always test against it
     let regFName = $("#regfirstname").val().toUpperCase().replace(/\s/g,'');
@@ -107,9 +121,40 @@ jQuery.validator.addMethod("testEContactName", function(value, element) {
     }
 }, 'Emergency contact cannot be in your party.');
 
+// Validates whether all emergency contact phone numbers aren't also a party member's phone number
+// e.g. Bob Smith's registrant phone number is not also Party member 1's emergency contact phone number
+jQuery.validator.addMethod("testEContactPhone", function(value, element) {
+    // First grab registrant information, as you will always test against it
+    let regPhone = $("#regphone").val().toUpperCase().replace(/\s/g,'');
+    console.log('Registrant', regPhone);
+    // If the current element is the registrant emergency contact, check that against registrant name
+    // If they match, invalid
+    if ((element.id == 'regephone') && (element.value.toUpperCase().replace(/\s/g,'') == regPhone)) {
+        return false;
+    }
+    let currEContactPhone = value.toUpperCase().replace(/\s/g,'');
+    console.log('Current Participant', currEContactPhone);
+    // If current emergency contact name equals registrant name, invalid
+    if (regPhone == currEContactPhone) {
+        return false;
+    }
+    else {
+        let phoneNumbers = $(".pphone");
+        for (let i = 0; i < phoneNumbers.length; i++) {
+            let newPartPhone = phoneNumbers[i].value.toUpperCase().replace(/\s/g,'');
+            console.log('Other Participant', newPartPhone);
+            // If current emergency contact number equals a party member's number, invalid
+            if (currEContactPhone == newPartPhone) {
+                return false;
+            }
+        }
+        return true;
+    }
+}, 'Cannot be a party member\'s number.');
+
+// Config file with list of regex to test various fields against 
+// http://regexlib.com/DisplayPatterns.aspx?cattabindex=3&categoryId=4 
+
 $("#eventSignupForm").validate({
     errorClass: "validationError"
 });
-
-// https://jqueryvalidation.org/jQuery.validator.addMethod/
-// http://regexlib.com/DisplayPatterns.aspx?cattabindex=3&categoryId=4 
