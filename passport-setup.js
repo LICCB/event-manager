@@ -6,22 +6,22 @@ const logger = require('./logger');
 logger.module = 'passport';
 
 passport.serializeUser((user, done) => {
-    if(user != null){
+    if(user){
         // error, userID
         done(null, user.userID);
     } else {
-        done(null, null);
+        done(null, false);
     }
 });
 
 passport.deserializeUser((id, done) => {
-    if(id != null){
+    if(id){
         // error, userID
         db.queryUserByID(id).then((result) => {
             done(null, result[0]);
         });
     } else {
-        done(null, null);
+        done(null, false);
     }
 });
 
@@ -34,10 +34,9 @@ passport.use(
     }, (accessToken, refreshToken, profile, done) => {
         // passport callback function
         db.queryUserByEmail(profile.emails[0].value).then((result) => {
-            logger.log(result);
-            logger.log(result.length);
             const valid = !(result.length === 0);
-            if(valid){
+            if(valid && result[0].userEnabled){
+                console.log(result);
                 logger.log(profile.emails[0].value + " has successfully logged in");
                 // error, user
                 db.updateUser(profile.emails[0].value, profile.id, profile.photos[0].value).then((upd) => {
@@ -45,7 +44,7 @@ passport.use(
                 })
             } else {
                 logger.log(profile.emails[0].value + " is not a valid user");
-                done(null, null);
+                done(null, false);
             }
         })
     })

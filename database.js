@@ -327,9 +327,11 @@ async function insertParty(signup, eventID, volunteerStatus) {
   if(volunteerStatus == 1) {
     signupkeys = signupkeys - 2;
   }
+  
   logger.log("final:" + signupkeys);
-  if(signupkeys > 14) {
-    partsize = (signupkeys - 14) / 10;
+  if(signupkeys > 15) {
+    partsize = (signupkeys - 15) / 11;
+
   }
   console.log("partysize:" + partsize);
   const queryStmt = "SELECT participantID FROM participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
@@ -352,7 +354,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
   metadata = Object.assign(eventTypeFields, eventTypeMetadata);
   var insertStmt = "INSERT INTO participants " +
     "(participantID, partyID, eventID, firstName, " +
-    "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
+    "lastName, phone, email, emergencyPhone, emergencyName, emergencyRelation, zip, " +
     "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
     "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
     "VALUES(" +
@@ -365,6 +367,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "?, " + //email
     "?, " + //emergencyPhone
     "?, " + //emergencyName
+    "?, " + //emergencyRelation
     "?, " + //zipcode
     signup.regadult + ", " + //isAdult
     signup.regcpr + ", " + //CPR
@@ -386,10 +389,11 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "'" + date + "', " + //regTime
     "'', " + //userComments
     "'?');"; //metadata
+
   logger.log(registrantID);
   let insert = await sequelize.query(insertStmt,
   {
-    replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
+    replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.regerelation, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
     type: sequelize.QueryTypes.INSERT
   });
 
@@ -406,7 +410,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     }
     var insertStmt1 = "INSERT INTO participants " +
       "(participantID, partyID, eventID, firstName, " +
-      "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
+      "lastName, phone, email, emergencyPhone, emergencyName, emergencyRelation, zip, " +
       "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
       "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
       "VALUES(" +
@@ -419,6 +423,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "?, " + //email
       "?, " + //emergencyPhone
       "?, " + //emergencyName
+      "?, " + //emergencyRelation
       "?, " + //zipcode
       signup[`part${i}age`] + ", " + //isAdult
       signup[`part${i}cpr`] + ", " + //CPR
@@ -440,9 +445,10 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "'" + date + "', " + //regTime
       "'', " + //userComments
       "'?');"; //metadata
+
     let insert = await sequelize.query(insertStmt1,
     {
-      replacements: [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
+      replacements: [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup[`part${i}erelation`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
       type: sequelize.QueryTypes.INSERT
     });
   logger.log(eventID);
@@ -609,8 +615,8 @@ async function updateUser(email, googleID, pictureURL){
 async function insertUser(email, fName, lName){
   const userID = uuidv4();
   const query = 'INSERT INTO users ' +
-                '(userID, email, googleID, firstName, lastName, userEnabled) ' +
-                `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1)`; // set googleID to userID until first login
+                '(userID, email, googleID, firstName, lastName, userEnabled, pictureURL, roleID) ' +
+                `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1, '', '7d4666ef-2d92-4f8a-ae4f-6b61d568031b')`; // set googleID to userID until first login
   logger.log(query);
   let insert = await sequelize.query(query, {type: sequelize.QueryTypes.INSERT});
   return insert;
