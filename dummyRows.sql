@@ -21,7 +21,7 @@ INSERT INTO LICCB.users (userID, googleID, pictureURL, email, firstName, lastNam
     ('e382d3ee-392d-42c1-a453-5c97806be39d', 'e382d3ee-392d-42c1-a453-5c97806be39d', '', 'britney.spears@gmail.com', 'Britney', 'Spears', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b');
 
 INSERT INTO LICCB.eventTypes (typeID, typeMetadata, typeName)
-    VALUES('6d4776ef-2d92-4f8a-ae4f-6b61d568031b', '{"extraCarSeats": "text"}', 'test');
+    VALUES('6d4776ef-2d92-4f8a-ae4f-6b61d568031b', '{"extraCarSeats": "textbox"}', 'test');
 
 INSERT INTO LICCB.events (eventID, managerID, creatorID, eventName, maxPartySize, privateEvent, startTime, endTime, eventStatus, capacity, staffRatio, eventDesc, eventNotes, eventMetadata, eventType)
     VALUES('123e4567-e89b-12d3-a456-556642440000', 'e382d3ee-392d-42c1-a453-5c97806be39d', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'July Outting', 2, 0, '2020-7-10 12:00:00', '2020-7-10 18:00:00', 'Registration Open', 15, 0.5, 'Annual July boating adventure!', NULL, NULL, '6d4776ef-2d92-4f8a-ae4f-6b61d568031b');
