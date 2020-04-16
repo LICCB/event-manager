@@ -34,7 +34,9 @@
 					class="active"
 				<% } %>
 			><a href="/export">Export</a></li>
+		<% if(user){ %>
 			<li><a href="/auth/logout">Logout</a></li>
+		<% } %>
         </ul>
     </nav>
 

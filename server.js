@@ -370,6 +370,10 @@ app.post('/export/exportData', authCheck, async (req, res) => {
   res.status(200).send(csv);
 });
 
+app.get('/loginFailed', async (req, res) => {
+  res.render('loginFailed', {user: null});
+});
+
 app.listen(3000, function () {
   logger.log('Listening on port 3000!', 'info');
 });
