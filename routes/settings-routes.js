@@ -5,13 +5,13 @@ const logger = require('../logger');
 logger.module = 'settings-routes';
 
 const authCheck = (req, res, next) => {
-    if(!req.user){
-        // if not logged in
-        res.redirect('/auth/login');
-    } else {
-        // if logged in
-        next();
-    }
+  if(!req.user){
+      // if not logged in
+      res.redirect('/auth/google');
+  } else {
+      // if logged in
+      next();
+  }
 };
 
 router.get('/', authCheck, (req, res) => {

@@ -615,8 +615,8 @@ async function updateUser(email, googleID, pictureURL){
 async function insertUser(email, fName, lName){
   const userID = uuidv4();
   const query = 'INSERT INTO users ' +
-                '(userID, email, googleID, firstName, lastName, userEnabled) ' +
-                `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1)`; // set googleID to userID until first login
+                '(userID, email, googleID, firstName, lastName, userEnabled, pictureURL, roleID) ' +
+                `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1, '', '7d4666ef-2d92-4f8a-ae4f-6b61d568031b')`; // set googleID to userID until first login
   logger.log(query);
   let insert = await sequelize.query(query, {type: sequelize.QueryTypes.INSERT});
   return insert;
