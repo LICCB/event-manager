@@ -19,72 +19,60 @@
 
         <div class="checkboxes">
           <span>
-            <select name="testexample" id="testexample" class="testexample" multiple="multiple" onchange="applyRegStatusFilters()">
-              <option value="Awaiting Confirmation">Awaiting Confirmation</option>
-              <option value="Registered">Registered</option>
-              <option value="Not Confirmed">Not Confirmed</option>
-              <option value="Not Selected">Not Selected</option>
-              <option value="Standby">Standby</option>
-              <option value="Selected">Selected</option>
-              <option value="Cancelled">Cancelled</option>
-              <option value="Same Day Cancel">Same Day Cancel</option>
-            </select>
-            <!-- <input type="checkbox" name="regStatus" id="regStatus">  -->
 
-            <!-- <label for="regStatusStandby" >Standby</label>
-            <input type="checkbox" name="regStatusStandby" id="regStatusStandby">  -->
-            <!-- <select name="regStatus" id="regStatus" onchange="regStatusFunction()" style="max-width:8%";> 
-              <option value="default">default</option>
-              <option value="Registered">Registered</option>
-            </select> -->
-            
-            <!-- <input type="checkbox" name="isAdult" id="isAdult" > <label for="isAdult" >isAdult</label> -->
+            <div>
+              <select name="testexample" id="testexample" class="testexample" multiple="multiple" onchange="applyRegStatusFilters()" style="width:30%;">
+                <option value="Awaiting Confirmation">Awaiting Confirmation</option>
+                <option value="Registered">Registered</option>
+                <option value="Not Confirmed">Not Confirmed</option>
+                <option value="Not Selected">Not Selected</option>
+                <option value="Standby">Standby</option>
+                <option value="Selected">Selected</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Same Day Cancel">Same Day Cancel</option>
+              </select>
+            </div>
+
             <label for="isAdult" >Over 18?</label> 
             <select name="isAdult" id="isAdult" onchange="isAdultFunction()" style="max-width:8%";> 
-              <option value="default">default</option>
-              <option value="yes">Yes</option>
+              <option value="default">Remove Filter</option>
+              <option value="yes">Apply Filter</option>
             </select>
 
-            <!-- <input type="checkbox" name="canSwim" id="canSwim" > <label for="canSwim" >canSwim</label> -->
             <label for="canSwim" >canSwim</label> 
             <select name="canSwim" id="canSwim" onchange="canSwimFunction()" style="max-width:8%";> 
-              <option value="default">default</option>
-              <option value="yes">Yes</option>
+              <option value="default">Remove Filter</option>
+              <option value="yes">Apply Filter</option>
             </select>   
 
-            <!-- <input type="checkbox" name="hasCPRCert" id="hasCPRCert">  <label for="hasCPRCert">hasCPRCert</label> -->
             <label for="hasCPRCert">hasCPRCert</label>
             <select name="hasCPRCert" id="hasCPRCert" onchange="hasCPRCertFunction()" style="max-width:8%";> 
-              <option value="default">default</option>
-              <option value="yes">Yes</option>
+              <option value="default">Remove Filter</option>
+              <option value="yes">Apply Filter</option>
             </select> 
 
-            <!-- <input type="checkbox" name="boatExperience" id="boatExperience"> <label for="boatExperience">boatExperience</label> -->
             <label for="boatExperience">boatExperience</label>
             <select name="boatExperience" id="boatExperience" onchange="boatExperienceFunction()" style="max-width:8%";> 
-              <option value="default">default</option>
-              <option value="yes">Yes</option>
+              <option value="default">Remove Filter</option>
+              <option value="yes">Apply Filter</option>
             </select> 
 
-            <!-- <input type="checkbox" name="priorVolunteer" id="priorVolunteer"> <label for="priorVolunteer">priorVolunteer</label> -->
             <label for="priorVolunteer">priorVolunteer</label>
             <select name="priorVolunteer" id="priorVolunteer" onchange="priorVolunteerFunction()" style="max-width:8%";> 
-              <option value="default">default</option>
-              <option value="yes">Yes</option>
+              <option value="default">Remove Filter</option>
+              <option value="yes">Apply Filter</option>
             </select> 
             
-            <!-- <input type="checkbox" name="roleFamiliarity" id="roleFamiliarity"> <label for="roleFamiliarity">roleFamiliarity</label> -->
             <label for="roleFamiliarity">roleFamiliarity</label>
             <select name="roleFamiliarity" id="roleFamiliarity" onchange="roleFamiliarityFunction()" style="max-width:8%";> 
-              <option value="default">default</option>
-              <option value="yes">Yes</option>
+              <option value="default">Remove Filter</option>
+              <option value="yes">Apply Filter</option>
             </select>
 
-            <!-- <input type="checkbox" name="volunteer" id="volunteer"> <label for="volunteer">volunteer</label> -->
             <label for="volunteer">volunteer</label>
             <select name="volunteer" id="volunteer" onchange="volunteerFunction()" style="max-width:8%";> 
-              <option value="default">default</option>
-              <option value="yes">Yes</option>
+              <option value="default">Remove Filter</option>
+              <option value="yes">Apply Filter</option>
             </select>
 
           </span>

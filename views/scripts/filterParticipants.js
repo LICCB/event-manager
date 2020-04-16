@@ -1,5 +1,4 @@
 $().ready(function() {
-  // Documentation of Select 2: https://select2.org/
   $("#testexample").select2({
     placeholder: "apply regstatus filter"
   });
@@ -18,19 +17,17 @@ $('#select-all').click(function(event) {
       });
   }
 });
+
 statusArray = [];
-// ENUM('Awaiting Confirmation', 'Registered', 'Not Confirmed', 'notSelected', 'Standby', 'Selected', 'Cancelled', 'Same Day Cancel'),
 function applyRegStatusFilters() {
 
-  // var rowCount = $('#table table-striped table-dark table-bordered table-hover td').length;
   var rowCount = $('tr:visible').length-1;
-
   var x = $(".testexample").select2("val");
 
+  
+  // console.log("current: " + x);
+  // console.log("previous: " + statusArray);
   // reapply outsidefilter
-  console.log("current: " + x);
-  console.log("previous: " + statusArray);
-
   if (code.includes("1") && x.length < statusArray.length) {
     $('.awaitingConfirmation').show();
     $('.Registered').show();
@@ -107,13 +104,10 @@ function applyRegStatusFilters() {
       if (x.includes("Same Day Cancel")){
         $('.sameDayCancel').show();
       }
-      // console.log("array: " + x);
     }
   }
 
   statusArray = x;
-
-
 
 }
 function isAdultFunction() {
@@ -290,6 +284,11 @@ function updateCheckbox(checkbox) {
   $(':checkbox:hidden').each(function() {
     this.checked = false;                        
   });
+
+  // recheck all visible checkboxes
+  $(':checkbox:visible:enabled').each(function() {
+    this.checked = true;                        
+  }); 
 
   
   $("#select-all").prop("checked", false);
