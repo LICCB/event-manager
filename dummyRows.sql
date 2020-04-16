@@ -5,7 +5,7 @@ INSERT INTO LICCB.roles (roleID, grantInfo)
 
 INSERT INTO LICCB.users (userID, googleID, pictureURL, email, firstName, lastName, userEnabled, roleID)
     VALUES
-    ('1b671a64-40d5-491e-99b0-da01ff1f3341', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'jhandwer@stevens.edu', 'Jordan', 'Handwerger', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('1b671a64-40d5-491e-99b0-da01ff1f3341', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'jhandwer@stevens.edu', 'Jordan', 'Handwerger', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568045b'),
     ('f679a992-3b44-40f3-839f-2c5f43a5ac47', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'barnwell9@gmail.com', 'Corey', 'Barnwell', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
     ('3c17760d-9589-4db6-8110-34ec9dda457f', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'kmorel1339@gmail.com', 'K', 'M', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
     ('44a94c19-11df-495f-9351-b31f90459afc', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'cjlando3297@gmail.com', 'C', 'L', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
