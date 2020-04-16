@@ -1,7 +1,7 @@
 INSERT INTO LICCB.roles (roleID, grantInfo)
     VALUES
     ('7d4666ef-2d92-4f8a-ae4f-6b61d568031b', '{"admin" :{"events": {"create:any": ["*"], "read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"eventTypes" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"participants": {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"users" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]}}}'),
-    ('7d4666ef-2d92-4f8a-ae4f-6b61d568045b', '{"other" :{"events": {"read:any": ["*"]},"eventTypes" : {"read:any": ["*"]},"participants": {"read:any": ["*"]},"users" : {"read:any": ["*"]}}}');
+    ('7d4666ef-2d92-4f8a-ae4f-6b61d568045b', '{"read_only" :{"events": {"read:any": ["*"]},"eventTypes" : {"read:any": ["*"]},"participants": {"read:any": ["*"]},"users" : {"read:any": ["*"]}}}');
 
 INSERT INTO LICCB.users (userID, googleID, pictureURL, email, firstName, lastName, userEnabled, roleID)
     VALUES
@@ -12,6 +12,12 @@ INSERT INTO LICCB.users (userID, googleID, pictureURL, email, firstName, lastNam
     ('1ed00f27-029a-4431-9e26-969c70b1d387', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'senholmes.21@gmail.com', 'S', 'H', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
     ('b4e4c282-2dcc-4731-8448-f1f8ec9e39bf', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'ankdave97@gmail.com', 'A', 'D', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
     ('858603fb-4980-430b-970c-c80159666dae', '858603fb-4980-430b-970c-c80159666dae', '', 'charlie.harper@gmail.com', 'Charlie', 'Harper', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('c7eff1d1-46da-4c5c-8c22-c808b1886db6', 'c7eff1d1-46da-4c5c-8c22-c808b1886db6', '', 'david.matten@licboathouse.com', 'David', 'Matten', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('4a8cdd30-2d9d-46df-b74a-bf477fa4092a', '4a8cdd30-2d9d-46df-b74a-bf477fa4092a', '', 'dmatten00@gmail.com', 'David', 'Matten', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('cd521b6d-2b9a-4480-a022-b5ab55aada58', 'cd521b6d-2b9a-4480-a022-b5ab55aada58', '', 'licboathouse@gmail.com,', 'LIC Boathouse', 'Admin', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('aa56ca40-a9cb-4f51-a943-c6eec9f763fe', 'aa56ca40-a9cb-4f51-a943-c6eec9f763fe', '', 'licboathouse.ms@gmail.com', 'Michael', 'Smalley', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('27d031a3-ebd5-440c-97fb-052d89c31259', '27d031a3-ebd5-440c-97fb-052d89c31259', '', 'licboathouse.am@gmail.com', 'Agnes', 'Michalek', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('ed54e319-d363-4b46-a9cc-cea878ba8ab3', 'ed54e319-d363-4b46-a9cc-cea878ba8ab3', '', 'liccboathouse@gmail.com', 'LICCB Org', 'Generic Checkin', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
     ('e382d3ee-392d-42c1-a453-5c97806be39d', 'e382d3ee-392d-42c1-a453-5c97806be39d', '', 'britney.spears@gmail.com', 'Britney', 'Spears', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b');
 
 INSERT INTO LICCB.eventTypes (typeID, typeMetadata, typeName)
