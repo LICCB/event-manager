@@ -597,9 +597,9 @@ async function queryUserByID(userID){
   return user;
 }
 
-async function updateUser(email, googleID, fname, lname){
+async function updateUser(email, googleID, pictureURL){
   const query = 'UPDATE users ' +
-                `SET googleID='${googleID}', firstName='${fname}', lastName='${lname}' ` +
+                `SET googleID='${googleID}', pictureURL='${pictureURL}' ` +
                 `WHERE email='${email}';`;
   logger.log(query);
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
