@@ -6,7 +6,7 @@
 </head>
 
 <body>
-  <%- include('../partials/header', {title: title}) %>
+  <%- include('../partials/header', {title: title, user: user}) %>
   <div class="container content">
     <button class="button-left"><a href="/settings/addUser">Add New User</a></button>
     <table class="table" id="usersTable">
@@ -22,12 +22,14 @@
         <% for(i=0; i < users.length; i++){ %>
         <tr>
             <td>
-            <% if(users[i].userEnabled){ %>
-              <a href="<%= `/settings/disableUser/${users[i].userID}` %>" >Disable</a> | 
-            <% } else { %>
-              <a href="<%= `/settings/enableUser/${users[i].userID}` %>">Enable</a> |
-            <% } %>
-            <a href="<%= `/settings/deleteUser/${users[i].userID}` %>">Delete</a></td>
+          <% if(users[i].userEnabled){ %>
+              <a href="<%= `/settings/disableUser/${users[i].userID}` %>" >Disable</a>
+          <% } else { %>
+              <a href="<%= `/settings/enableUser/${users[i].userID}` %>">Enable</a>
+          <% } %>
+          <% if(!(users[i].isManager || users[i].isCreator)) { %>
+              | <a href="<%= `/settings/deleteUser/${users[i].userID}` %>">Delete</a></td>
+          <% } %> 
             <td> <%=  `${users[i].firstName} ${users[i].lastName}` %> </td>
             <td> <%=  users[i].email %> </td>
             <td> TBD </td>

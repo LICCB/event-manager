@@ -72,6 +72,16 @@
                     <input type="text" id="regename" name="regename" class = "name" placeholder="Emergency Contact Name" required>
                     <br>
 
+                    <label for="regerelation">Registrant Emergency Contact Relationship:</label>
+                    <select id="regerelation" name="regerelation" class = "relation" form = "eventSignupForm" required>
+                        <option selected disabled hidden style='display: none' value=''></option>
+                        <option value="parent">Parent/Guardian</option>
+                        <option value="spouse">Spouse</option>
+                        <option value="relative">Relative</option>
+                        <option value="friend">Friend</option>
+                    </select>
+                    <br>
+
                     <label for="regephone">Registrant Emergency Contact Phone Number:</label>
                     <input type="text" id="regephone" name="regephone" class = "phone "placeholder="Emergency Contact Phone Number" required>
                     <br>
@@ -125,8 +135,10 @@
                 <!--Insert Dynamic Fields-->
                 <!--Insert Event Type Specific Fields-->
                 <div id="newfields" form="eventSignupForm">
-                    <% if(event.eventMetadata != null || eventType.typeMetadata != null) { %>
+                    <% if(event.eventMetadata != null || eventType.typeMetadata != null) { %> 
                         <h2>Additional Questions:</h2>
+                    <% } %>
+                    <% if(event.eventMetadata != null) { %>
                         <% var md = JSON.parse(event.eventMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
                         <% for(i=0; i < keys.length; i++){ %>
                             <label for="<%= keys[i] %>"> <%= keys[i] %></label>
@@ -137,6 +149,8 @@
                                 <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required>
                             <% } %>
                         <% } %>
+                            <% } %>
+                    <% if(eventType.typeMetadata != null) { %>
                         <% var md = JSON.parse(eventType.typeMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
                         <% for(i=0; i < keys.length; i++){ %>
                             <br>
@@ -203,10 +217,15 @@
                 <div>
                     <div-center class="reginfo">
                       <label for="partysize"></label>
-                      <input type="button" value="Add a Party Member" class="button" id="addpart" />
+                      
                     </div-center>
 
                     <div id="partymembers" form="PublicSignup"> </div>
+
+
+
+            
+                    <input type="button" value="Add a Party Member" class="button" id="addpart"  maxSize = "<%=event.maxPartySize%>"/>
 
                     <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/>
                     <br>
@@ -222,7 +241,6 @@
     </div>
     <br>
 </body>
-
 
 <script src="/scripts/addParticipant.js"></script>
 
