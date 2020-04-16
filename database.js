@@ -583,13 +583,6 @@ async function queryRegistrantEmailsByEventID(eventID){
     emails.slice(0, emails.length - 1)).flat();
 }
 
-async function queryAllUsers(){
-  const query = 'SELECT * FROM users;';
-  logger.log(query);
-  let user = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
-  return user;
-}
-
 async function queryUserByEmail(email){
   const query = `SELECT * FROM users WHERE email='${email}';`;
   logger.log(query);
@@ -604,9 +597,9 @@ async function queryUserByID(userID){
   return user;
 }
 
-async function updateUser(email, googleID, fname, lname){
+async function updateUser(email, googleID, pictureURL){
   const query = 'UPDATE users ' +
-                `SET googleID='${googleID}', firstName='${fname}', lastName='${lname}' ` +
+                `SET googleID='${googleID}', pictureURL='${pictureURL}' ` +
                 `WHERE email='${email}';`;
   logger.log(query);
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
@@ -645,7 +638,6 @@ async function deleteUser(id){
 }
 
 async function queryEventTypes(){
-  // const query = "SELECT * FROM eventTypes;";
   const query = 'SELECT DISTINCT eventTypes.typeID, eventTypes.typeName, eventTypes.typeMetadata, IF(events.eventType IS NULL, FALSE, TRUE) as inUse ' + 
                 'FROM eventTypes ' +
                 'LEFT JOIN events ON (eventTypes.typeID = events.eventType)';
@@ -688,7 +680,6 @@ async function updateEventType(id, type){
   return upd;
 }
 
-module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
