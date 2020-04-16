@@ -12,6 +12,8 @@ const passportSetup = require('./passport-setup');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const config = require('./config.json');
+const logger = require('./logger');
+logger.module = 'server';
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/views'));
@@ -49,8 +51,10 @@ const authCheck = (req, res, next) => {
 /**
  * Renders the home page
  */
-app.get('/',function (req, res) {
-  res.render('index');
+app.get('/', authCheck, function (req, res) {
+  res.render('index', {
+    user: req.user
+  });
 });
 
 /**
@@ -58,6 +62,7 @@ app.get('/',function (req, res) {
  */
 app.get('/createEvent', authCheck, async (req, res) => {
   res.render('event/createEvent', {
+    user: req.user,
     title: "Create Event",
     users: await db.queryAllUsers(),
     eventTypes: await db.queryEventTypes()
@@ -77,6 +82,7 @@ app.post('/createEvent', authCheck, async (req, res) => {
  */
 app.get('/events', authCheck, async (req, res) => {
   res.render('event/events', {
+    user: req.user,
     title: "Events",
     events: utils.cleanupEventData(await db.queryEventsTableData())
   });
@@ -84,9 +90,8 @@ app.get('/events', authCheck, async (req, res) => {
 
 app.get('/event/:id', authCheck, async (req, res) => {
   const e = await db.queryEventDetailsByID(req.params.id);
-  console.log(e);
-  console.log(e.startTime);
   res.render('event/event', {
+    user: req.user,
     title: "Event Detail",
     event: e[0],
     participants: await db.queryParticipantsByEventID(req.params.id),
@@ -145,6 +150,7 @@ app.get('/signup/signupThanks', function(req, res) {
  */
 app.get('/editEvent/:id', authCheck, async (req, res) => {
   res.render("event/editEvent", {
+    user: req.user,
     title: "Edit Event",
     event: (await db.queryEventByID(req.params.id))[0],
     users: await db.queryAllUsers(),
@@ -160,7 +166,6 @@ app.post('/editEvent/:id', authCheck, async (req, res) => {
   const {oldStart, oldEnd, newStart, newEnd} = await db.updateEvent(req.body, req.params.id);
   if((oldStart.getTime() !== newStart.getTime()) || (oldEnd.getTime() !== newEnd.getTime())){
     const emails = await db.queryRegistrantEmailsByEventID(req.params.id);
-    console.log(emails);
     mailer.sendTimeChangeEmail(emails, oldStart, oldEnd, newStart, newEnd, req.body.eventName);
   }
   res.redirect('/events');
@@ -202,21 +207,32 @@ app.get('/cancelEvent/:id', authCheck, async (req, res) => {
  * Renders the complete participant list
  */
 app.get('/participants', authCheck, async (req, res) => {
-  res.render('participants/allParticipants', {participants: await db.queryParticipants()})
+  res.render('participants/allParticipants', {
+    user: req.user,
+    participants: await db.queryParticipants()
+  });
 });
 
 /**
  * Renders the participant list for the specified event
  */
 app.get('/participants/:id', authCheck, async (req, res) => {
-  res.render('participants/eventParticipants', {participants: await db.queryParticipantsByEventID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  res.render('participants/eventParticipants', {
+    user: req.user,
+    participants: await db.queryParticipantsByEventID(req.params.id),
+    event: (await db.queryEventByID(req.params.id))[0]
+  });
 });
 
 /**
  * Renders the participant list for the specified participant
  */
 app.get('/participant/:id', authCheck, async (req, res) => {
-  res.render('participants/singleParticipant', {participants: await db.queryParticipantByID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  res.render('participants/singleParticipant', {
+    user: req.user,
+    participants: await db.queryParticipantByID(req.params.id),
+    event: (await db.queryEventByID(req.params.id))[0]
+  });
 });
 
 /**
@@ -287,6 +303,7 @@ app.get('/export', authCheck, async (req, res) => {
   let users = await db.queryAllUsers();
   delete users.meta;
   res.render("export/export", {
+    user: req.user,
     title: "Export",
     events: events,
     users: users,
@@ -327,6 +344,7 @@ app.post('/export/exportData', authCheck, async (req, res) => {
     let users = await db.queryAllUsers();
     delete users.meta;
     res.render("export/export",  {
+      user: req.user,
       title: "Export",
       events: events,
       users: users,
@@ -353,5 +371,5 @@ app.post('/export/exportData', authCheck, async (req, res) => {
 });
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+  logger.log('Listening on port 3000!', 'info');
 });

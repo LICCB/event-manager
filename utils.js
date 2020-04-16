@@ -1,3 +1,6 @@
+const logger = require('./logger');
+logger.module = 'utils';
+
 /**
  * Returns the time in HH:MM from the JS Date object
  * @param {Date} time 
@@ -71,7 +74,7 @@ function getEventMetadata(event) {
         }
     }
     md += "}";
-    console.log(md);
+    logger.log(md);
     return JSON.stringify(JSON.parse(md));
 }
 

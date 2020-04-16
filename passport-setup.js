@@ -2,10 +2,10 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const config = require('./config.json');
 const db = require('./database');
+const logger = require('./logger');
+logger.module = 'passport';
 
 passport.serializeUser((user, done) => {
-    console.log("In serializeUser");
-    console.log(user);
     if(user != null){
         // error, userID
         done(null, user.userID);
@@ -15,8 +15,6 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    console.log("In deserializeUser");
-    console.log(id);
     if(id != null){
         // error, userID
         db.queryUserByID(id).then((result) => {
@@ -35,21 +33,18 @@ passport.use(
         clientSecret: config.keys.google.clientSecret
     }, (accessToken, refreshToken, profile, done) => {
         // passport callback function
-        console.log('passport callback function fired');
-        console.log(profile);
         db.queryUserByEmail(profile.emails[0].value).then((result) => {
-            console.log(result);
-            console.log(result.length);
-            // const valid = !(Object.keys(result).length === 0 && result.constructor === Object);
+            logger.log(result);
+            logger.log(result.length);
             const valid = !(result.length === 0);
             if(valid){
-                console.log(profile.emails[0].value + " is a valid user");
+                logger.log(profile.emails[0].value + " has successfully logged in");
                 // error, user
-                db.updateUser(profile.emails[0].value, profile.id, profile.name.givenName, profile.name.familyName).then((upd) => {
+                db.updateUser(profile.emails[0].value, profile.id, profile.photos[0].value).then((upd) => {
                     done(null, result[0]);
                 })
             } else {
-                console.log(profile.emails[0].value + " is not a valid user");
+                logger.log(profile.emails[0].value + " is not a valid user");
                 done(null, null);
             }
         })
