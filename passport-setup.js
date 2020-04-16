@@ -35,7 +35,8 @@ passport.use(
         // passport callback function
         db.queryUserByEmail(profile.emails[0].value).then((result) => {
             const valid = !(result.length === 0);
-            if(valid){
+            if(valid && result[0].userEnabled){
+                console.log(result);
                 logger.log(profile.emails[0].value + " has successfully logged in");
                 // error, user
                 db.updateUser(profile.emails[0].value, profile.id, profile.photos[0].value).then((upd) => {
