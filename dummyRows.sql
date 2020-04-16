@@ -3,16 +3,16 @@ INSERT INTO LICCB.roles (roleID, grantInfo)
     ('7d4666ef-2d92-4f8a-ae4f-6b61d568031b', '{"admin" :{"events": {"create:any": ["*"], "read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"eventTypes" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"participants": {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"users" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]}}}'),
     ('7d4666ef-2d92-4f8a-ae4f-6b61d568045b', '{"other" :{"events": {"read:any": ["*"]},"eventTypes" : {"read:any": ["*"]},"participants": {"read:any": ["*"]},"users" : {"read:any": ["*"]}}}');
 
-INSERT INTO LICCB.users (userID, googleID, email, firstName, lastName, userEnabled, roleID)
+INSERT INTO LICCB.users (userID, googleID, pictureURL, email, firstName, lastName, userEnabled, roleID)
     VALUES
-    ('1b671a64-40d5-491e-99b0-da01ff1f3341', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'jhandwer@stevens.edu', 'Jordan', 'Handwerger', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
-    ('f679a992-3b44-40f3-839f-2c5f43a5ac47', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'barnwell9@gmail.com', 'Corey', 'Barnwell', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
-    ('3c17760d-9589-4db6-8110-34ec9dda457f', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'kmorel1339@gmail.com', 'K', 'M', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
-    ('44a94c19-11df-495f-9351-b31f90459afc', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'cjlando3297@gmail.com', 'C', 'L', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
-    ('1ed00f27-029a-4431-9e26-969c70b1d387', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'senholmes.21@gmail.com', 'S', 'H', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
-    ('b4e4c282-2dcc-4731-8448-f1f8ec9e39bf', '1b671a64-40d5-491e-99b0-da01ff1f3341', 'ankdave97@gmail.com', 'A', 'D', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
-    ('858603fb-4980-430b-970c-c80159666dae', '858603fb-4980-430b-970c-c80159666dae', 'charlie.harper@gmail.com', 'Charlie', 'Harper', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
-    ('e382d3ee-392d-42c1-a453-5c97806be39d', 'e382d3ee-392d-42c1-a453-5c97806be39d', 'britney.spears@gmail.com', 'Britney', 'Spears', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b');
+    ('1b671a64-40d5-491e-99b0-da01ff1f3341', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'jhandwer@stevens.edu', 'Jordan', 'Handwerger', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('f679a992-3b44-40f3-839f-2c5f43a5ac47', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'barnwell9@gmail.com', 'Corey', 'Barnwell', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('3c17760d-9589-4db6-8110-34ec9dda457f', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'kmorel1339@gmail.com', 'K', 'M', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('44a94c19-11df-495f-9351-b31f90459afc', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'cjlando3297@gmail.com', 'C', 'L', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('1ed00f27-029a-4431-9e26-969c70b1d387', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'senholmes.21@gmail.com', 'S', 'H', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('b4e4c282-2dcc-4731-8448-f1f8ec9e39bf', '1b671a64-40d5-491e-99b0-da01ff1f3341', '', 'ankdave97@gmail.com', 'A', 'D', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('858603fb-4980-430b-970c-c80159666dae', '858603fb-4980-430b-970c-c80159666dae', '', 'charlie.harper@gmail.com', 'Charlie', 'Harper', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('e382d3ee-392d-42c1-a453-5c97806be39d', 'e382d3ee-392d-42c1-a453-5c97806be39d', '', 'britney.spears@gmail.com', 'Britney', 'Spears', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b');
 
 INSERT INTO LICCB.eventTypes (typeID, typeMetadata, typeName)
     VALUES('6d4776ef-2d92-4f8a-ae4f-6b61d568031b', '{"extraCarSeats": text}', 'test');

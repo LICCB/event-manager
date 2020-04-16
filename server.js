@@ -15,7 +15,7 @@ const config = require('./config.json');
 const logger = require('./logger');
 const rbacSetup = require('./rbac-setup');
 const AccessControl = require('accesscontrol');
-const ac = new AccessControl();
+var ac = "";
 logger.module = 'server';
 
 app.use(express.static(__dirname + '/public'));
@@ -36,6 +36,14 @@ app.use(cookieSession({
 // initialize passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+// initialize rbac
+async function setUpRBAC() {
+  const holder = await rbacSetup.getRolesFromDb();
+  ac = holder;
+};
+setUpRBAC();
+
 
 // setup routes
 app.use('/auth', authRoutes);
