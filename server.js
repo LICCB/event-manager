@@ -13,6 +13,9 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const config = require('./config.json');
 const logger = require('./logger');
+const rbacSetup = require('./rbac-setup');
+const AccessControl = require('accesscontrol');
+const ac = new AccessControl();
 logger.module = 'server';
 
 app.use(express.static(__dirname + '/public'));

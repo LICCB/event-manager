@@ -1,5 +1,7 @@
 INSERT INTO LICCB.roles (roleID, grantInfo)
-    VALUES('7d4666ef-2d92-4f8a-ae4f-6b61d568031b', '{"admin": {"profile": {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]}');
+    VALUES
+    ('7d4666ef-2d92-4f8a-ae4f-6b61d568031b', '{"admin" :{"events": {"create:any": ["*"], "read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"eventTypes" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"participants": {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"users" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]}}}'),
+    ('7d4666ef-2d92-4f8a-ae4f-6b61d568045b', '{"other" :{"events": {"read:any": ["*"]},"eventTypes" : {"read:any": ["*"]},"participants": {"read:any": ["*"]},"users" : {"read:any": ["*"]}}}');
 
 INSERT INTO LICCB.users (userID, googleID, email, firstName, lastName, userEnabled, roleID)
     VALUES

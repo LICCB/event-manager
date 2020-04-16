@@ -688,6 +688,11 @@ async function updateEventType(id, type){
   return upd;
 }
 
+async function queryAllRoles(){
+  let roles = await sequelize.query("SELECT * FROM roles");
+  return roles;
+}
+
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
@@ -729,3 +734,4 @@ module.exports.queryEventTypeByID = queryEventTypeByID;
 module.exports.deleteEventType = deleteEventType;
 module.exports.updateEventType = updateEventType;
 module.exports.queryEventTypeMetadata = queryEventTypeMetadata;
+module.exports.queryAllRoles = queryAllRoles;
