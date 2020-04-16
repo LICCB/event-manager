@@ -24,7 +24,7 @@
                     of selections will usually take place 3 to 2 days ahead of the trip. A final round of selections are
                     usually made the day before, along with the Declines.</p>
                 <br>
-                
+
                 <%if(event.eventNotes != null) { %>
                     <h1><%=event.eventNotes%></h1>
                 <% } %>
@@ -86,6 +86,8 @@
                     <input type="text" id="regephone" name="regephone" class = "phone "placeholder="Emergency Contact Phone Number" required>
                   </div-left>
 
+                  <br>
+
                   <div-right class="reginfo">
                     <label for="regadult">Over 18?</label>
                     <select name="regadult" form="eventSignupForm" required>
@@ -135,35 +137,36 @@
                 <!--Insert Event Type Specific Fields-->
                 <div id="newfields" form="eventSignupForm">
                     <% if(event.eventMetadata != null || eventType.typeMetadata != null) { %> 
-                        <h2>Additional Questions:</h2>
+                        <h2>Additional Questions</h2>
                     <% } %>
                     <% if(event.eventMetadata != null) { %>
                         <% var md = JSON.parse(event.eventMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
                         <% for(i=0; i < keys.length; i++){ %>
                             <label for="<%= keys[i] %>"> <%= keys[i] %></label>
                             <% if(vals[i] == "checkbox") { %>
-                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true">
+                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true"> <br>
                             <% } %>
                             <% if(vals[i] == "textbox") { %>
-                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required> <br>
                             <% } %>
                         <% } %>
-                            <% } %>
+                    <% } %>
                     <% if(eventType.typeMetadata != null) { %>
                         <% var md = JSON.parse(eventType.typeMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
                         <% for(i=0; i < keys.length; i++){ %>
                             <label for="<%= keys[i] %>"> <%= keys[i] %></label>
                             <% if(vals[i] == "checkbox") { %>
-                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true">
+                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true"> <br>
                             <% } %>
                             <% if(vals[i] == "textbox") { %>
-                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required> <br>
                             <% } %>
                         <% } %>
                     <% } %>
                 </div>
 
                 <div-right class="discinfo">
+                    <h2>Discovery Information</h2>
                     <label for="zip">Zip Code:</label>
                     <input type="text" id="zip" name="zipcode" class ="zip" placeholder="Zip Code" required>
                     <br>
