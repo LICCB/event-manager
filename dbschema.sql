@@ -1,4 +1,9 @@
-DROP TABLE IF EXISTS LICCB.participants, LICCB.events, LICCB.eventTypes, LICCB.users;
+DROP TABLE IF EXISTS LICCB.participants, LICCB.events, LICCB.eventTypes, LICCB.users, LICCB.roles;
+
+CREATE TABLE LICCB.roles(
+    roleID      CHAR(36) NOT NULL PRIMARY KEY,
+    grantInfo   TEXT NOT NULL
+);
 
 CREATE TABLE LICCB.users(
     userID      CHAR(36) NOT NULL,
@@ -8,7 +13,12 @@ CREATE TABLE LICCB.users(
     firstName   VARCHAR(30) NOT NULL,
     lastName    VARCHAR(30) NOT NULL,
     userEnabled BOOLEAN NOT NULL,
-    PRIMARY KEY (userID)
+    roleID      VARCHAR(36) NOT NULL,
+    PRIMARY KEY (userID),
+
+    -- Foreign key to reference the users role
+    FOREIGN KEY (roleID)
+        REFERENCES roles(roleID)
 );
 
 CREATE TABLE LICCB.eventTypes(
@@ -45,7 +55,7 @@ CREATE TABLE LICCB.events(
     FOREIGN KEY (creatorID)
         REFERENCES users(userID),
 
-    -- Foreign key for the creator to ensure it is a real user
+    -- Foreign key for eventType 
     FOREIGN KEY (eventType)
         REFERENCES eventTypes(typeID)
 );
