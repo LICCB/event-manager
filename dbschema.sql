@@ -9,6 +9,7 @@ CREATE TABLE LICCB.users(
     userID      CHAR(36) NOT NULL,
     email       VARCHAR(36) NOT NULL,
     googleID    VARCHAR(36) NOT NULL,
+    pictureURL  VARCHAR(120) NOT NULL,
     firstName   VARCHAR(30) NOT NULL,
     lastName    VARCHAR(30) NOT NULL,
     userEnabled BOOLEAN NOT NULL,

@@ -4,7 +4,7 @@
   <%- include('../partials/head', {title: title}) %>
 </head>
 <body>
-  <%- include('../partials/header', {title: title}) %>
+  <%- include('../partials/header', {title: title, user: user}) %>
   <div class="container content">
     <form action="/settings/addUser" method="POST">
         <label for="uEmail">User Email</label>

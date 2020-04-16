@@ -6,8 +6,6 @@ const logger = require('./logger');
 logger.module = 'passport';
 
 passport.serializeUser((user, done) => {
-    logger.log("In serializeUser");
-    logger.log(user);
     if(user != null){
         // error, userID
         done(null, user.userID);
@@ -17,8 +15,6 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    logger.log("In deserializeUser");
-    logger.log(id);
     if(id != null){
         // error, userID
         db.queryUserByID(id).then((result) => {
@@ -37,17 +33,14 @@ passport.use(
         clientSecret: config.keys.google.clientSecret
     }, (accessToken, refreshToken, profile, done) => {
         // passport callback function
-        logger.log('passport callback function fired');
-        logger.log(profile);
         db.queryUserByEmail(profile.emails[0].value).then((result) => {
             logger.log(result);
             logger.log(result.length);
-            // const valid = !(Object.keys(result).length === 0 && result.constructor === Object);
             const valid = !(result.length === 0);
             if(valid){
-                logger.log(profile.emails[0].value + " is a valid user");
+                logger.log(profile.emails[0].value + " has successfully logged in");
                 // error, user
-                db.updateUser(profile.emails[0].value, profile.id, profile.name.givenName, profile.name.familyName).then((upd) => {
+                db.updateUser(profile.emails[0].value, profile.id, profile.photos[0].value).then((upd) => {
                     done(null, result[0]);
                 })
             } else {
