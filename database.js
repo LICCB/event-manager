@@ -320,20 +320,17 @@ async function insertParty(signup, eventID, volunteerStatus) {
   const event = (await queryEventByID(eventID))[0];
   var eventTypeFields = (await queryEventTypeMetadata(eventID))[0].typeMetadata;
   const metadataFields = Object.keys(JSON.parse(event.eventMetadata)).length + Object.keys(JSON.parse(eventTypeFields)).length;
-  logger.log("signupKeys:" + signupkeys);
-  logger.log("metadataFields:" + metadataFields);
+
   signupkeys = signupkeys - metadataFields;
-  logger.log("adjusted:" + signupkeys);
   if(volunteerStatus == 1) {
     signupkeys = signupkeys - 2;
   }
-  
   logger.log("final:" + signupkeys);
   if(signupkeys > 15) {
     partsize = (signupkeys - 15) / 11;
 
   }
-  console.log("partysize:" + partsize);
+  console.log(`partysize: ${partsize + 1}`);
   const queryStmt = "SELECT participantID FROM participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
   const query = await sequelize.query(queryStmt,
   {
@@ -341,7 +338,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     type: sequelize.QueryTypes.SELECT
   });
   var registrantID = uuidv4();
-  logger.log(query[0]);
+  logger.log(`List of participants possible existing participants: ${query[0]}`);
   if(query[0] != undefined) {
     registrantID = query[0].participantID;
   }
@@ -388,15 +385,15 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "?, " + //volunteer
     "'" + date + "', " + //regTime
     "'', " + //userComments
-    "'?');"; //metadata
-
-  logger.log(registrantID);
+    "?);"; //metadata
+  
   let insert = await sequelize.query(insertStmt,
   {
-    replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.regerelation, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
+    replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.regerelation, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, JSON.stringify(metadata)],
     type: sequelize.QueryTypes.INSERT
   });
-
+  logger.log(`Registrant:${registrantID} signed up for event:${eventID} successfully`);
+  
   for(i = 1; i <= partsize; i++) {
     const queryStmt = "SELECT participantID FROM participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
     const query = await sequelize.query(queryStmt,
@@ -444,15 +441,15 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "?, " + //volunteer
       "'" + date + "', " + //regTime
       "'', " + //userComments
-      "'?');"; //metadata
+      "?);"; //metadata
 
     let insert = await sequelize.query(insertStmt1,
     {
-      replacements: [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup[`part${i}erelation`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
+      replacements: [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup[`part${i}erelation`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, JSON.stringify(metadata)],
       type: sequelize.QueryTypes.INSERT
     });
-  logger.log(eventID);
-  logger.log(registrantID);
+    logger.log(`Registrant:${newParticipantID} signed up for event:${eventID} successfully`);
+  logger.log(`${partsize + 1} participants signed up for event:${eventID} under partyID:${registrantID}`);
   return registrantID;
   }
 }
