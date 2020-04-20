@@ -24,14 +24,14 @@
                     of selections will usually take place 3 to 2 days ahead of the trip. A final round of selections are
                     usually made the day before, along with the Declines.</p>
                 <br>
-                
+
                 <%if(event.eventNotes != null) { %>
                     <h1><%=event.eventNotes%></h1>
                 <% } %>
 
                 <%if(volunteerStatus == 1) { %>
                     <h2>Volunteer Information</h2>
-                    <div name = "Volunteer Info">
+                    <div class="fieldset" name = "Volunteer Info">
                         <label for="priorVolunteer">Have you been a volunteer before?</label>
                         <select name="priorVolunteer" form="eventSignupForm" required>
                             <option selected disabled hidden style='display: none' value=''></option>
@@ -47,10 +47,10 @@
                             <option value="true">Yes</option>
                         </select>
                     </div>
-                    
+
                 <% } %>
 
-                <div-left class="reginfo">
+                <div class="reginfo">
                     <h2>Registrant Information</h2>
                     <label for="regfirstname">Registrant First Name:</label>
                     <input type="text" id="regfirstname" name="regfirstname" class = "fname "placeholder="Your First Name Here" required>
@@ -74,9 +74,10 @@
 
                     <label for="regephone">Registrant Emergency Contact Phone Number:</label>
                     <input type="text" id="regephone" name="regephone" class = "phone "placeholder="Emergency Contact Phone Number" required>
-                  </div-left>
+                    <br>
+                  </div>
 
-                  <div-right class="reginfo">
+                  <div class="reginfo">
                     <label for="regadult">Over 18?</label>
                     <select name="regadult" form="eventSignupForm" required>
                         <option selected disabled hidden style='display: none' value=''></option>
@@ -117,10 +118,10 @@
                         <option value="true">Yes</option>
                     </select>
                     <br>
-                </div-right>
+                </div>
 
                 <br>
-    
+
                 <!--Insert Dynamic Fields-->
                 <!--Insert Event Type Specific Fields-->
                 <div id="newfields" form="eventSignupForm">
@@ -149,7 +150,7 @@
                     <% } %>
                 </div>
 
-                <div-right class="discinfo">
+                <div class="discinfo">
                     <label for="zip">Zip Code:</label>
                     <input type="text" id="zip" name="zipcode" class ="zip" placeholder="Zip Code" required>
                     <br>
@@ -197,18 +198,18 @@
 
                     <label for="notes">Additional Notes:</label>
                     <textarea style="width:100px" name="notes" form="eventSignupForm"></textarea>
-                </div-right>
+                </div>
                 <div>
-                    <div-center class="reginfo">
+                    <div class="reginfo">
                       <label for="partysize"></label>
                       <input type="button" value="Add a Party Member" class="button" id="addpart" />
-                    </div-center>
-            
+                    </div>
+
                     <div id="partymembers" form="PublicSignup"> </div>
-            
+
                     <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/>
                     <br>
-        
+
                 </div>
                 <input type="submit" value="Submit Registration">
             </form>

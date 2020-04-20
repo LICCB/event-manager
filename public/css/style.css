@@ -324,6 +324,7 @@ ul ul a {
   margin: 5px;
   background-color: #082b47;
   border-radius: 5px;
+  white-space: nowrap;
 }
 
 .tb-button:hover {
