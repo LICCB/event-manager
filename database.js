@@ -392,7 +392,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.regerelation, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, JSON.stringify(metadata)],
     type: sequelize.QueryTypes.INSERT
   });
-  logger.log(`Registrant:${registrantID} signed up for event:${eventID} successfully`);
+  logger.log(`Registrant:${registrantID} signed up for event:${eventID} successfully`, 'info');
   
   for(i = 1; i <= partsize; i++) {
     const queryStmt = "SELECT participantID FROM participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
@@ -448,8 +448,9 @@ async function insertParty(signup, eventID, volunteerStatus) {
       replacements: [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup[`part${i}erelation`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, JSON.stringify(metadata)],
       type: sequelize.QueryTypes.INSERT
     });
-    logger.log(`Registrant:${newParticipantID} signed up for event:${eventID} successfully`);
-  logger.log(`${partsize + 1} participants signed up for event:${eventID} under partyID:${registrantID}`);
+    logger.log(`Registrant:${newParticipantID} signed up for event:${eventID} successfully`, 'info');
+  logger.log(`${partsize + 1} participants signed up for event:${eventID} under partyID:${registrantID}`, 'info');
+  logger.log(`Edit Registration Link: /editRegistration/${eventID}/${registrantID}`)
   return registrantID;
   }
 }

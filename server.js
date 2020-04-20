@@ -327,7 +327,7 @@ app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
   res.render("signup/editRegistration", {
     title: "Edit Public Signup",
     event: (await db.queryEventByID(req.params.eventid))[0],
-    eventType: (await db.queryEventTypeMetadata(event.eventType))[0],
+    eventType: (await db.queryEventTypeMetadata(req.params.eventid))[0],
     participants: await db.queryParticipantsByEventAndParty(req.params.eventid, req.params.partyid),
     utils: utils
   });
