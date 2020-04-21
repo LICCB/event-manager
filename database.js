@@ -395,10 +395,10 @@ async function insertParty(signup, eventID, volunteerStatus) {
   logger.log(`Registrant:${registrantID} signed up for event:${eventID} successfully`, 'info');
   
   for(i = 1; i <= partsize; i++) {
-    const queryStmt = "SELECT participantID FROM participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND NOT IN (SELECT participantID FROM participants WHERE eventID = ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
+    const queryStmt = "SELECT participantID FROM participants WHERE (firstName = ? AND lastName = ?) OR phone = ? OR email = ? AND NOT IN (SELECT participantID FROM participants WHERE eventID = ? AND ((firstName = ? AND lastName = ?) OR phone = ? OR email = ?)";
     const query = await sequelize.query(queryStmt,
     {
-      replacements: [signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone, eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone],
+      replacements: [signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`],],
       type: sequelize.QueryTypes.SELECT
     });
     var newParticipantID = uuidv4();
@@ -409,7 +409,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "(participantID, partyID, eventID, firstName, " +
       "lastName, phone, email, emergencyPhone, emergencyName, emergencyRelation, zip, " +
       "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
-      "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
+      "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata)" +
       "VALUES(" +
       "'" + newParticipantID + "', " + //participantID
       "'" + registrantID + "', " + //partyID
