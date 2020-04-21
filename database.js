@@ -331,10 +331,10 @@ async function insertParty(signup, eventID, volunteerStatus) {
 
   }
   console.log(`partysize: ${partsize + 1}`);
-  const queryStmt = "SELECT participantID FROM participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
+  const queryStmt = "SELECT participantID FROM participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND NOT IN (SELECT participantID FROM participants WHERE eventID = ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
   const query = await sequelize.query(queryStmt,
   {
-    replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone],
+    replacements: [signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone, eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone],
     type: sequelize.QueryTypes.SELECT
   });
   var registrantID = uuidv4();
@@ -395,10 +395,10 @@ async function insertParty(signup, eventID, volunteerStatus) {
   logger.log(`Registrant:${registrantID} signed up for event:${eventID} successfully`, 'info');
   
   for(i = 1; i <= partsize; i++) {
-    const queryStmt = "SELECT participantID FROM participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
+    const queryStmt = "SELECT participantID FROM participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND NOT IN (SELECT participantID FROM participants WHERE eventID = ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
     const query = await sequelize.query(queryStmt,
     {
-      replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone],
+      replacements: [signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone, eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone],
       type: sequelize.QueryTypes.SELECT
     });
     var newParticipantID = uuidv4();
