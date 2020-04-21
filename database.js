@@ -693,6 +693,15 @@ async function queryRoleByID(id){
   return role;
 }
 
+async function queryAllRoles(){
+  return await sequelize.query('SELECT * FROM roles;');
+}
+
+async function insertRole(){
+  // manipulate json
+  return null;
+}
+
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
@@ -736,3 +745,5 @@ module.exports.updateEventType = updateEventType;
 module.exports.queryEventTypeMetadata = queryEventTypeMetadata;
 module.exports.queryAllRoles = queryAllRoles;
 module.exports.queryRoleByID = queryRoleByID;
+module.exports.queryAllRoles = queryAllRoles;
+module.exports.insertRole = insertRole;
