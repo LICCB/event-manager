@@ -697,9 +697,11 @@ async function queryAllRoles(){
   return await sequelize.query('SELECT * FROM roles;');
 }
 
-async function insertRole(){
-  // manipulate json
-  return null;
+async function insertRole(role){
+  const grantInfo = utils.getGrantInfoForDb(role);
+  const query = `INSERT INTO roles (roleID, grantInfo) VALUES('${uuidv4()}', '${grantInfo}');`;
+  console.log(query);
+  return await sequelize.query(query);
 }
 
 module.exports.queryAllUsers = queryAllUsers;

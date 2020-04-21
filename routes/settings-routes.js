@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const db = require('../database');
-// const passport = require('passport');
 const logger = require('../logger');
+const utils = require('../utils');
 logger.module = 'settings-routes';
+
 
 const authCheck = (req, res, next) => {
   if(!req.user){
@@ -101,23 +102,26 @@ router.get('/deleteEventType/:id', authCheck, async (req, res) => {
   res.redirect('/settings/eventTypes');
 });
 
-router.get('/addRole', authCheck, async (req, res) => {
-  res.render('settings/addRole', {
+router.get('/createRole', authCheck, async (req, res) => {
+  res.render('settings/createRole', {
     user: req.user,
-    title: 'Add Role'
+    title: 'Create Role',
+    resources: ['Events', 'Event Types', 'Participants', 'Users'],
+    permissions: ['Create', 'Read', 'Update', 'Delete']
   });
 });
 
-router.post('/addRole', authCheck, async (req, res) => {
-  // insert new role
+router.post('/createRole', authCheck, async (req, res) => {
+  await db.insertRole(req.body);
   res.redirect('/settings/roles')
 });
 
 router.get('/roles', authCheck, async (req, res) => {
-  res.render('settings/addRole', {
+  res.render('settings/roles', {
     user: req.user,
     title: 'Roles',
-    roles: await db.queryAllRoles()
+    roles: (await db.queryAllRoles())[0],
+    utils: utils
   });
 });
 
