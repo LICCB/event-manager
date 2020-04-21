@@ -13,9 +13,9 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const config = require('./config.json');
 const logger = require('./logger');
-const rbacSetup = require('./rbac-setup');
+const rbac = require('./rbac-setup');
 const AccessControl = require('accesscontrol');
-var ac = "";
+// var ac = "";
 logger.module = 'server';
 
 app.use(express.static(__dirname + '/public'));
@@ -39,15 +39,20 @@ app.use(passport.session());
 
 // initialize rbac
 async function setUpRBAC() {
-  const holder = await rbacSetup.getRolesFromDb();
+  const holder = await rbac.getRolesFromDb();
   ac = holder;
+  app.set('ac', ac);
 };
 setUpRBAC();
+
+function setRBAC(newAc){
+  ac = newAc;
+}
 
 
 // setup routes
 app.use('/auth', authRoutes);
-app.use('/settings', settingsRoutes);
+app.use('/settings', settingsRoutes.router);
 
 const authCheck = (req, res, next) => {
   if(!req.user){
@@ -427,3 +432,5 @@ app.get('/loginFailed', async (req, res) => {
 app.listen(3000, function () {
   logger.log('Listening on port 3000!', 'info');
 });
+
+module.exports.setRBAC = setRBAC;

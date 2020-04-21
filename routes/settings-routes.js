@@ -2,6 +2,9 @@ const router = require('express').Router();
 const db = require('../database');
 const logger = require('../logger');
 const utils = require('../utils');
+const rbac = require('../rbac-setup');
+var ac = "";
+const server = require('../server');
 logger.module = 'settings-routes';
 
 
@@ -16,6 +19,7 @@ const authCheck = (req, res, next) => {
 };
 
 router.get('/', authCheck, (req, res) => {
+  // console.log(test);
     res.render('settings/settings', {
       user: req.user,
       title: "Settings"
@@ -112,7 +116,9 @@ router.get('/createRole', authCheck, async (req, res) => {
 });
 
 router.post('/createRole', authCheck, async (req, res) => {
-  await db.insertRole(req.body);
+  const newAc = await db.insertRole(req.body);
+  server.setRBAC(newAc);
+  ac = newAc;
   res.redirect('/settings/roles')
 });
 
@@ -125,4 +131,8 @@ router.get('/roles', authCheck, async (req, res) => {
   });
 });
 
-module.exports = router;
+function setRBAC(newAc){
+  ac = newAc;
+}
+module.exports.router = router;
+module.exports.setRBAC = setRBAC;

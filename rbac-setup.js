@@ -1,6 +1,7 @@
 // initialize access control
 const db = require('./database');
 const AccessControl = require('accesscontrol');
+// var ac = null;
 
 async function getRolesFromDb(){
     var grants = await db.queryAllRoles();
@@ -19,8 +20,10 @@ async function getRolesFromDb(){
     roles += "}";
     const ac = new AccessControl(JSON.parse(roles));
     // console.log(ac.getGrants());
-    const permission = ac.can('Admin').readAny('events');
+    // const permission = ac.can('Admin').readAny('events');
+    // ac = newAc;
     return ac;
 };
 
 module.exports.getRolesFromDb = getRolesFromDb;
+module.exports.ac = getRolesFromDb();
