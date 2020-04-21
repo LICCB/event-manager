@@ -68,37 +68,57 @@ router.get('/createEventType', authCheck, async (req, res) => {
     });
   });
   
-  router.post('/createEventType', authCheck, async (req, res) => {
-    await db.insertEventType(req.body);
-    res.redirect("/settings/eventTypes");
+router.post('/createEventType', authCheck, async (req, res) => {
+  await db.insertEventType(req.body);
+  res.redirect("/settings/eventTypes");
+});
+
+router.get('/eventTypes', authCheck, async (req, res) => {
+  const eventTypes = await db.queryEventTypes();
+  res.render("settings/eventTypes", {
+    user: req.user,
+    title: "Event Types",
+    types: eventTypes
   });
+});
+
+router.get('/editEventType/:id', authCheck, async (req, res) => {
+  const type = await db.queryEventTypeByID(req.params.id);
+  res.render("settings/editEventType", {
+    user: req.user,
+    title: "Edit Event Type",
+    type: type[0]
+  });
+});
   
-  router.get('/eventTypes', authCheck, async (req, res) => {
-    const eventTypes = await db.queryEventTypes();
-    res.render("settings/eventTypes", {
-      user: req.user,
-      title: "Event Types",
-      types: eventTypes
-    });
+router.post('/editEventType/:id', authCheck, async (req, res) => {
+  await db.updateEventType(req.params.id, req.body);
+  res.redirect('/settings/eventTypes');
+});
+
+router.get('/deleteEventType/:id', authCheck, async (req, res) => {
+  await db.deleteEventType(req.params.id);
+  res.redirect('/settings/eventTypes');
+});
+
+router.get('/addRole', authCheck, async (req, res) => {
+  res.render('settings/addRole', {
+    user: req.user,
+    title: 'Add Role'
   });
-  
-  router.get('/editEventType/:id', authCheck, async (req, res) => {
-    const type = await db.queryEventTypeByID(req.params.id);
-    res.render("settings/editEventType", {
-      user: req.user,
-      title: "Edit Event Type",
-      type: type[0]
-    });
+});
+
+router.post('/addRole', authCheck, async (req, res) => {
+  // insert new role
+  res.redirect('/settings/roles')
+});
+
+router.get('/roles', authCheck, async (req, res) => {
+  res.render('settings/addRole', {
+    user: req.user,
+    title: 'Roles',
+    roles: await db.queryAllRoles()
   });
-  
-  router.post('/editEventType/:id', authCheck, async (req, res) => {
-    await db.updateEventType(req.params.id, req.body);
-    res.redirect('/settings/eventTypes');
-  });
-  
-  router.get('/deleteEventType/:id', authCheck, async (req, res) => {
-    await db.deleteEventType(req.params.id);
-    res.redirect('/settings/eventTypes');
-  });
+});
 
 module.exports = router;
