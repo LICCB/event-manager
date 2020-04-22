@@ -6,7 +6,8 @@
 </head>
 
 <body>
-    <%- include('../partials/header', {title: title}) %>
+    <%- include('../partials/header', {title: title, user: user}) %>
+
     <div class="container content">
         <% if (error) { %>
         <div class="alert alert-danger" role="alert">

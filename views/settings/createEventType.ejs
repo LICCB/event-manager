@@ -6,7 +6,8 @@
 </head>
 
 <body>
-  <%- include('../partials/header', {title: title}) %>
+  <%- include('../partials/header', {title: title, user: user}) %>
+
   <div class="container content">
     <fieldset>
       <form action="/settings/createEventType" method="post" id="eventypeform">

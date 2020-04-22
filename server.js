@@ -13,6 +13,9 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const config = require('./config.json');
 const logger = require('./logger');
+const rbacSetup = require('./rbac-setup');
+const AccessControl = require('accesscontrol');
+var ac = "";
 logger.module = 'server';
 
 app.use(express.static(__dirname + '/public'));
@@ -34,6 +37,14 @@ app.use(cookieSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// initialize rbac
+async function setUpRBAC() {
+  const holder = await rbacSetup.getRolesFromDb();
+  ac = holder;
+};
+setUpRBAC();
+
+
 // setup routes
 app.use('/auth', authRoutes);
 app.use('/settings', settingsRoutes);
@@ -48,18 +59,59 @@ const authCheck = (req, res, next) => {
   }
 };
 
+function permCheck(resource, func) {
+  return async function(req, res, next) {
+    const grantInfo = ((await db.queryRoleByID(req.user.roleID))[0][0]).grantInfo;
+    const role = (Object.keys(JSON.parse(grantInfo)))[0];
+    var perm = {granted : false};
+    switch(func) {
+      case 'create':
+        perm = ac.can(role).createAny(resource);
+        break;
+      case 'read':
+        perm = ac.can(role).readAny(resource);
+        break;   
+      case 'update':
+        perm = ac.can(role).updateAny(resource);
+        break;
+      case 'delete':
+        perm = ac.can(role).deleteAny(resource);
+        break;
+      default:
+        break;
+    }
+    if(perm.granted){
+      logger.log(`${req.user.firstName} ${req.user.lastName} was granted access to ${resource} for ${func}`)
+      next();
+    }
+    else{
+      logger.log(`${req.user.firstName} ${req.user.lastName} was denied access to ${resource} for ${func}`)
+      res.redirect('unauthorized');
+    }
+  }
+}
+
 /**
  * Renders the home page
  */
-app.get('/',function (req, res) {
-  res.render('index');
+app.get('/', authCheck, function (req, res) {
+  res.render('index', {
+    user: req.user
+  });
+});
+
+app.get('/unauthorized', authCheck, function(req, res){
+  res.render('unauthorized', {
+    user: req.user
+  })
 });
 
 /**
  * Renders the createEvent page with the list of possible event managers
  */
-app.get('/createEvent', authCheck, async (req, res) => {
+app.get('/createEvent', authCheck, permCheck('events', 'create'), async (req, res) => {
   res.render('event/createEvent', {
+    user: req.user,
     title: "Create Event",
     users: await db.queryAllUsers(),
     eventTypes: await db.queryEventTypes()
@@ -77,8 +129,10 @@ app.post('/createEvent', authCheck, async (req, res) => {
 /**
  * Renders the events page with the list of all events
  */
-app.get('/events', authCheck, async (req, res) => {
+app.get('/events', authCheck, permCheck('events', 'read'), async (req, res) => {
+  logger.log(`${req.user.firstName} ${req.user.lastName} has successfully accessed the events page`);
   res.render('event/events', {
+    user: req.user,
     title: "Events",
     events: utils.cleanupEventData(await db.queryEventsTableData())
   });
@@ -86,9 +140,8 @@ app.get('/events', authCheck, async (req, res) => {
 
 app.get('/event/:id', authCheck, async (req, res) => {
   const e = await db.queryEventDetailsByID(req.params.id);
-  logger.log(e);
-  logger.log(e.startTime);
   res.render('event/event', {
+    user: req.user,
     title: "Event Detail",
     event: e[0],
     participants: await db.queryParticipantsByEventID(req.params.id),
@@ -147,6 +200,7 @@ app.get('/signup/signupThanks', function(req, res) {
  */
 app.get('/editEvent/:id', authCheck, async (req, res) => {
   res.render("event/editEvent", {
+    user: req.user,
     title: "Edit Event",
     event: (await db.queryEventByID(req.params.id))[0],
     users: await db.queryAllUsers(),
@@ -162,7 +216,6 @@ app.post('/editEvent/:id', authCheck, async (req, res) => {
   const {oldStart, oldEnd, newStart, newEnd} = await db.updateEvent(req.body, req.params.id);
   if((oldStart.getTime() !== newStart.getTime()) || (oldEnd.getTime() !== newEnd.getTime())){
     const emails = await db.queryRegistrantEmailsByEventID(req.params.id);
-    logger.log(emails);
     mailer.sendTimeChangeEmail(emails, oldStart, oldEnd, newStart, newEnd, req.body.eventName);
   }
   res.redirect('/events');
@@ -204,21 +257,32 @@ app.get('/cancelEvent/:id', authCheck, async (req, res) => {
  * Renders the complete participant list
  */
 app.get('/participants', authCheck, async (req, res) => {
-  res.render('participants/allParticipants', {participants: await db.queryParticipants()})
+  res.render('participants/allParticipants', {
+    user: req.user,
+    participants: await db.queryParticipants()
+  });
 });
 
 /**
  * Renders the participant list for the specified event
  */
 app.get('/participants/:id', authCheck, async (req, res) => {
-  res.render('participants/eventParticipants', {participants: await db.queryParticipantsByEventID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  res.render('participants/eventParticipants', {
+    user: req.user,
+    participants: await db.queryParticipantsByEventID(req.params.id),
+    event: (await db.queryEventByID(req.params.id))[0]
+  });
 });
 
 /**
  * Renders the participant list for the specified participant
  */
 app.get('/participant/:id', authCheck, async (req, res) => {
-  res.render('participants/singleParticipant', {participants: await db.queryParticipantByID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  res.render('participants/singleParticipant', {
+    user: req.user,
+    participants: await db.queryParticipantByID(req.params.id),
+    event: (await db.queryEventByID(req.params.id))[0]
+  });
 });
 
 /**
@@ -289,6 +353,7 @@ app.get('/export', authCheck, async (req, res) => {
   let users = await db.queryAllUsers();
   delete users.meta;
   res.render("export/export", {
+    user: req.user,
     title: "Export",
     events: events,
     users: users,
@@ -329,6 +394,7 @@ app.post('/export/exportData', authCheck, async (req, res) => {
     let users = await db.queryAllUsers();
     delete users.meta;
     res.render("export/export",  {
+      user: req.user,
       title: "Export",
       events: events,
       users: users,
@@ -352,6 +418,10 @@ app.post('/export/exportData', authCheck, async (req, res) => {
   res.setHeader('Content-disposition', `attachment; filename=${fileName}`);
   res.set('Content-Type', 'text/csv');
   res.status(200).send(csv);
+});
+
+app.get('/loginFailed', async (req, res) => {
+  res.render('loginFailed', {user: null});
 });
 
 app.listen(3000, function () {

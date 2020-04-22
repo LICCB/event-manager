@@ -320,18 +320,17 @@ async function insertParty(signup, eventID, volunteerStatus) {
   const event = (await queryEventByID(eventID))[0];
   var eventTypeFields = (await queryEventTypeMetadata(eventID))[0].typeMetadata;
   const metadataFields = Object.keys(JSON.parse(event.eventMetadata)).length + Object.keys(JSON.parse(eventTypeFields)).length;
-  logger.log("signupKeys:" + signupkeys);
-  logger.log("metadataFields:" + metadataFields);
+
   signupkeys = signupkeys - metadataFields;
-  logger.log("adjusted:" + signupkeys);
   if(volunteerStatus == 1) {
     signupkeys = signupkeys - 2;
   }
   logger.log("final:" + signupkeys);
-  if(signupkeys > 14) {
-    partsize = (signupkeys - 14) / 10;
+  if(signupkeys > 15) {
+    partsize = (signupkeys - 15) / 11;
+
   }
-  console.log("partysize:" + partsize);
+  console.log(`partysize: ${partsize + 1}`);
   const queryStmt = "SELECT participantID FROM participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
   const query = await sequelize.query(queryStmt,
   {
@@ -339,7 +338,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     type: sequelize.QueryTypes.SELECT
   });
   var registrantID = uuidv4();
-  logger.log(query[0]);
+  logger.log(`List of participants possible existing participants: ${query[0]}`);
   if(query[0] != undefined) {
     registrantID = query[0].participantID;
   }
@@ -352,7 +351,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
   metadata = Object.assign(eventTypeFields, eventTypeMetadata);
   var insertStmt = "INSERT INTO participants " +
     "(participantID, partyID, eventID, firstName, " +
-    "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
+    "lastName, phone, email, emergencyPhone, emergencyName, emergencyRelation, zip, " +
     "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
     "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
     "VALUES(" +
@@ -365,6 +364,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "?, " + //email
     "?, " + //emergencyPhone
     "?, " + //emergencyName
+    "?, " + //emergencyRelation
     "?, " + //zipcode
     signup.regadult + ", " + //isAdult
     signup.regcpr + ", " + //CPR
@@ -385,14 +385,15 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "?, " + //volunteer
     "'" + date + "', " + //regTime
     "'', " + //userComments
-    "'?');"; //metadata
-  logger.log(registrantID);
+    "?);"; //metadata
+  
   let insert = await sequelize.query(insertStmt,
   {
-    replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
+    replacements: [eventID, signup.regfirstname, signup.reglastname, signup.regphone, signup.regemail, signup.regephone, signup.regename, signup.regerelation, signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, JSON.stringify(metadata)],
     type: sequelize.QueryTypes.INSERT
   });
-
+  logger.log(`Registrant:${registrantID} signed up for event:${eventID} successfully`);
+  
   for(i = 1; i <= partsize; i++) {
     const queryStmt = "SELECT participantID FROM participants WHERE eventID != ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
     const query = await sequelize.query(queryStmt,
@@ -406,7 +407,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     }
     var insertStmt1 = "INSERT INTO participants " +
       "(participantID, partyID, eventID, firstName, " +
-      "lastName, phone, email, emergencyPhone, emergencyName, zip, " +
+      "lastName, phone, email, emergencyPhone, emergencyName, emergencyRelation, zip, " +
       "isAdult, hasCPRCert, canSwim, boatExperience, boathouseDisc, " +
       "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
       "VALUES(" +
@@ -419,6 +420,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "?, " + //email
       "?, " + //emergencyPhone
       "?, " + //emergencyName
+      "?, " + //emergencyRelation
       "?, " + //zipcode
       signup[`part${i}age`] + ", " + //isAdult
       signup[`part${i}cpr`] + ", " + //CPR
@@ -439,14 +441,15 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "?, " + //volunteer
       "'" + date + "', " + //regTime
       "'', " + //userComments
-      "'?');"; //metadata
+      "?);"; //metadata
+
     let insert = await sequelize.query(insertStmt1,
     {
-      replacements: [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, metadata],
+      replacements: [eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup[`part${i}erelation`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, volunteerStatus, JSON.stringify(metadata)],
       type: sequelize.QueryTypes.INSERT
     });
-  logger.log(eventID);
-  logger.log(registrantID);
+    logger.log(`Registrant:${newParticipantID} signed up for event:${eventID} successfully`);
+  logger.log(`${partsize + 1} participants signed up for event:${eventID} under partyID:${registrantID}`);
   return registrantID;
   }
 }
@@ -583,13 +586,6 @@ async function queryRegistrantEmailsByEventID(eventID){
     emails.slice(0, emails.length - 1)).flat();
 }
 
-async function queryAllUsers(){
-  const query = 'SELECT * FROM users;';
-  logger.log(query);
-  let user = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
-  return user;
-}
-
 async function queryUserByEmail(email){
   const query = `SELECT * FROM users WHERE email='${email}';`;
   logger.log(query);
@@ -604,9 +600,9 @@ async function queryUserByID(userID){
   return user;
 }
 
-async function updateUser(email, googleID, fname, lname){
+async function updateUser(email, googleID, pictureURL){
   const query = 'UPDATE users ' +
-                `SET googleID='${googleID}', firstName='${fname}', lastName='${lname}' ` +
+                `SET googleID='${googleID}', pictureURL='${pictureURL}' ` +
                 `WHERE email='${email}';`;
   logger.log(query);
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
@@ -616,8 +612,8 @@ async function updateUser(email, googleID, fname, lname){
 async function insertUser(email, fName, lName){
   const userID = uuidv4();
   const query = 'INSERT INTO users ' +
-                '(userID, email, googleID, firstName, lastName, userEnabled) ' +
-                `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1)`; // set googleID to userID until first login
+                '(userID, email, googleID, firstName, lastName, userEnabled, pictureURL, roleID) ' +
+                `VALUES('${userID}', '${email}', '${userID}', '${fName}', '${lName}', 1, '', '7d4666ef-2d92-4f8a-ae4f-6b61d568031b')`; // set googleID to userID until first login
   logger.log(query);
   let insert = await sequelize.query(query, {type: sequelize.QueryTypes.INSERT});
   return insert;
@@ -645,7 +641,6 @@ async function deleteUser(id){
 }
 
 async function queryEventTypes(){
-  // const query = "SELECT * FROM eventTypes;";
   const query = 'SELECT DISTINCT eventTypes.typeID, eventTypes.typeName, eventTypes.typeMetadata, IF(events.eventType IS NULL, FALSE, TRUE) as inUse ' + 
                 'FROM eventTypes ' +
                 'LEFT JOIN events ON (eventTypes.typeID = events.eventType)';
@@ -686,6 +681,16 @@ async function updateEventType(id, type){
   logger.log(query);
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
+}
+
+async function queryAllRoles(){
+  let roles = await sequelize.query("SELECT * FROM roles");
+  return roles;
+}
+
+async function queryRoleByID(id){
+  let role = await sequelize.query(`SELECT * FROM roles WHERE roleID='${id}'`);
+  return role;
 }
 
 module.exports.queryAllUsers = queryAllUsers;
@@ -729,3 +734,5 @@ module.exports.queryEventTypeByID = queryEventTypeByID;
 module.exports.deleteEventType = deleteEventType;
 module.exports.updateEventType = updateEventType;
 module.exports.queryEventTypeMetadata = queryEventTypeMetadata;
+module.exports.queryAllRoles = queryAllRoles;
+module.exports.queryRoleByID = queryRoleByID;
