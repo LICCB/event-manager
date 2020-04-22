@@ -48,6 +48,19 @@ router.get('/enableUser/:id', authCheck, async (req, res) => {
     res.redirect('/settings/users');
 });
 
+router.get('/editUser/:id', authCheck, async (req, res) => {
+  await db.updateUser(req.params.id);
+  res.redirect('/settings/editUser', {
+    user: req.user
+  });
+});
+
+router.post('/editUser/:id', authCheck, async (req, res) => {
+  console.log(req.body);
+  // await db.updateUser(req.params.id, re);
+  res.redirect('/settings/users');
+});
+
 router.get('/disableUser/:id', authCheck, async (req, res) => {
     await db.disableUser(req.params.id);
     res.redirect('/settings/users');

@@ -609,6 +609,15 @@ async function updateUser(email, googleID, pictureURL){
   return upd;
 }
 
+async function editUser(id,email, fName, lName, roleID){
+  const query = 'UPDATE users ' +
+                `SET email='${email}', fName='${fName}', lName='${lName}', roleID='${roleID}' ` +
+                `WHERE userID='${id}';`;
+  logger.log(query);
+  let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
+  return upd;
+}
+
 async function insertUser(email, fName, lName){
   const userID = uuidv4();
   const query = 'INSERT INTO users ' +
