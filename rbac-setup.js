@@ -19,7 +19,7 @@ async function getRolesFromDb(){
     roles += "}";
     const ac = new AccessControl(JSON.parse(roles));
     // console.log(ac.getGrants());
-    const permission = ac.can('admin').readAny('events');
+    const permission = ac.can('Admin').readAny('events');
     // console.log(permission);
     // console.log(permission.granted);
     return ac;

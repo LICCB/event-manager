@@ -133,10 +133,10 @@
                 <br>
 
                 <div id="newfields" form="eventSignupForm">
-                    <% if(event.eventMetadata != '{}' || eventType.typeMetadata != '{}') { %> 
+                    <% if((event.eventMetadata != '{}' && event.eventMetadata != null) || (eventType.typeMetadata != '{}' && eventType.typeMetadata != null)) { %> 
                         <h2>Additional Questions</h2>
                     <% } %>
-                    <% if(event.eventMetadata != '{}') { %>
+                    <% if(event.eventMetadata != '{}' && event.eventMetadata != null) { %>
                         <% var md = JSON.parse(event.eventMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
                         <% for(i=0; i < keys.length; i++){ %>
                             <label for="<%= keys[i] %>"> <%= keys[i] %></label>
@@ -148,7 +148,7 @@
                             <% } %>
                         <% } %>
                     <% } %>
-                    <% if(eventType.typeMetadata != '{}') { %>
+                    <% if(eventType.typeMetadata != '{}' && eventType.typeMetadata != null) { %>
                         <% var md = JSON.parse(eventType.typeMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
                         <% for(i=0; i < keys.length; i++){ %>
                             <br>
