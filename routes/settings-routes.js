@@ -26,11 +26,13 @@ router.get('/', authCheck, (req, res) => {
     });
 });
 
-router.get('/addUser', authCheck, (req, res) => {
-    res.render('settings/addUser', {
-      user: req.user,
-      title: "Add User"
-    });
+router.get('/addUser', authCheck, async (req, res) => {
+  res.render('settings/addUser', {
+    user: req.user,
+    title: "Add User",
+    roles: (await db.queryAllRoles())[0],
+    utils: utils
+  });
 });
 
 router.post('/addUser', authCheck, async (req, res) => {
@@ -49,21 +51,25 @@ router.get('/enableUser/:id', authCheck, async (req, res) => {
 });
 
 router.get('/editUser/:id', authCheck, async (req, res) => {
-  await db.updateUser(req.params.id);
-  res.redirect('/settings/editUser', {
-    user: req.user
+  res.render('settings/editUser', {
+    title: "Edit User",
+    user: req.user,
+    roles: (await db.queryAllRoles())[0],
+    utils: utils
   });
 });
 
 router.post('/editUser/:id', authCheck, async (req, res) => {
   console.log(req.body);
-  // await db.updateUser(req.params.id, re);
+  // id,email, fName, lName, roleID
+  const u = req.body;
+  await db.updateUser(u.userID, u.email. u.fname, u.lname, u.roleID);
   res.redirect('/settings/users');
 });
 
 router.get('/disableUser/:id', authCheck, async (req, res) => {
-    await db.disableUser(req.params.id);
-    res.redirect('/settings/users');
+  await db.disableUser(req.params.id);
+  res.redirect('/settings/users');
 });
 
 router.get('/deleteUser/:id', authCheck, async (req, res) => {
@@ -73,10 +79,13 @@ router.get('/deleteUser/:id', authCheck, async (req, res) => {
 
 router.get('/users', authCheck, async (req, res) => {
     const users = await db.queryAllUsers();
+    // console.log(users);
     res.render('settings/users', {
       user: req.user,
       title: "All Users",
-      users: users});
+      users: users,
+      utils: utils
+    });
 });
 
 router.get('/createEventType', authCheck, async (req, res) => {

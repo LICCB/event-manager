@@ -7,14 +7,21 @@
   <%- include('../partials/header', {title: title, user: user}) %>
   <div class="container content">
     <form action="/settings/addUser" method="POST">
-        <label for="uEmail">User Email</label>
+        <label for="uEmail">User Email: </label>
         <input type="text" id="uEmail" name="email">
         <br>
-        <label for="fname">First Name</label>
+        <label for="fname">First Name: </label>
         <input type="text" id="fname" name="fname">
         <br>
-        <label for="lname">Last Name</label>
+        <label for="lname">Last Name: </label>
         <input type="text" id="lname" name="lname">
+        <br>
+        <label for="type">Role: </label>
+        <select name="roleID">
+          <% for(i = 0; i < roles.length; i++) { %>
+            <option value=<%= roles[i].roleID %>> <%= utils.getRoleName(roles[i]) %> </option>
+          <% } %>
+        </select>
         <br>
         <button class="button" type="submit" value="Create Event">Submit</button>
     </form>

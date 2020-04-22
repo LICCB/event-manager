@@ -33,7 +33,7 @@
           <% } %> 
             <td> <%=  `${users[i].firstName} ${users[i].lastName}` %> </td>
             <td> <%=  users[i].email %> </td>
-            <td> <%= users[i].roleID %> </td>
+            <td> <%= utils.getRoleName(users[i]) %> </td>
         </tr>
         <% } %>
       </tbody>

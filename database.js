@@ -34,7 +34,10 @@ async function queryAllCols(tableName) {
 }
 
 async function queryAllUsers() {
-  let users = await sequelize.query("SELECT * FROM users", {type: sequelize.QueryTypes.SELECT});
+  const query = 'SELECT * ' +
+                'FROM users JOIN roles ' + 
+                'ON users.roleID = roles.roleID;';
+  let users = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return users;
 }
 
@@ -713,7 +716,6 @@ async function insertRole(role){
   return await sequelize.query(query);
 }
 
-module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
