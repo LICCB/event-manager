@@ -21,7 +21,8 @@
           <span>
 
             <div>
-              <select name="testexample" id="testexample" class="testexample" multiple="multiple" onchange="applyRegStatusFilters()" style="width:30%;">
+              <label for="regStatusPillbox" >Filter by Registration</label>
+              <select name="regStatusPillbox" id="regStatusPillbox" class="regStatusPillbox" multiple="multiple" onchange="someFilterAppliedOrRemoved()" style="width:30%;">
                 <option value="Awaiting Confirmation">Awaiting Confirmation</option>
                 <option value="Registered">Registered</option>
                 <option value="Not Confirmed">Not Confirmed</option>
@@ -31,46 +32,52 @@
                 <option value="Cancelled">Cancelled</option>
                 <option value="Same Day Cancel">Same Day Cancel</option>
               </select>
+              <label for="eventDiscoveryPillbox" >Filter by Event Discovery</label>
+              <select name="eventDiscoveryPillbox" id="eventDiscoveryPillbox" class="eventDiscoveryPillbox" multiple="multiple" onchange="someFilterAppliedOrRemoved()" style="width:30%;">
+                <option value="Facebook">Facebook</option>
+                <option value="Friend">Friend</option>
+                <option value="Email">Email</option>
+              </select>
             </div>
 
             <label for="isAdult" >Over 18?</label> 
-            <select name="isAdult" id="isAdult" onchange="isAdultFunction()" style="max-width:8%";> 
+            <select name="isAdult" id="isAdult" onchange="someFilterAppliedOrRemoved()" style="max-width:8%";> 
               <option value="default">Remove Filter</option>
               <option value="yes">Apply Filter</option>
             </select>
 
             <label for="canSwim" >canSwim</label> 
-            <select name="canSwim" id="canSwim" onchange="canSwimFunction()" style="max-width:8%";> 
+            <select name="canSwim" id="canSwim" onchange="someFilterAppliedOrRemoved()" style="max-width:8%";> 
               <option value="default">Remove Filter</option>
               <option value="yes">Apply Filter</option>
             </select>   
 
             <label for="hasCPRCert">hasCPRCert</label>
-            <select name="hasCPRCert" id="hasCPRCert" onchange="hasCPRCertFunction()" style="max-width:8%";> 
+            <select name="hasCPRCert" id="hasCPRCert" onchange="someFilterAppliedOrRemoved()" style="max-width:8%";> 
               <option value="default">Remove Filter</option>
               <option value="yes">Apply Filter</option>
             </select> 
 
             <label for="boatExperience">boatExperience</label>
-            <select name="boatExperience" id="boatExperience" onchange="boatExperienceFunction()" style="max-width:8%";> 
+            <select name="boatExperience" id="boatExperience" onchange="someFilterAppliedOrRemoved()" style="max-width:8%";> 
               <option value="default">Remove Filter</option>
               <option value="yes">Apply Filter</option>
             </select> 
 
             <label for="priorVolunteer">priorVolunteer</label>
-            <select name="priorVolunteer" id="priorVolunteer" onchange="priorVolunteerFunction()" style="max-width:8%";> 
+            <select name="priorVolunteer" id="priorVolunteer" onchange="someFilterAppliedOrRemoved()" style="max-width:8%";> 
               <option value="default">Remove Filter</option>
               <option value="yes">Apply Filter</option>
             </select> 
             
             <label for="roleFamiliarity">roleFamiliarity</label>
-            <select name="roleFamiliarity" id="roleFamiliarity" onchange="roleFamiliarityFunction()" style="max-width:8%";> 
+            <select name="roleFamiliarity" id="roleFamiliarity" onchange="someFilterAppliedOrRemoved()" style="max-width:8%";> 
               <option value="default">Remove Filter</option>
               <option value="yes">Apply Filter</option>
             </select>
 
             <label for="volunteer">volunteer</label>
-            <select name="volunteer" id="volunteer" onchange="volunteerFunction()" style="max-width:8%";> 
+            <select name="volunteer" id="volunteer" onchange="someFilterAppliedOrRemoved()" style="max-width:8%";> 
               <option value="default">Remove Filter</option>
               <option value="yes">Apply Filter</option>
             </select>
@@ -104,15 +111,15 @@
       
               <% for(i = 0; i < participants.length; i++){ %>
                 <% if (participants[i].regStatus == 'Awaiting Confirmation') { %>
-                  <tr  class="<%=`awaitingConfirmation ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
+                  <tr  class="<%=`awaitingConfirmation ${participants[i].eventDisc} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
                 <% } else if (participants[i].regStatus == 'Not Confirmed') { %>    
-                  <tr  class="<%=`notConfirmed ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">  
+                  <tr  class="<%=`notConfirmed ${participants[i].eventDisc} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">  
                 <% } else if (participants[i].regStatus == 'Not Selected') { %>    
-                  <tr  class="<%=`notSelected ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">  
+                  <tr  class="<%=`notSelected ${participants[i].eventDisc} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">  
                 <% } else if (participants[i].regStatus == 'Same Day Cancel') { %>
-                  <tr  class="<%=`sameDayCancel ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">  
+                  <tr  class="<%=`sameDayCancel ${participants[i].eventDisc} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">  
                 <% } else { %>
-                  <tr  class="<%=`${participants[i].regStatus} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
+                  <tr  class="<%=`${participants[i].regStatus} ${participants[i].eventDisc} ${participants[i].isAdult ? 'adult' : 'child'} ${participants[i].canSwim ? 'canSwim' : 'cantSwim'} ${participants[i].hasCPRCert ? 'yesCPR' : 'noCPR'} ${participants[i].boatExperience ? 'yesBoat' : 'noBoat'} ${participants[i].priorVolunteer ? 'yesPriorV' : 'noPriorV'} ${participants[i].roleFamiliarity ? 'yesFamiliar' : 'noFamiliar'} ${participants[i].volunteer ? 'yesVolunteer' : 'noVolunteer'}` %>">
                 <% } %>
                 
                   <td class="manualChanges">  
