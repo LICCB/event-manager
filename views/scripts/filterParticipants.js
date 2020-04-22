@@ -37,9 +37,49 @@ function someFilterAppliedOrRemoved() {
           console.log(participantAttributes);
 
 
-          // process isAdult filter
+          // process filters
           var regStatusFilterStatus = $(".regStatusPillbox").select2("val");
           var eventDiscoveryFilterStatus = $(".eventDiscoveryPillbox").select2("val");
+
+          $(this).show();
+
+          console.log(regStatusFilterStatus);
+          console.log(eventDiscoveryFilterStatus);
+
+          // if any pillboxes filters are applied
+          if (regStatusFilterStatus.length > 0 || eventDiscoveryFilterStatus.length > 0) {
+            console.log("Some pillbox applied...");
+            $(this).hide();
+            
+            // if only eventDiscovery is applied
+            if (regStatusFilterStatus.length == 0) {
+              console.log("eventDiscovery applied...");
+              for (var i = 0; i < eventDiscoveryFilterStatus.length; i++) {
+                  if (participantAttributes.includes(eventDiscoveryFilterStatus[i])!=false) {
+                    $(this).show();
+                  } 
+              }
+            // if only regStatus is applied
+            } else if (eventDiscoveryFilterStatus == 0) {
+              console.log("regStatus applied...");
+              for (var i = 0; i < regStatusFilterStatus.length; i++) {
+                if (participantAttributes.includes(regStatusFilterStatus[i])!=false) {
+                  $(this).show();
+                } 
+              }
+            } else {
+              console.log("both applied...");
+              function common(a, b) {
+                return b.filter(Set.prototype.has.bind(new Set(a)));
+              }
+              if ( ([regStatusFilterStatus, participantAttributes].reduce(common).length != 0) && ([eventDiscoveryFilterStatus, participantAttributes].reduce(common).length != 0) ) {
+                $(this).show();
+              }
+
+            }
+          }
+
+          // process other filters
           var isAdultFilterStatus = document.getElementById("isAdult").value;
           var canSwimFilterStatus = document.getElementById("canSwim").value;
           var hasCPRCertFilterStatus = document.getElementById("hasCPRCert").value;
@@ -47,131 +87,6 @@ function someFilterAppliedOrRemoved() {
           var priorVolunteerFilterStatus = document.getElementById("priorVolunteer").value;
           var roleFamiliarityFilterStatus = document.getElementById("roleFamiliarity").value;
           var volunteerFilterStatus = document.getElementById("volunteer").value;
-
-          $(this).show();
-
-          console.log(regStatusFilterStatus);
-          console.log(eventDiscoveryFilterStatus);
-
-          // check regStatus stuff first
-          if (regStatusFilterStatus.length > 0 || eventDiscoveryFilterStatus.length > 0) {
-            $(this).hide();
-
-            // just eventDiscovery
-            if (regStatusFilterStatus.length == 0) {
-              if (eventDiscoveryFilterStatus.includes("Facebook") && participantAttributes.includes("Facebook")) {
-                $(this).show();
-              }
-              if (eventDiscoveryFilterStatus.includes("Friend") && participantAttributes.includes("Friend")) {
-                $(this).show();
-              }
-              if (eventDiscoveryFilterStatus.includes("Email") && participantAttributes.includes("Email")) {
-                $(this).show();
-              }
-            // just regStatus
-            } else if (eventDiscoveryFilterStatus == 0) {
-              if (regStatusFilterStatus.includes("Awaiting Confirmation") && participantAttributes.includes("awaitingConfirmation")) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Registered") && participantAttributes.includes("Registered")) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Not Confirmed") && participantAttributes.includes("notConfirmed")) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Not Selected") && participantAttributes.includes("notSelected")) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Standby") && participantAttributes.includes("Standby")) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Selected") && participantAttributes.includes("Selected")) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Cancelled") && participantAttributes.includes("Cancelled")) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Same Day Cancel") && participantAttributes.includes("sameDayCancel")) {
-                $(this).show();
-              }
-            // handle both pillboxes used also
-            } else {
-              // if current row has something one of each filter
-              if (regStatusFilterStatus.includes("Awaiting Confirmation") && participantAttributes.includes("awaitingConfirmation") && (eventDiscoveryFilterStatus.includes("Facebook") && participantAttributes.includes("Facebook"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Registered") && participantAttributes.includes("Registered") && (eventDiscoveryFilterStatus.includes("Facebook") && participantAttributes.includes("Facebook"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Not Confirmed") && participantAttributes.includes("notConfirmed") && (eventDiscoveryFilterStatus.includes("Facebook") && participantAttributes.includes("Facebook"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Not Selected") && participantAttributes.includes("notSelected") && (eventDiscoveryFilterStatus.includes("Facebook") && participantAttributes.includes("Facebook"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Standby") && participantAttributes.includes("Standby") && (eventDiscoveryFilterStatus.includes("Facebook") && participantAttributes.includes("Facebook"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Selected") && participantAttributes.includes("Selected") && (eventDiscoveryFilterStatus.includes("Facebook") && participantAttributes.includes("Facebook"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Cancelled") && participantAttributes.includes("Cancelled") && (eventDiscoveryFilterStatus.includes("Facebook") && participantAttributes.includes("Facebook"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Same Day Cancel") && participantAttributes.includes("sameDayCancel") && (eventDiscoveryFilterStatus.includes("Facebook") && participantAttributes.includes("Facebook"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Awaiting Confirmation") && participantAttributes.includes("awaitingConfirmation") && (eventDiscoveryFilterStatus.includes("Friend") && participantAttributes.includes("Friend"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Registered") && participantAttributes.includes("Registered") && (eventDiscoveryFilterStatus.includes("Friend") && participantAttributes.includes("Friend"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Not Confirmed") && participantAttributes.includes("notConfirmed") && (eventDiscoveryFilterStatus.includes("Friend") && participantAttributes.includes("Friend"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Not Selected") && participantAttributes.includes("notSelected") && (eventDiscoveryFilterStatus.includes("Friend") && participantAttributes.includes("Friend"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Standby") && participantAttributes.includes("Standby") && (eventDiscoveryFilterStatus.includes("Friend") && participantAttributes.includes("Friend"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Selected") && participantAttributes.includes("Selected") && (eventDiscoveryFilterStatus.includes("Friend") && participantAttributes.includes("Friend"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Cancelled") && participantAttributes.includes("Cancelled") && (eventDiscoveryFilterStatus.includes("Friend") && participantAttributes.includes("Friend"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Same Day Cancel") && participantAttributes.includes("sameDayCancel") && (eventDiscoveryFilterStatus.includes("Friend") && participantAttributes.includes("Friend"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Awaiting Confirmation") && participantAttributes.includes("awaitingConfirmation") && (eventDiscoveryFilterStatus.includes("Email") && participantAttributes.includes("Email"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Registered") && participantAttributes.includes("Registered") && (eventDiscoveryFilterStatus.includes("Email") && participantAttributes.includes("Email"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Not Confirmed") && participantAttributes.includes("notConfirmed") && (eventDiscoveryFilterStatus.includes("Email") && participantAttributes.includes("Email"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Not Selected") && participantAttributes.includes("notSelected") && (eventDiscoveryFilterStatus.includes("Email") && participantAttributes.includes("Email"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Standby") && participantAttributes.includes("Standby") && (eventDiscoveryFilterStatus.includes("Email") && participantAttributes.includes("Email"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Selected") && participantAttributes.includes("Selected") && (eventDiscoveryFilterStatus.includes("Email") && participantAttributes.includes("Email"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Cancelled") && participantAttributes.includes("Cancelled") && (eventDiscoveryFilterStatus.includes("Email") && participantAttributes.includes("Email"))) {
-                $(this).show();
-              }
-              if (regStatusFilterStatus.includes("Same Day Cancel") && participantAttributes.includes("sameDayCancel") && (eventDiscoveryFilterStatus.includes("Email") && participantAttributes.includes("Email"))) {
-                $(this).show();
-              }
-            }
-
-          }
     
           // check other filters
           if (isAdultFilterStatus == "yes" && participantAttributes.includes("child")) {
