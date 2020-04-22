@@ -134,6 +134,32 @@ function getPermissions(role){
     return permissions;
 }
 
+function getResourcePermissionsMatrix(res){
+    if(res == undefined){return '';}
+    var crud = [];
+    var perms = ['create:any', 'read:any', 'update:any', 'delete:any'];
+    var newPerms = ['Create', 'Read', 'Update', 'Delete'];
+    for(var i=0;i<perms.length;i++){
+        if(res[perms[i]]){
+            crud.push(1);
+        } else {
+            crud.push(0);
+        }
+    }
+    return crud;
+}
+
+function getPermissionsMatrix(role){
+    var permissions = [];
+    var grantInfo = JSON.parse(role.grantInfo);
+    var vals = (Object.values(grantInfo))[0];
+    var resources = ['Events', 'EventTypes', 'Participants', 'Users'];
+    for(var i=0;i<resources.length;i++){
+        permissions.push(getResourcePermissionsMatrix(vals[resources[i]]));
+    }
+    return permissions;
+}
+
 function getRoleName(role){
     return (Object.keys(JSON.parse(role.grantInfo)))[0];
 }
@@ -176,3 +202,4 @@ module.exports.eventMetadataWrapper = eventMetadataWrapper;
 module.exports.getPermissions = getPermissions;
 module.exports.getRoleName = getRoleName;
 module.exports.getGrantInfoForDb = getGrantInfoForDb;
+module.exports.getPermissionsMatrix = getPermissionsMatrix;

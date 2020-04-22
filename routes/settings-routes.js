@@ -63,7 +63,7 @@ router.post('/editUser/:id', authCheck, async (req, res) => {
   console.log(req.body);
   // id,email, fName, lName, roleID
   const u = req.body;
-  await db.updateUser(u.userID, u.email. u.fname, u.lname, u.roleID);
+  await db.editUser(req.user.userID, u.email, u.fname, u.lname, u.roleID);
   res.redirect('/settings/users');
 });
 
@@ -149,6 +149,27 @@ router.get('/roles', authCheck, async (req, res) => {
     user: req.user,
     title: 'Roles',
     roles: (await db.queryAllRoles())[0],
+    utils: utils
+  });
+});
+
+router.get('/deleteRole/:id', authCheck, async (req, res) => {
+  await db.deleteRole(req.params.id);
+  res.redirect('/settings/roles');
+});
+
+router.get('/editRole/:id', authCheck, async (req, res) => {
+  const role = (await db.queryRoleByID(req.params.id))[0][0];
+  console.log(role);
+  const permissions = utils.getPermissionsMatrix(role);
+  console.log(permissions);
+  res.render('settings/editRole', {
+    title: 'Edit Role',
+    user: req.user,
+    role: role,
+    resources: ['Events', 'Event Types', 'Participants', 'Users'],
+    permissions: ['Create', 'Read', 'Update', 'Delete'],
+    granted: permissions,
     utils: utils
   });
 });

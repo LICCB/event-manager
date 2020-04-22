@@ -607,16 +607,14 @@ async function updateUser(email, googleID, pictureURL){
   const query = 'UPDATE users ' +
                 `SET googleID='${googleID}', pictureURL='${pictureURL}' ` +
                 `WHERE email='${email}';`;
-  logger.log(query);
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
 
 async function editUser(id,email, fName, lName, roleID){
   const query = 'UPDATE users ' +
-                `SET email='${email}', fName='${fName}', lName='${lName}', roleID='${roleID}' ` +
+                `SET email='${email}', firstName='${fName}', lastName='${lName}', roleID='${roleID}' ` +
                 `WHERE userID='${id}';`;
-  logger.log(query);
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
@@ -712,7 +710,16 @@ async function queryAllRoles(){
 async function insertRole(role){
   const grantInfo = utils.getGrantInfoForDb(role);
   const query = `INSERT INTO roles (roleID, grantInfo) VALUES('${uuidv4()}', '${grantInfo}');`;
-  // console.log(query);
+  return await sequelize.query(query);
+}
+
+async function deleteRole(id){
+  return await sequelize.query(`DELETE FROM roles WHERE roleID='${id}'`);
+}
+
+async function updateRole(id, roleInfo){
+  const grantInfo = utils.getGrantInfoForDb(roleInfo);
+  const query = `UPDATE roles SET grantInfo='${grantInfo}' WHERE roleID='${id}';`;
   return await sequelize.query(query);
 }
 
@@ -760,3 +767,6 @@ module.exports.queryAllRoles = queryAllRoles;
 module.exports.queryRoleByID = queryRoleByID;
 module.exports.queryAllRoles = queryAllRoles;
 module.exports.insertRole = insertRole;
+module.exports.editUser = editUser;
+module.exports.deleteRole = deleteRole;
+module.exports.updateRole = updateRole;

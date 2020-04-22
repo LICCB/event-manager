@@ -114,7 +114,7 @@ app.get('/unauthorized', authCheck, function(req, res){
 /**
  * Renders the createEvent page with the list of possible event managers
  */
-app.get('/createEvent', authCheck, permCheck('events', 'create'), async (req, res) => {
+app.get('/createEvent', authCheck, permCheck('Events', 'create'), async (req, res) => {
   res.render('event/createEvent', {
     user: req.user,
     title: "Create Event",
@@ -134,7 +134,7 @@ app.post('/createEvent', authCheck, async (req, res) => {
 /**
  * Renders the events page with the list of all events
  */
-app.get('/events', authCheck, permCheck('events', 'read'), async (req, res) => {
+app.get('/events', authCheck, permCheck('Events', 'read'), async (req, res) => {
   logger.log(`${req.user.firstName} ${req.user.lastName} has successfully accessed the events page`);
   res.render('event/events', {
     user: req.user,
