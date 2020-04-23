@@ -13,9 +13,8 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const config = require('./config.json');
 const logger = require('./logger');
-const rbac = require('./rbac-setup');
+const rbac = require('./rbac');
 const AccessControl = require('accesscontrol');
-// var ac = "";
 logger.module = 'server';
 
 app.use(express.static(__dirname + '/public'));
@@ -37,22 +36,9 @@ app.use(cookieSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// initialize rbac
-async function setUpRBAC() {
-  const holder = await rbac.getRolesFromDb();
-  ac = holder;
-  app.set('ac', ac);
-};
-setUpRBAC();
-
-function setRBAC(newAc){
-  ac = newAc;
-}
-
-
 // setup routes
 app.use('/auth', authRoutes);
-app.use('/settings', settingsRoutes.router);
+app.use('/settings', settingsRoutes);
 
 const authCheck = (req, res, next) => {
   if(!req.user){
@@ -64,11 +50,12 @@ const authCheck = (req, res, next) => {
   }
 };
 
-function permCheck(resource, func) {
+const permCheck = function (resource, func) {
   return async function(req, res, next) {
     const grantInfo = ((await db.queryRoleByID(req.user.roleID))[0][0]).grantInfo;
     const role = (Object.keys(JSON.parse(grantInfo)))[0];
     var perm = {granted : false};
+    var ac = await rbac.getRolesFromDb();
     switch(func) {
       case 'create':
         perm = ac.can(role).createAny(resource);
@@ -432,5 +419,3 @@ app.get('/loginFailed', async (req, res) => {
 app.listen(3000, function () {
   logger.log('Listening on port 3000!', 'info');
 });
-
-module.exports.setRBAC = setRBAC;

@@ -1,7 +1,13 @@
 // initialize access control
 const db = require('./database');
 const AccessControl = require('accesscontrol');
-// var ac = null;
+
+// global permissions variables
+var resources = ['Events', 'Event Types', 'Participants', 'Users'];
+var permissions = ['Create', 'Read', 'Update', 'Delete'];
+var acPermissions = ['create:any', 'read:any', 'update:any', 'delete:any'];
+const internalPermissions = ['"create:any":["*"]','"read:any":["*"]','"update:any":["*"]','"delete:any":["*"]'];
+
 
 async function getRolesFromDb(){
     var grants = await db.queryAllRoles();
@@ -22,5 +28,8 @@ async function getRolesFromDb(){
     return ac;
 };
 
+module.exports.resources = resources;
+module.exports.permissions = permissions;
+module.exports.acPermissions = acPermissions;
 module.exports.getRolesFromDb = getRolesFromDb;
-module.exports.ac = getRolesFromDb();
+module.exports.internalPermissions = internalPermissions;

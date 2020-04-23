@@ -2,9 +2,9 @@ const router = require('express').Router();
 const db = require('../database');
 const logger = require('../logger');
 const utils = require('../utils');
-const rbac = require('../rbac-setup');
-var ac = "";
+const rbac = require('../rbac');
 const server = require('../server');
+// const authCheck = server.authCheck;
 logger.module = 'settings-routes';
 
 
@@ -60,8 +60,6 @@ router.get('/editUser/:id', authCheck, async (req, res) => {
 });
 
 router.post('/editUser/:id', authCheck, async (req, res) => {
-  console.log(req.body);
-  // id,email, fName, lName, roleID
   const u = req.body;
   await db.editUser(req.user.userID, u.email, u.fname, u.lname, u.roleID);
   res.redirect('/settings/users');
@@ -79,7 +77,6 @@ router.get('/deleteUser/:id', authCheck, async (req, res) => {
 
 router.get('/users', authCheck, async (req, res) => {
     const users = await db.queryAllUsers();
-    // console.log(users);
     res.render('settings/users', {
       user: req.user,
       title: "All Users",
@@ -132,16 +129,14 @@ router.get('/createRole', authCheck, async (req, res) => {
   res.render('settings/createRole', {
     user: req.user,
     title: 'Create Role',
-    resources: ['Events', 'Event Types', 'Participants', 'Users'],
-    permissions: ['Create', 'Read', 'Update', 'Delete']
+    resources: rbac.resources,
+    permissions: rbac.permissions
   });
 });
 
 router.post('/createRole', authCheck, async (req, res) => {
-  const newAc = await db.insertRole(req.body);
-  server.setRBAC(newAc);
-  ac = newAc;
-  res.redirect('/settings/roles')
+  await db.insertRole(req.body);
+  res.redirect('/settings/roles');
 });
 
 router.get('/roles', authCheck, async (req, res) => {
@@ -160,22 +155,21 @@ router.get('/deleteRole/:id', authCheck, async (req, res) => {
 
 router.get('/editRole/:id', authCheck, async (req, res) => {
   const role = (await db.queryRoleByID(req.params.id))[0][0];
-  console.log(role);
   const permissions = utils.getPermissionsMatrix(role);
-  console.log(permissions);
   res.render('settings/editRole', {
     title: 'Edit Role',
     user: req.user,
     role: role,
-    resources: ['Events', 'Event Types', 'Participants', 'Users'],
-    permissions: ['Create', 'Read', 'Update', 'Delete'],
+    resources: rbac.resources,
+    permissions: rbac.permissions,
     granted: permissions,
     utils: utils
   });
 });
 
-function setRBAC(newAc){
-  ac = newAc;
-}
-module.exports.router = router;
-module.exports.setRBAC = setRBAC;
+router.post('/editRole/:id', authCheck, async (req, res) => {
+  await db.updateRole(req.params.id, req.body);
+  res.redirect('/settings/roles');
+});
+
+module.exports = router;

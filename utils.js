@@ -1,4 +1,5 @@
 const logger = require('./logger');
+const rbac = require('./rbac');
 logger.module = 'utils';
 
 /**
@@ -112,8 +113,8 @@ function trimTime(time){
 function getResourcePermissions(res){
     if(res == undefined){return '';}
     var crud = '';
-    var perms = ['create:any', 'read:any', 'update:any', 'delete:any'];
-    var newPerms = ['Create', 'Read', 'Update', 'Delete'];
+    var perms = rbac.acPermissions;
+    var newPerms = rbac.permissions;
     for(var i=0;i<perms.length;i++){
         if(res[perms[i]]){
             if(crud.length > 0){crud += ', '};
@@ -127,9 +128,9 @@ function getPermissions(role){
     var permissions = [];
     var grantInfo = JSON.parse(role.grantInfo);
     var vals = (Object.values(grantInfo))[0];
-    var resources = ['Events', 'EventTypes', 'Participants', 'Users'];
+    var resources = rbac.resources;
     for(var i=0;i<resources.length;i++){
-        permissions.push(getResourcePermissions(vals[resources[i]]));
+        permissions.push(getResourcePermissions(vals[resources[i].replace(' ', '')]));
     }
     return permissions;
 }
@@ -137,8 +138,7 @@ function getPermissions(role){
 function getResourcePermissionsMatrix(res){
     if(res == undefined){return '';}
     var crud = [];
-    var perms = ['create:any', 'read:any', 'update:any', 'delete:any'];
-    var newPerms = ['Create', 'Read', 'Update', 'Delete'];
+    var perms = rbac.acPermissions;
     for(var i=0;i<perms.length;i++){
         if(res[perms[i]]){
             crud.push(1);
@@ -153,9 +153,9 @@ function getPermissionsMatrix(role){
     var permissions = [];
     var grantInfo = JSON.parse(role.grantInfo);
     var vals = (Object.values(grantInfo))[0];
-    var resources = ['Events', 'EventTypes', 'Participants', 'Users'];
+    var resources = rbac.resources;
     for(var i=0;i<resources.length;i++){
-        permissions.push(getResourcePermissionsMatrix(vals[resources[i]]));
+        permissions.push(getResourcePermissionsMatrix(vals[resources[i].replace(' ', '')]));
     }
     return permissions;
 }
@@ -165,15 +165,15 @@ function getRoleName(role){
 }
 
 function getGrantInfoForDb(role){
-    const resources = ['Events', 'EventTypes', 'Participants', 'Users'];
-    const permissions = ['Create', 'Read', 'Update', 'Delete'];
-    const internal = ['"create:any":["*"]','"read:any":["*"]','"update:any":["*"]','"delete:any":["*"]']
+    const resources = rbac.resources;
+    const permissions = rbac.permissions;
+    const internal = rbac.internalPermissions;
     var json = `{ "${role.roleName}": {`;
     var resPerm = '';
     var permCount;
     for(var j = 0; j < resources.length; j++){ 
       permCount =0;
-      json += `"${resources[j]}" : {`;
+      json += `"${resources[j].replace(' ', '')}" : {`;
       for(var i = 0; i < permissions.length; i++){ 
         resPerm = (permissions[i] + resources[j]).replace(' ', '');
         if(role[resPerm].length != 1){
