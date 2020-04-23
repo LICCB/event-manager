@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head', {title: title}) %>
+</head>
+
+<body class="bg-gray">
+  <%- include('../partials/header', {title: title, user: user}) %>
+  <div class="container content">
+    <fieldset>
+      <form action="/settings/createEventType" method="post" id="eventypeform">
+        <div class="left">
+          <label for="tname">Event Type Name:</label>
+          <input type="text" id="tname" name="typeName" placeholder="Event Type Name" required>
+          <br>
+          <input type="button" value="Add a field" class="addfield" id="addfield" />
+          <div id="newfields" form="eventform"></div>
+        </div>
+        <br>
+        <div id="newfields" form="eventtypeform"></div><br>
+        <div class="center content">
+          <button class="button" type="submit" value="Create Event Type">Submit</button>
+          <button class="button" value="Go Back" onclick="history.back()">Go Back</button>
+        </div>
+      </form>
+    </fieldset>
+    <footer class="footer">
+      <%- include('../partials/footer') %>
+    </footer>
+  </div>
+  <%- include('../partials/scripts') %>
+  <script src="/scripts/addFields.js"></script>
+</body>
+</html>

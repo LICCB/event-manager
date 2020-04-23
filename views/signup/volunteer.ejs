@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Event Signup - Volunteer Status</title>
+    <link rel="stylesheet" type="text/css" href="/css/form.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+    <div class="container">
+        <fieldset class="fieldset">
+            <form action="/signup" method="post" id="volunteer">
+                <h1>Are you signing up as a Volunteer?</h1>
+                <p>Do you wish to participate as a member of the public, or as Volunteer?  (A 'Volunteer' is anyone who wants to assist with the event in question, in some capacity, now.  You DO NOT have to have volunteered with us before to offer to do so now.)</p>
+
+                  <div class="volunteer">
+                    <label for="volunteer">Volunteer?</label>
+                    <select name="volunteer" form="volunteer" required>
+                        <option selected disabled hidden style='display: none' value=''></option>
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                    </select>
+                    <br>
+                </div>
+                <input type="submit" value="Submit Registration">
+            </form>
+        </fieldset>
+    </div>
+</body>
+</html>

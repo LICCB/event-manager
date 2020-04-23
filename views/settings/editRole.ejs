@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head', {title: title}) %>
+  <link rel="stylesheet" type="text/css" href="/css/style-dark.css">
+</head>
+
+<body>
+  <%- include('../partials/header', {title: title, user: user}) %>
+  <div class="container content">
+    <form method='POST' id='roleform'>
+        <label for="rname">Role Name:</label>
+        <input type="text" id="rname" name="roleName" value="<%= utils.getRoleName(role) %>" required>
+        <table class="table" id="rolesTable">
+            <thead>
+                <tr>
+                    <th></th>
+                    <% for(var i =0; i < permissions.length; i++){ %>
+                        <th scope="col"><%= permissions[i] %></th>
+                    <% } %>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(var i=0; i < resources.length; i++){ %>
+                    <tr>
+                        <td><%= resources[i] %></td>
+                    <% for(var j = 0; j < permissions.length; j++){ %>
+                        <td>
+                            <input type="hidden" id="<%= (permissions[j] + resources[i]).replace(' ', '') %>" name="<%= (permissions[j] + resources[i]).replace(' ', '') %>" value="0">
+                            <input type="checkbox" id="<%= (permissions[j] + resources[i]).replace(' ', '') %>" name="<%= (permissions[j] + resources[i]).replace(' ', '') %>" 
+                                <% if(granted[i][j]){ %> checked <% } %>>
+                        </td>
+                    <% } %>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <button class="button" type="submit" value="Update Role">Submit</button>
+        <button class="button" value="Go Back" onclick="history.back()">Go Back</button>
+    </form>
+    <footer class="footer">
+      <%- include('../partials/footer') %>
+    </footer>
+  </div>
+  <br>
+  <%- include('../partials/scripts') %>
+  <script src="/scripts/tableSorter.js"></script>
+  <script src="/scripts/jQueryDataTables.js"></script>
+</body>
+
+
+</body>
+</html>

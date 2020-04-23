@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head', {title: title}) %>
+  <link rel="stylesheet" type="text/css" href="/css/style-dark.css">
+</head>
+
+<body>
+  <%- include('../partials/header', {title: title, user: user}) %>
+  <div class="container content">
+    <button class="button-left"><a href="/settings/createRole">Create New Role</a></button>
+    <table class="table" id="rolesTable">
+      <thead>
+        <% var keys = Object.keys(roles[0]) %>
+        <tr>
+          <th></th>
+            <th scope="col">Name</th>
+            <th scope="col">Events</th>
+            <th scope="col">Event Types</th>
+            <th scope="col">Participants</th>
+            <th scope="col">Users</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(i = 0; i < roles.length; i++){ %>
+        <tr <%= `class=${roles[i].roleID}` %>>
+          <td>
+            <a href=<%= "editRole/" + roles[i].roleID %>>Edit</a> <br>
+            <a href=<%= "deleteRole/" + roles[i].roleID %>>Delete</a>
+          </td>
+          <td><%= utils.getRoleName(roles[i]) %></td>
+          <% var permList = utils.getPermissions(roles[i]) %>
+          <% for(var j=0; j < permList.length; j++){ %>
+            <td> <%=  permList[j] %> </td>
+          <% } %>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <footer class="footer">
+      <%- include('../partials/footer') %>
+    </footer>
+  </div>
+  <br>
+  <%- include('../partials/scripts') %>
+  <script src="/scripts/tableSorter.js"></script>
+
+  <script src="/scripts/jQueryDataTables.js"></script>
+</body>
+
+
+</body>
+</html>

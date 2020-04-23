@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head', {title: title}) %>
+</head>
+
+<body>
+  <%- include('../partials/header', {title: title, user: user}) %>
+  <div class="container content">
+    <button class="button-left"><a href="/settings/addUser">Add New User</a></button>
+    <table class="table" id="usersTable">
+      <thead>
+        <tr>
+          <th></th>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(i=0; i < users.length; i++){ %>
+        <tr>
+            <td>
+              <a href="<%= `/settings/editUser/${users[i].userID}` %>">Edit | </a>
+          <% if(users[i].userEnabled){ %>
+              <a href="<%= `/settings/disableUser/${users[i].userID}` %>" >Disable</a>
+          <% } else { %>
+              <a href="<%= `/settings/enableUser/${users[i].userID}` %>">Enable</a>
+          <% } %>
+          <% if(!(users[i].isManager || users[i].isCreator)) { %>
+              | <a href="<%= `/settings/deleteUser/${users[i].userID}` %>">Delete</a></td>
+          <% } %> 
+            <td> <%=  `${users[i].firstName} ${users[i].lastName}` %> </td>
+            <td> <%=  users[i].email %> </td>
+            <td> <%= utils.getRoleName(users[i]) %> </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <footer class="footer">
+      <%- include('../partials/footer') %>
+    </footer>
+  </div>
+  <br>
+  <%- include('../partials/scripts') %>
+  <script src="/scripts/filterusers.js"></script>
+  <script src="/scripts/tableSorter.js"></script>
+
+  <script src="/scripts/jQueryDataTables.js"></script>
+</body>
+
+
+</body>
+</html>

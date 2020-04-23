@@ -3,10 +3,11 @@
 
 <head>
     <%- include('../partials/head', {title: title}) %>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 
 <body class="bg-gray">
-    <%- include('../partials/header', {title: title}) %>
+    <%- include('../partials/header', {title: title, user: user}) %>
     <% if(event !== null && users !== null){%>
     <div class="content container">
         <fieldset>
@@ -18,9 +19,15 @@
                     <label for="man">Event Manager:</label>
                     <select name="managerID" form="eventform">
                         <% for(i = 0; i < users.length; i++) { %>
-                        <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %>
+                        <option value=<%= users[i].userID %> <% if(event.managerID == users[i].userID){ %> <%= "selected" %> <% } %>> <%= users[i].firstName + " " + users[i].lastName %>
                         </option>
                         <% } %>
+                    </select>
+                    <label for="type">Event Type:</label>
+                    <select name="typeID" form="eventform">
+                      <% for(i = 0; i < eventTypes.length; i++) { %>
+                      <option value=<%= eventTypes[i].typeID %> <% if(event.eventType == eventTypes[i].typeID){ %> <%= "selected" %> <% } %>> <%= eventTypes[i].typeName %> </option>
+                      <% } %>
                     </select>
                     <br>
                     <label for="cap">Capacity:</label>
@@ -71,8 +78,6 @@
                                     Checked</option>
                                 <option value="textbox" <% if(vals[i] == "textbox"){ %> <%= "selected" %> <% } %>>Text
                                 </option>
-                                <option value="textarea" <% if(vals[i] == "textarea"){ %> <%= "selected" %> <% } %>>
-                                    Paragraph</option>
                             </select>
                             <input type="button" onclick="remove(<%= i %>)" class="remove" value="X">
                         </div>
@@ -92,13 +97,13 @@
                 </div>
             </form>
         </fieldset>
-    </div>
     <% } %>
-    <footer>
+  <footer class="footer">
         <%- include('../partials/footer') %>
-    </footer>
-    <%- include('../partials/scripts') %>
-    <script src="/scripts/addFields.js" metadata="<%= event.eventMetadata %>"></script>
+  </footer>
+  </div>
+  <%- include('../partials/scripts') %>
+  <script src="/scripts/addFields.js" metadata="<%= event.eventMetadata %>"></script>
 </body>
 
 </html>

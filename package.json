@@ -9,17 +9,21 @@
   "author": "LICCB",
   "license": "ISC",
   "dependencies": {
+    "accesscontrol": "^2.2.1",
     "body-parser": "^1.19.0",
-    "cookie-parser": "^1.4.4",
+    "browser-cookies": "^1.2.0",
     "cookie-session": "^1.4.0",
     "dc-tableview": "^2.0.1",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "jquery": "^3.4.1",
+    "jsdom": "^16.2.1",
     "json2csv": "^4.5.4",
     "mariadb": "^2.2.0",
     "nodemailer": "^6.4.2",
-    "jsdom": "^16.1.0",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
+    "sequelize": "^5.21.6",
     "uuid": "^3.4.0"
   }
 }

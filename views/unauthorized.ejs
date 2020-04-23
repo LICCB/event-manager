@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head', {title: "Home"}) %>
+  </head>
+  <body class="bg-gray">
+    <%- include('partials/header', {title: "Home", user: user}) %>
+    <div class="container content">
+        <p>Sorry, you do not have the correct permissions to access this page or feature. <p>
+        <p>If you believe this is a mistake, please contact your system administrator.</p>
+        <button class="button" value="Go Back" onclick="history.back()">Go Back</button>
+      <footer class="footer">
+        <%- include('partials/footer') %>
+      </footer>
+    </div>
+
+    <%- include('partials/scripts') %>
+  </body>
+</html>

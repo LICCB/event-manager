@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head', {title: title}) %>
+</head>
+
+<body class="bg-gray">
+    <%- include('../partials/header', {title: title, user: user}) %>
+    <div class="content container">
+        <br><br><br><br>
+        <fieldset>
+            <form action=<%= `/settings/editEventType/${type.typeID}` %> method="post" id="eventtypeform">
+                <div class="left">
+                    <label for="tname">Event Type Name:</label>
+                    <input type="text" id="tname" name="typeName" value="<%= type.typeName %>" required>
+                    <br>
+                    <input type="button" value="Add a field" class="addfield" id="addfield" />
+                    <div id="newfields" form="eventtypeform">
+                        <% if(type.typeMetadata != null) { %>
+                        <% var md = JSON.parse(type.typeMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
+                        <% for(i=0; i < keys.length; i++){ %>
+                        <div class="fieldwrapper<%= i %>">
+                            <label for="field<%= -1-i %>">Field:</label>
+                            <input type="text" id="field<%= -1-i %>" name="field<%= -1-i %>" class="fieldname"
+                                form="eventtypeform" value="<%= keys[i] %>">
+                            <select class="fieldtype" name="type<%= -1-i %>" form="eventtypeform">
+                                <option value="checkbox" <% if(vals[i] == "checkbox"){ %> <%= "selected" %> <% } %>>
+                                    Checked</option>
+                                <option value="textbox" <% if(vals[i] == "textbox"){ %> <%= "selected" %> <% } %>>Text
+                                </option>
+                            </select>
+                            <input type="button" onclick="remove(<%= i %>)" class="remove" value="X">
+                        </div>
+                        <script>
+                            var remove = function (i) {
+                                $(`.fieldwrapper${i}`).remove()
+                            };
+                        </script>
+                        <br>
+                        <% } %>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="center content">
+                    <button class="button" type="submit" value="Update Event Type">Update Event</button>
+                    <button class="button" value="Go Back" onclick="history.back()">Go Back</button>
+                </div>
+            </form>
+        </fieldset>
+    <footer>
+        <%- include('../partials/footer') %>
+    </footer>
+    </div>
+    <%- include('../partials/scripts') %>
+    <script src="/scripts/addFields.js" metadata="<%= type.typeMetadata %>"></script>
+</body>
+
+</html>
