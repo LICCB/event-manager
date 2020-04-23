@@ -1,7 +1,7 @@
 INSERT INTO LICCB.roles (roleID, grantInfo)
     VALUES
-    ('7d4666ef-2d92-4f8a-ae4f-6b61d568031b', '{"admin" :{"events": {"create:any": ["*"], "read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"eventTypes" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"participants": {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"users" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]}}}'),
-    ('7d4666ef-2d92-4f8a-ae4f-6b61d568045b', '{"read_only" :{"events": {"read:any": ["*"]},"eventTypes" : {"read:any": ["*"]},"participants": {"read:any": ["*"]},"users" : {"read:any": ["*"]}}}');
+    ('7d4666ef-2d92-4f8a-ae4f-6b61d568031b', '{"Admin" :{"Events": {"create:any": ["*"], "read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"EventTypes" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"Participants": {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"Users" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]}}}'),
+    ('7d4666ef-2d92-4f8a-ae4f-6b61d568045b', '{"Read Only" :{"Events": {"read:any": ["*"]},"EventTypes" : {"read:any": ["*"]},"Participants": {"read:any": ["*"]},"Users" : {"read:any": ["*"]}}}');
 
 INSERT INTO LICCB.users (userID, googleID, pictureURL, email, firstName, lastName, userEnabled, roleID)
     VALUES

@@ -34,7 +34,10 @@ async function queryAllCols(tableName) {
 }
 
 async function queryAllUsers() {
-  let users = await sequelize.query("SELECT * FROM users", {type: sequelize.QueryTypes.SELECT});
+  const query = 'SELECT * ' +
+                'FROM users JOIN roles ' + 
+                'ON users.roleID = roles.roleID;';
+  let users = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return users;
 }
 
@@ -604,7 +607,14 @@ async function updateUser(email, googleID, pictureURL){
   const query = 'UPDATE users ' +
                 `SET googleID='${googleID}', pictureURL='${pictureURL}' ` +
                 `WHERE email='${email}';`;
-  logger.log(query);
+  let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
+  return upd;
+}
+
+async function editUser(id,email, fName, lName, roleID){
+  const query = 'UPDATE users ' +
+                `SET email='${email}', firstName='${fName}', lastName='${lName}', roleID='${roleID}' ` +
+                `WHERE userID='${id}';`;
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
@@ -693,7 +703,26 @@ async function queryRoleByID(id){
   return role;
 }
 
-module.exports.queryAllUsers = queryAllUsers;
+async function queryAllRoles(){
+  return await sequelize.query('SELECT * FROM roles;');
+}
+
+async function insertRole(role){
+  const grantInfo = utils.getGrantInfoForDb(role);
+  const query = `INSERT INTO roles (roleID, grantInfo) VALUES('${uuidv4()}', '${grantInfo}');`;
+  return await sequelize.query(query);
+}
+
+async function deleteRole(id){
+  return await sequelize.query(`DELETE FROM roles WHERE roleID='${id}'`);
+}
+
+async function updateRole(id, roleInfo){
+  const grantInfo = utils.getGrantInfoForDb(roleInfo);
+  const query = `UPDATE roles SET grantInfo='${grantInfo}' WHERE roleID='${id}';`;
+  return await sequelize.query(query);
+}
+
 module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
 module.exports.queryEventByID = queryEventByID;
@@ -736,3 +765,8 @@ module.exports.updateEventType = updateEventType;
 module.exports.queryEventTypeMetadata = queryEventTypeMetadata;
 module.exports.queryAllRoles = queryAllRoles;
 module.exports.queryRoleByID = queryRoleByID;
+module.exports.queryAllRoles = queryAllRoles;
+module.exports.insertRole = insertRole;
+module.exports.editUser = editUser;
+module.exports.deleteRole = deleteRole;
+module.exports.updateRole = updateRole;
