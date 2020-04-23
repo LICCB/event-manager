@@ -319,7 +319,13 @@ async function insertParty(signup, eventID, volunteerStatus) {
   var partsize = 0;
   const event = (await queryEventByID(eventID))[0];
   var eventTypeFields = (await queryEventTypeMetadata(eventID))[0].typeMetadata;
-  const metadataFields = Object.keys(JSON.parse(event.eventMetadata)).length + Object.keys(JSON.parse(eventTypeFields)).length;
+  var metadataFields;
+  if(event.eventMetadata != '{}' && event.eventMetadata != null) {
+    metadataFields += Object.keys(JSON.parse(event.eventMetadata)).length;
+  }
+  if(eventTypeFields != '{}' && eventTypeFields != null) {
+    metadataFields += Object.keys(JSON.parse(eventTypeFields)).length;
+  }
 
   signupkeys = signupkeys - metadataFields;
   if(volunteerStatus == 1) {
@@ -330,8 +336,8 @@ async function insertParty(signup, eventID, volunteerStatus) {
     partsize = (signupkeys - 15) / 11;
 
   }
-  console.log(`partysize: ${partsize + 1}`);
-  const queryStmt = "SELECT participantID FROM participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND NOT IN (SELECT participantID FROM participants WHERE eventID = ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?)";
+  logger.log(`Party size: ${partsize + 1}`, 'info');
+  const queryStmt = "SELECT participantID FROM participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND participantID NOT IN (SELECT participantID FROM participants WHERE eventID = ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?));";
   const query = await sequelize.query(queryStmt,
   {
     replacements: [signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone, eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone],
@@ -342,12 +348,20 @@ async function insertParty(signup, eventID, volunteerStatus) {
   if(query[0] != undefined) {
     registrantID = query[0].participantID;
   }
-  var eventSpecificMetadata = utils.eventMetadataWrapper(signup, event.eventMetadata);
-  var eventTypeMetadata = utils.eventMetadataWrapper(signup, eventTypeFields);
-  eventTypeFields = JSON.parse(eventSpecificMetadata);
-  eventTypeFields = Object.assign({}, eventTypeFields);
-  eventTypeMetadata = JSON.parse(eventTypeMetadata);
-  eventTypeMetadata = Object.assign({}, eventTypeMetadata);
+  var eventSpecificMetadata;
+  if(event.eventMetadata != '{}' && event.eventMetadata != null) {
+    eventSpecificMetadata = utils.eventMetadataWrapper(signup, event.eventMetadata);
+    eventTypeFields = JSON.parse(eventSpecificMetadata);
+  }
+  var eventTypeMetadata;
+  if(eventTypeFields != '{}' && eventTypeFields != null){
+    eventTypeMetadata = utils.eventMetadataWrapper(signup, eventTypeFields);
+    eventTypeFields = Object.assign({}, eventTypeFields);
+    eventTypeMetadata = JSON.parse(eventTypeMetadata);
+    eventTypeMetadata = Object.assign({}, eventTypeMetadata);
+  }
+  console.log()
+
   metadata = Object.assign(eventTypeFields, eventTypeMetadata);
   var insertStmt = "INSERT INTO participants " +
     "(participantID, partyID, eventID, firstName, " +
@@ -395,7 +409,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
   logger.log(`Registrant:${registrantID} signed up for event:${eventID} successfully`, 'info');
   
   for(i = 1; i <= partsize; i++) {
-    const queryStmt = "SELECT participantID FROM participants WHERE (firstName = ? AND lastName = ?) OR phone = ? OR email = ? AND NOT IN (SELECT participantID FROM participants WHERE eventID = ? AND ((firstName = ? AND lastName = ?) OR phone = ? OR email = ?)";
+    const queryStmt = "SELECT participantID FROM participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND participantID NOT IN (SELECT participantID FROM participants WHERE eventID = ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?));";
     const query = await sequelize.query(queryStmt,
     {
       replacements: [signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`],],

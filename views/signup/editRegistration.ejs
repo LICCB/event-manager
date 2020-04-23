@@ -196,10 +196,10 @@
 
                 <div id="newfields" form="eventSignupForm">
                     <% var metadata = JSON.parse(participants[0].metadata)%>
-                    <% if(event.eventMetadata != '{}' || eventType.typeMetadata != '{}') { %> 
+                    <% if((event.eventMetadata != '{}' && event.eventMetadata != null) || (eventType.typeMetadata != '{}' && eventType.typeMetadata != null)) { %> 
                         <h2>Additional Questions</h2>
                     <% } %>
-                    <% if(event.eventMetadata != '{}') { %>
+                    <% if(event.eventMetadata != '{}' && event.eventMetadata != null) { %>
                         <% var md = JSON.parse(event.eventMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
                         <% for(i=0; i < keys.length; i++){ %>
                             <label for="<%= keys[i] %>"> <%= keys[i] %></label>
@@ -207,11 +207,11 @@
                             <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true" <%if(metadata[keys[i]] == "true") { %> <%="checked"%> <%}%> > <br>
                             <% } %>
                             <% if(vals[i] == "textbox") { %>
-                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = <%=metadata[keys[i]]%> required> <br>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = <%=metadata[keys[i]]%>> <br>
                             <% } %>
                         <% } %>
                     <% } %>
-                    <% if(eventType.typeMetadata != '{}') { %>
+                    <% if(eventType.typeMetadata != '{}' && eventType.typeMetadata != null) { %>
                         <% var md = JSON.parse(eventType.typeMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
                         <% for(i=0; i < keys.length; i++){ %>
                             <br>
@@ -220,7 +220,7 @@
                                 <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true" <%if(metadata[keys[i]] == "true") { %> <%="checked"%> <%}%> > <br>
                             <% } %>
                             <% if(vals[i] == "textbox") { %>
-                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = <%=metadata[keys[i]]%> required> <br>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = <%=metadata[keys[i]]%>> <br>
                             <% } %>
                         <% } %>
                     <% } %>
