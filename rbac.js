@@ -2,6 +2,13 @@
 const db = require('./database');
 const AccessControl = require('accesscontrol');
 
+// global permissions variables
+var resources = ['Events', 'Event Types', 'Participants', 'Users'];
+var permissions = ['Create', 'Read', 'Update', 'Delete'];
+var acPermissions = ['create:any', 'read:any', 'update:any', 'delete:any'];
+const internalPermissions = ['"create:any":["*"]','"read:any":["*"]','"update:any":["*"]','"delete:any":["*"]'];
+
+
 async function getRolesFromDb(){
     var grants = await db.queryAllRoles();
     var roles = "{";
@@ -10,7 +17,6 @@ async function getRolesFromDb(){
     for(i = 0; i < numRoles; i++){
         role = grants[0][i].grantInfo;
         role = role.slice(1, role.length-1);
-        console.log(role);
         roles += role;
         if(i < numRoles-1){
             roles += ',';
@@ -18,12 +24,11 @@ async function getRolesFromDb(){
     }
     roles += "}";
     const ac = new AccessControl(JSON.parse(roles));
-    // console.log(ac.getGrants());
-    const permission = ac.can('Admin').readAny('events');
-    // console.log(permission);
-    // console.log(permission.granted);
     return ac;
-    // return new AccessControl(JSON.parse(roles));
 };
 
+module.exports.resources = resources;
+module.exports.permissions = permissions;
+module.exports.acPermissions = acPermissions;
 module.exports.getRolesFromDb = getRolesFromDb;
+module.exports.internalPermissions = internalPermissions;

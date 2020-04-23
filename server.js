@@ -13,9 +13,8 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const config = require('./config.json');
 const logger = require('./logger');
-const rbacSetup = require('./rbac-setup');
+const rbac = require('./rbac');
 const AccessControl = require('accesscontrol');
-var ac = "";
 logger.module = 'server';
 
 app.use(express.static(__dirname + '/public'));
@@ -37,14 +36,6 @@ app.use(cookieSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// initialize rbac
-async function setUpRBAC() {
-  const holder = await rbacSetup.getRolesFromDb();
-  ac = holder;
-};
-setUpRBAC();
-
-
 // setup routes
 app.use('/auth', authRoutes);
 app.use('/settings', settingsRoutes);
@@ -59,11 +50,12 @@ const authCheck = (req, res, next) => {
   }
 };
 
-function permCheck(resource, func) {
+const permCheck = function (resource, func) {
   return async function(req, res, next) {
     const grantInfo = ((await db.queryRoleByID(req.user.roleID))[0][0]).grantInfo;
     const role = (Object.keys(JSON.parse(grantInfo)))[0];
     var perm = {granted : false};
+    var ac = await rbac.getRolesFromDb();
     switch(func) {
       case 'create':
         perm = ac.can(role).createAny(resource);
@@ -109,7 +101,7 @@ app.get('/unauthorized', authCheck, function(req, res){
 /**
  * Renders the createEvent page with the list of possible event managers
  */
-app.get('/createEvent', authCheck, permCheck('events', 'create'), async (req, res) => {
+app.get('/createEvent', authCheck, permCheck('Events', 'create'), async (req, res) => {
   res.render('event/createEvent', {
     user: req.user,
     title: "Create Event",
@@ -129,8 +121,7 @@ app.post('/createEvent', authCheck, async (req, res) => {
 /**
  * Renders the events page with the list of all events
  */
-app.get('/events', authCheck, permCheck('events', 'read'), async (req, res) => {
-  logger.log(`${req.user.firstName} ${req.user.lastName} has successfully accessed the events page`);
+app.get('/events', authCheck, permCheck('Events', 'read'), async (req, res) => {
   res.render('event/events', {
     user: req.user,
     title: "Events",
