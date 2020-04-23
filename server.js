@@ -254,7 +254,7 @@ app.get('/lottery/random/:id', async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
   test2 = (await db.queryParticipantsNotReady(req.params.id));
   test3 = (await db.queryEventStatusByID(req.params.id));
-  console.log(Object.values(test3[0]));
+  // console.log(Object.values(test3[0]));
   if (test[0] == null || test[0] == undefined || test2[0] == null || test2[0] == undefined || Object.values(test3[0]) == 'Selection Finished') {
     res.redirect('/events');
   } else {
@@ -262,7 +262,7 @@ app.get('/lottery/random/:id', async (req, res) => {
     getParticipants = await db.runSelectionRandom(req.params.id);
     if (getParticipants.length == 0) {
       res.redirect('/events');
-      console.log("No Participants are eligible for selection");
+      // console.log("No Participants are eligible for selection");
     } else {
       res.render('lottery/lotteryEventLocked', {title: "Run Strategy",participants: getParticipants, capacity: Object.values(capacity[0]), event: (await db.queryEventByID(req.params.id))[0]})
     }
@@ -276,7 +276,7 @@ app.post('/updateSelectedParticipantsStrategy/:id', async (req, res) => {
   for (let i=0; i<selectedParticipants.length; i++) {
     let output = await db.changeParticipantStatus(selectedParticipants[i].participantID, req.params.id, 'Selected');
     if (output != "success") {
-      console.log(`failed to select participantID: ${selectedParticipants[i].participantID} in event: ${eventID}`)
+      // console.log(`failed to select participantID: ${selectedParticipants[i].participantID} in event: ${eventID}`)
     }
   }
   res.redirect('/events');
@@ -300,13 +300,13 @@ app.post('/updateSelectedParticipants/:id', async (req, res) => {
       }
     }
   }
-  console.log(individuallySelectedUsers)
+  // console.log(individuallySelectedUsers)
     // update inidividually selected users
 
   for (let i=0; i<individuallySelectedUsers.length; i++) {
     let output = await db.changeParticipantStatus(individuallySelectedUsers[i], req.params.id, 'Selected');
     if (output != "success") {
-      console.log(`failed to select participantID: ${individuallySelectedUsers[i]} in event: ${eventID}`)
+      // console.log(`failed to select participantID: ${individuallySelectedUsers[i]} in event: ${eventID}`)
     }
   }  
 

@@ -29,12 +29,12 @@ function someFilterAppliedOrRemoved() {
     // var data = [];
     $(this).find('tr').each(function (rowIndex, r) {
       item = ($(this).attr('class'));
-      // console.log(item);
+      // //console.log(item);
         if (item == undefined || item.length == 0) {
-          console.log("item is undefined");
+          // //console.log("item is undefined");
         } else {
           var participantAttributes = String(item).split(" ");
-          console.log(participantAttributes);
+          // //console.log(participantAttributes);
 
 
           // process filters
@@ -43,17 +43,17 @@ function someFilterAppliedOrRemoved() {
 
           $(this).show();
 
-          console.log(regStatusFilterStatus);
-          console.log(eventDiscoveryFilterStatus);
+          //console.log(regStatusFilterStatus);
+          //console.log(eventDiscoveryFilterStatus);
 
           // if any pillboxes filters are applied
           if (regStatusFilterStatus.length > 0 || eventDiscoveryFilterStatus.length > 0) {
-            console.log("Some pillbox applied...");
+            //console.log("Some pillbox applied...");
             $(this).hide();
             
             // if only eventDiscovery is applied
             if (regStatusFilterStatus.length == 0) {
-              console.log("eventDiscovery applied...");
+              //console.log("eventDiscovery applied...");
               for (var i = 0; i < eventDiscoveryFilterStatus.length; i++) {
                   if (participantAttributes.includes(eventDiscoveryFilterStatus[i])!=false) {
                     $(this).show();
@@ -61,14 +61,14 @@ function someFilterAppliedOrRemoved() {
               }
             // if only regStatus is applied
             } else if (eventDiscoveryFilterStatus == 0) {
-              console.log("regStatus applied...");
+              //console.log("regStatus applied...");
               for (var i = 0; i < regStatusFilterStatus.length; i++) {
                 if (participantAttributes.includes(regStatusFilterStatus[i])!=false) {
                   $(this).show();
                 } 
               }
             } else {
-              console.log("both applied...");
+              //console.log("both applied...");
               function common(a, b) {
                 return b.filter(Set.prototype.has.bind(new Set(a)));
               }
@@ -126,14 +126,14 @@ function someFilterAppliedOrRemoved() {
 
  
 
-          // console.log(regStatusFilterStatus);
-          // console.log(isAdultFilterStatus);
-          // console.log(canSwimFilterStatus);
-          // console.log(hasCPRCertFilterStatus);
-          // console.log(boatExperienceFilterStatus);
-          // console.log(priorVolunteerFilterStatus);
-          // console.log(roleFamiliarityFilterStatus);
-          // console.log(volunteerFilterStatus);
+          // //console.log(regStatusFilterStatus);
+          // //console.log(isAdultFilterStatus);
+          // //console.log(canSwimFilterStatus);
+          // //console.log(hasCPRCertFilterStatus);
+          // //console.log(boatExperienceFilterStatus);
+          // //console.log(priorVolunteerFilterStatus);
+          // //console.log(roleFamiliarityFilterStatus);
+          // //console.log(volunteerFilterStatus);
         }
     });
   });
@@ -147,8 +147,8 @@ function someFilterAppliedOrRemoved() {
 //   var rowCount = $('tr:visible').length-1;
 //   var x = $(".regStatusPillbox").select2("val");
   
-//   // console.log("current: " + x);
-//   // console.log("previous: " + statusArray);
+//   // //console.log("current: " + x);
+//   // //console.log("previous: " + statusArray);
 //   // reapply outsidefilter
 //   if (code.includes("1") && x.length < statusArray.length) {
 //     $('.awaitingConfirmation').show();
@@ -183,7 +183,7 @@ function someFilterAppliedOrRemoved() {
 //   } else {
 
 //     if (x == undefined || x.length == 0) {
-//       console.log("no values selected");
+//       //console.log("no values selected");
 //       $('.awaitingConfirmation').show();
 //       $('.Registered').show();
 //       $('.notConfirmed').show();
@@ -346,9 +346,9 @@ function someFilterAppliedOrRemoved() {
 //       code = code.charAt(0) + code.charAt(1) + code.charAt(2) + code.charAt(3) + code.charAt(4) + code.charAt(5) +  code.charAt(6) + "0";
 //       break;
 //     default:
-//       console.log(checkbox)  
+//       //console.log(checkbox)  
 //   }
-//   // console.log(code);  
+//   // //console.log(code);  
 
 //   // handle all filters 
 //   if (code.charAt(1) == "0") {
