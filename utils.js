@@ -90,6 +90,7 @@ function eventMetadataWrapper(signup, metadata) {
         }
     }
     md += "}";
+    logger.log("Utils: metadata:" + md);
     return JSON.stringify(JSON.parse(md));
 }
 
@@ -108,6 +109,12 @@ function trimTime(time){
     var timeStr = time.toString();
     const stop = timeStr.indexOf(":00 ");
     return timeStr.slice(0, stop);
+}
+
+function trimTimeAMPM(time){
+    var timeStr = time.toString();
+    const stop = timeStr.indexOf(":00 ");
+    return timeStr.slice(0, stop) + " " + timeStr.slice(timeStr.length-2);
 }
 
 function getResourcePermissions(res){
@@ -203,3 +210,4 @@ module.exports.getPermissions = getPermissions;
 module.exports.getRoleName = getRoleName;
 module.exports.getGrantInfoForDb = getGrantInfoForDb;
 module.exports.getPermissionsMatrix = getPermissionsMatrix;
+module.exports.trimTimeAMPM = trimTimeAMPM;

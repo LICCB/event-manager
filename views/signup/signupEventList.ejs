@@ -7,13 +7,13 @@
 
 <body>
   <div class="container signup">
-    <h1>Events</h1>
+    <h1>List of Events</h1>
     <table class="table" id="eventsTable">
       <thead>
         <tr>
             <th scope="col">Name</th>
-            <th scope="col">Start Time</th>
-            <th scope="col">End Time</th>
+            <th scope="col">Event Start</th>
+            <th scope="col">Event End</th>
             <th scope="col">Event Description</th>
             <th></th>
         </tr>
@@ -22,10 +22,9 @@
         <% for(i = 0; i < events.length; i++){ %>
         <tr>
             <td> <%=  events[i].eventName %> </td>
-            <td> <%=  events[i].startTime %> </td>
-            <td> <%=  events[i].endTime %> </td>
+            <td> <%=  events[i].startTime.toLocaleDateString() + " " + utils.trimTimeAMPM(events[i].startTime.toLocaleTimeString()) %> </td>
+            <td> <%=  events[i].endTime.toLocaleDateString() + " " + utils.trimTimeAMPM(events[i].endTime.toLocaleTimeString()) %> </td>
             <td> <%=  events[i].eventDesc %> </td>
-
             <td>
                 <a class="tb-button" href=<%= "/eventSignup/" + events[i].eventID + "/" + volunteerStatus %>>Sign Up</a>
 
