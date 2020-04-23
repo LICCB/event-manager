@@ -3,11 +3,12 @@
 
 <head>
   <%- include('../partials/head', {title: title}) %>
+  <link rel="stylesheet" type="text/css" href="/css/style-dark.css">
 </head>
 
-<body class="bg-gray">
-  <%- include('../partials/header', {title: title}) %>
-  <div class="content">
+<body>
+  <%- include('../partials/header', {title: title, user: user}) %>
+  <div class="container content">
     <button class="button-left"><a href="createEvent">Create New Event</a></button>
     <!-- <label for="archived">Archived</label>
     <input type="checkbox" id="archived" checked=checked>
@@ -30,16 +31,21 @@
         <% for(i = 0; i < events.length; i++){ %>
         <tr <%= `class=${events[i].eventStatus}` %>>
           <td>
-            <a href=<%= "event/" + events[i].eventID %>>Detail</a> |
-            <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> |
-            <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> |
-            <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> |
-            <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> |
-            <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a> |
-            <a href=<%= "lottery/" + events[i].eventID %>>Manual Selection</a> |
-            <a href=<%= "lottery/random/" + events[i].eventID %>>Run Strategy</a> |
-            <!-- <a href=<%= "lottery/selectAll/" + events[i].eventID %>>Select All</a> | -->
+            <button class="tb-button" data-toggle="collapse" data-target="#options<%=events[i].eventID%>">Options</button>
+            <br>
+
+            <p id="options<%=events[i].eventID%>" class="collapse">
+            <a href=<%="event/"+events[i].eventID%>>Detail</a> <br>
+            <a href=<%= "editEvent/" + events[i].eventID %>>Edit</a> <br>
+            <a href=<%= "publishEvent/" + events[i].eventID %>>Publish</a> <br>
+            <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> <br>
+            <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> <br>
+            <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a>
+            <a href=<%= "lottery/" + events[i].eventID %>>Manual Selection</a> 
+            <a href=<%= "lottery/random/" + events[i].eventID %>>Run Strategy</a> 
             <a href=<%= "lottery/resetSelection/" + events[i].eventID %>>Reset Selection</a>
+          </p>
+          
           </td>
             <td> <%=  events[i].eventName %> </td>
             <td> <%=  events[i].Manager %> </td>
@@ -59,7 +65,10 @@
   <%- include('../partials/scripts') %>
   <script src="/scripts/filterEvents.js"></script>
   <script src="/scripts/tableSorter.js"></script>
+
   <script src="/scripts/jQueryDataTables.js"></script>
 </body>
 
+
+</body>
 </html>

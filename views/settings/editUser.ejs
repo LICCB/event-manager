@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <%- include('../partials/head', {title: title}) %>
+</head>
+<body>
+  <%- include('../partials/header', {title: title, user: user}) %>
+  <div class="container content">
+    <form action="/settings/editUser/<%= user.userID %>" method="POST">
+        <label for="uEmail">User Email: </label>
+        <input type="text" id="uEmail" name="email" value="<%= user.email %>">
+        <br>
+        <label for="fname">First Name: </label>
+        <input type="text" id="fname" name="fname" value="<%= user.firstName %>">
+        <br>
+        <label for="lname">Last Name: </label>
+        <input type="text" id="lname" name="lname" value="<%= user.lastName %>">
+        <br>
+        <label for="roleID">Role: </label>
+        <select name="roleID" id="roleID">
+          <% for(i = 0; i < roles.length; i++) { %>
+            <option value=<%= roles[i].roleID %> <% if(roles[i].roleID == user.roleID){ %> <%= "selected" %> <% } %>> <%= utils.getRoleName(roles[i]) %> </option>
+          <% } %>
+        </select>
+        <br>
+        <button class="button" type="submit" value="Create Event">Submit</button>
+    </form>
+    <br>
+    <footer class="footer">
+      <%- include('../partials/footer') %>
+    </footer>
+  </div>
+  <br>
+  <%- include('../partials/scripts') %>
+</body>
+</html>

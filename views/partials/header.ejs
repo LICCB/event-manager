@@ -4,14 +4,18 @@
 </h1>
 <div class="wrapper">
 	<nav id="sidebar">
+		<% if(user) { %>
+			<img src="<%= user.pictureURL %>" class="img-thumbnail rounded-circle">
+			<p> <%= `${user.firstName} ${user.lastName}` %> </p>
+		<% } %>
         <ul class="list-unstyled components">
 			<li
-				<% if(title == "Events" || title == "Create Event" || title == "Edit Event") { %>
+				<% if(title == "Events" || title == "Create Event" || title == "Edit Event" || title == "Event Detail") { %>
 					class="active"
 				<% } %>
 			><a href="/events">Events</a></li>
 			<li
-				<% if(title == "All Participants" || title == "CheckIn Participants" || title == "Event Participants") { %>
+				<% if(title == "All Participants" || title == "CheckIn Participants" || title == "Event Participants" || title == "event.eventName + Check In") { %>
 					class="active"
 				<% } %>
 			><a href="/participants">Participants</a></li>
@@ -32,6 +36,9 @@
 					class="active"
 				<% } %>
 			><a href="/export">Export</a></li>
+		<% if(user){ %>
+			<li><a href="/auth/logout">Logout</a></li>
+		<% } %>
         </ul>
     </nav>
 

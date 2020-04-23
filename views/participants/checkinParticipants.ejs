@@ -21,13 +21,13 @@
               <td> <%= participants[i].firstName %></td>
               <td> <%= participants[i].lastName %></td>
               <td> <%= participants[i].checkinStatus %></td>
-              <td> <a href="/participants/checkin/<%= event.eventID %>/<%= participants[i].participantID %>">Check In</a> </td>
+              <td> <a class="tb-button" href="/participants/checkin/<%= event.eventID %>/<%= participants[i].participantID %>" role="button">Check In</a> </td>
             </tr>
           <% } %>
 
         </tbody>
       </table>
-      <a href="/participants/<%= event.eventID %>">Return to <%= event.eventName %> participants</a>
+      <a class="button" href="/participants/<%= event.eventID %>">Return to <%= event.eventName %> participants</a>
       <footer class="footer">
         <%- include('../partials/footer') %>
       </footer>
