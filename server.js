@@ -156,7 +156,8 @@ app.get('/signupEventList/:volunteerStatus', async (req, res) => {
   res.render('signup/signupEventList', {
     title: "List of Events",
     events: await db.querySpecificEvents(req.params.volunteerStatus),
-    volunteerStatus: req.params.volunteerStatus
+    volunteerStatus: req.params.volunteerStatus,
+    utils: utils
   });
 });
 
@@ -166,7 +167,8 @@ app.get('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
     event: (await db.queryEventByID(req.params.eventID))[0],
     eventType: (await db.queryEventTypeMetadata(req.params.eventID))[0],
     eventID: req.params.eventID,
-    volunteerStatus: req.params.volunteerStatus
+    volunteerStatus: req.params.volunteerStatus,
+    utils: utils
   });
 });
 
@@ -184,6 +186,21 @@ app.post('/signup', async (req, res) => {
 
 app.get('/signup/signupThanks', function(req, res) {
   res.render('signup/signupThanks')
+});
+
+app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
+  res.render("signup/editRegistration", {
+    title: "Edit Public Signup",
+    event: (await db.queryEventByID(req.params.eventid))[0],
+    eventType: (await db.queryEventTypeMetadata(req.params.eventid))[0],
+    participants: await db.queryParticipantsByEventAndParty(req.params.eventid, req.params.partyid),
+    utils: utils
+  });
+});
+
+app.post('/editRegistration/:eventid/:partyid', async (req, res) => {
+  await db.updateParty(req.body, req.params.eventid, req.params.partyid);
+  res.redirect('/signupThanks');
 });
 
 /**
@@ -312,21 +329,6 @@ app.get('/participants/checkin/:id', authCheck, async (req, res) => {
 app.get('/participants/checkin/:eventid/:participantid', authCheck, async (req, res) => { // Should be changed to POST
   await db.checkinParticipant(req.params.participantid, req.params.eventid);
   res.redirect('/participants/checkin/' + req.params.eventid);
-});
-
-app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
-  res.render("signup/editRegistration", {
-    title: "Edit Public Signup",
-    event: (await db.queryEventByID(req.params.eventid))[0],
-    eventType: (await db.queryEventTypeMetadata(req.params.eventid))[0],
-    participants: await db.queryParticipantsByEventAndParty(req.params.eventid, req.params.partyid),
-    utils: utils
-  });
-});
-
-app.post('/editRegistration/:eventid/:partyid', async (req, res) => {
-  await db.updateParty(req.body, req.params.eventid, req.params.partyid);
-  res.redirect('/signupThanks');
 });
   
 app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
