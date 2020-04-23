@@ -319,31 +319,32 @@ async function insertParty(signup, eventID, volunteerStatus) {
   logger.log(signup);
   const date = utils.getDateTime();
   var signupkeys = Object.keys(signup).length;
-  var partsize = 0;
+  var partysize = 0;
   const event = (await queryEventByID(eventID))[0];
   var eventTypeFields = (await queryEventTypeMetadata(eventID))[0].typeMetadata;
-  var metadataFields;
+  var metadataFieldsCount = 0;
   if(event.eventMetadata != '{}' && event.eventMetadata != null) {
-    metadataFields += Object.keys(JSON.parse(event.eventMetadata)).length;
+    metadataFieldsCount += Object.keys(JSON.parse(event.eventMetadata)).length;
   }
   if(eventTypeFields != '{}' && eventTypeFields != null) {
-    metadataFields += Object.keys(JSON.parse(eventTypeFields)).length;
+    metadataFieldsCount += Object.keys(JSON.parse(eventTypeFields)).length;
   }
-
-  signupkeys = signupkeys - metadataFields;
+  logger.log("Before metadata:" + signupkeys);
+  signupkeys = signupkeys - metadataFieldsCount;
+  logger.log("After metadata:" + signupkeys);
   if(volunteerStatus == 1) {
     signupkeys = signupkeys - 2;
   }
   logger.log("final:" + signupkeys);
   if(signupkeys > 15) {
-    partsize = (signupkeys - 15) / 11;
+    partysize = (signupkeys - 15) / 11;
 
   }
-  logger.log(`Party size: ${partsize + 1}`, 'info');
-  const queryStmt = "SELECT participantID FROM participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND participantID NOT IN (SELECT participantID FROM participants WHERE eventID = ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?));";
+  logger.log(`Party size: ${partysize + 1}`, 'info');
+  const queryStmt = "SELECT participantID FROM participants WHERE ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?) AND participantID NOT IN (SELECT participantID FROM participants WHERE eventID = ?);";
   const query = await sequelize.query(queryStmt,
   {
-    replacements: [signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone, eventID, signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone],
+    replacements: [signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone, eventID],
     type: sequelize.QueryTypes.SELECT
   });
   var registrantID = uuidv4();
@@ -354,18 +355,28 @@ async function insertParty(signup, eventID, volunteerStatus) {
   var eventSpecificMetadata;
   if(event.eventMetadata != '{}' && event.eventMetadata != null) {
     eventSpecificMetadata = utils.eventMetadataWrapper(signup, event.eventMetadata);
-    eventTypeFields = JSON.parse(eventSpecificMetadata);
+    eventSpecificMetadata = JSON.parse(eventSpecificMetadata); //why overwrite eventTy
+    eventSpecificMetadata = Object.assign({}, eventSpecificMetadata);
   }
   var eventTypeMetadata;
   if(eventTypeFields != '{}' && eventTypeFields != null){
     eventTypeMetadata = utils.eventMetadataWrapper(signup, eventTypeFields);
-    eventTypeFields = Object.assign({}, eventTypeFields);
     eventTypeMetadata = JSON.parse(eventTypeMetadata);
     eventTypeMetadata = Object.assign({}, eventTypeMetadata);
   }
-  console.log()
-
-  metadata = Object.assign(eventTypeFields, eventTypeMetadata);
+  logger.log("eventSpecificMetadata:" + eventSpecificMetadata);
+  logger.log("eventTypeMetadata:" + eventTypeMetadata);
+  if((eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') && (eventTypeMetadata == undefined || eventTypeMetadata == '{}')) {
+    metadata = {};
+  } else if(eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') {
+    metadata = eventTypeMetadata;
+  } else if(eventTypeMetadata == undefined || eventTypeMetadata == '{}') {
+    metadata = eventSpecificMetadata;
+  } else {
+    metadata = Object.assign(eventSpecificMetadata, eventTypeMetadata);
+  }
+  
+  logger.log("metadata:" + JSON.stringify(metadata));
   var insertStmt = "INSERT INTO participants " +
     "(participantID, partyID, eventID, firstName, " +
     "lastName, phone, email, emergencyPhone, emergencyName, emergencyRelation, zip, " +
@@ -411,11 +422,11 @@ async function insertParty(signup, eventID, volunteerStatus) {
   });
   logger.log(`Registrant:${registrantID} signed up for event:${eventID} successfully`, 'info');
   
-  for(i = 1; i <= partsize; i++) {
-    const queryStmt = "SELECT participantID FROM participants WHERE (firstName = ? AND lastName = ?) OR email = ?  OR phone = ? AND participantID NOT IN (SELECT participantID FROM participants WHERE eventID = ? AND ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?));";
+  for(i = 1; i <= partysize; i++) {
+    const queryStmt = "SELECT participantID FROM participants WHERE ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?) AND participantID NOT IN (SELECT participantID FROM participants WHERE eventID = ?);";
     const query = await sequelize.query(queryStmt,
     {
-      replacements: [signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`],],
+      replacements: [signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], eventID],
       type: sequelize.QueryTypes.SELECT
     });
     var newParticipantID = uuidv4();
@@ -466,21 +477,66 @@ async function insertParty(signup, eventID, volunteerStatus) {
       type: sequelize.QueryTypes.INSERT
     });
     logger.log(`Registrant:${newParticipantID} signed up for event:${eventID} successfully`, 'info');
-  logger.log(`${partsize + 1} participants signed up for event:${eventID} under partyID:${registrantID}`, 'info');
-  logger.log(`Edit Registration Link: /editRegistration/${eventID}/${registrantID}`)
-  return registrantID;
   }
+  logger.log(`${partysize + 1} participants signed up for event:${eventID} under partyID:${registrantID}`, 'info');
+  logger.log(`Edit Registration Link: /editRegistration/${eventID}/${registrantID}`);
+  return registrantID;
 }
 
 async function updateParty(signup, eventID, partyID) {
   logger.log(signup);
   const date = utils.getDateTime();
-  const signupkeys = Object.keys(signup).length;
-  var partsize = 0;
-  if(signupkeys > 16) {
-    partsize = (signupkeys - 16) / 11;
+  var signupkeys = Object.keys(signup).length;
+  var partysize = 0;
+  const event = (await queryEventByID(eventID))[0];
+  var eventTypeFields = (await queryEventTypeMetadata(eventID))[0].typeMetadata;
+  var metadataFieldsCount = 0;
+  if(event.eventMetadata != '{}' && event.eventMetadata != null) {
+    metadataFieldsCount += Object.keys(JSON.parse(event.eventMetadata)).length;
   }
-  logger.log(partsize);
+  if(eventTypeFields != '{}' && eventTypeFields != null) {
+    metadataFieldsCount += Object.keys(JSON.parse(eventTypeFields)).length;
+  }
+  logger.log("Before metadata:" + signupkeys);
+  signupkeys = signupkeys - metadataFieldsCount;
+  logger.log("After metadata:" + signupkeys);
+  if(volunteerStatus == 1) {
+    signupkeys = signupkeys - 2;
+  }
+  logger.log("final:" + signupkeys);
+  if(signupkeys > 16) {
+    partysize = (signupkeys - 16) / 11;
+
+  }
+  logger.log(`Party size: ${partysize + 1}`, 'info');
+  if(signupkeys > 16) {
+    partysize = (signupkeys - 16) / 11;
+  }
+  logger.log(`Party size: ${partysize + 1}`, 'info');
+
+  var eventSpecificMetadata;
+  if(event.eventMetadata != '{}' && event.eventMetadata != null) {
+    eventSpecificMetadata = utils.eventMetadataWrapper(signup, event.eventMetadata);
+    eventSpecificMetadata = JSON.parse(eventSpecificMetadata); //why overwrite eventTy
+    eventSpecificMetadata = Object.assign({}, eventSpecificMetadata);
+  }
+  var eventTypeMetadata;
+  if(eventTypeFields != '{}' && eventTypeFields != null){
+    eventTypeMetadata = utils.eventMetadataWrapper(signup, eventTypeFields);
+    eventTypeMetadata = JSON.parse(eventTypeMetadata);
+    eventTypeMetadata = Object.assign({}, eventTypeMetadata);
+  }
+  logger.log("eventSpecificMetadata:" + eventSpecificMetadata);
+  logger.log("eventTypeMetadata:" + eventTypeMetadata);
+  if((eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') && (eventTypeMetadata == undefined || eventTypeMetadata == '{}')) {
+    metadata = {};
+  } else if(eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') {
+    metadata = eventTypeMetadata;
+  } else if(eventTypeMetadata == undefined || eventTypeMetadata == '{}') {
+    metadata = eventSpecificMetadata;
+  } else {
+    metadata = Object.assign(eventSpecificMetadata, eventTypeMetadata);
+  }
   const update = "UPDATE participants " +
     "SET " +
     "eventID=?, " + //eventID
@@ -506,7 +562,7 @@ async function updateParty(signup, eventID, partyID) {
   });
 
   var partIds = signup.partIDs;
-  for(i = 1; i <= partsize; i++) {
+  for(i = 1; i <= partysize; i++) {
     var newParticipantID = uuidv4();
     logger.log(signup[`part${i}ID`]);
     var updateStmt = "IF EXISTS (SELECT * FROM participants " + 
@@ -558,7 +614,7 @@ async function updateParty(signup, eventID, partyID) {
       replacements: [eventID, partyID, signup[`part${i}ID`], signup[`part${i}fname`], signup[`part${i}lname`], signup.eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup[`part${i}age`], signup[`part${i}cpr`], signup[`part${i}swim`], signup[`part${i}boat`], signup.bhdiscovery, signup.eventdiscovery, signup.notes, eventID, partyID, signup[`part${i}ID`], partyID, signup.eventID, signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup.zipcode, signup[`part${i}age`], signup[`part${i}cpr`], signup[`part${i}swim`], signup[`part${i}boat`], signup.bhdiscovery, signup.eventdiscovery, signup.notes],
     });
   }
-  if(partsize < signup.partIDs.length) {
+  if(partysize < signup.partIDs.length) {
     //loop through participants who need to be deleted
     //CHECK IF THERE IS MORE THAN ONE ENTRY IF NOT DONT LOOP THROUGH DO partIds
     for(i = 0; i < signup.partIDs.length; i++) {
@@ -582,11 +638,11 @@ async function querySpecificEvents(choice) {
   if (choice == 1) {
     query = "SELECT * " +
                 "FROM events " +
-                "WHERE eventStatus = 'Registration Open';";
+                "WHERE eventStatus = 'Registration Open' ORDER BY startTime;";
   } else {
     query = "SELECT * " +
                 "FROM events " +
-                "WHERE eventStatus = 'Registration Open' AND privateEvent = 0;";
+                "WHERE eventStatus = 'Registration Open' AND privateEvent = 0 ORDER BY startTime;";
   }
   
   let events = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
