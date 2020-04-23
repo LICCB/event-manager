@@ -17,7 +17,6 @@ async function getRolesFromDb(){
     for(i = 0; i < numRoles; i++){
         role = grants[0][i].grantInfo;
         role = role.slice(1, role.length-1);
-        console.log(role);
         roles += role;
         if(i < numRoles-1){
             roles += ',';

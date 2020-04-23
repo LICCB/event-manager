@@ -122,7 +122,6 @@ app.post('/createEvent', authCheck, async (req, res) => {
  * Renders the events page with the list of all events
  */
 app.get('/events', authCheck, permCheck('Events', 'read'), async (req, res) => {
-  logger.log(`${req.user.firstName} ${req.user.lastName} has successfully accessed the events page`);
   res.render('event/events', {
     user: req.user,
     title: "Events",

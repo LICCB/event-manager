@@ -3,8 +3,6 @@ const db = require('../database');
 const logger = require('../logger');
 const utils = require('../utils');
 const rbac = require('../rbac');
-const server = require('../server');
-// const authCheck = server.authCheck;
 logger.module = 'settings-routes';
 
 
@@ -19,7 +17,6 @@ const authCheck = (req, res, next) => {
 };
 
 router.get('/', authCheck, (req, res) => {
-  // console.log(test);
     res.render('settings/settings', {
       user: req.user,
       title: "Settings"
