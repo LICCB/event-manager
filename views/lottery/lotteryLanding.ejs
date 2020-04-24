@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head', {title: title, events: events}) %>
+</head>
+
+<body class="bg-gray">
+    <%- include('../partials/header', {title: title}) %>
+    <div class="container content">
+        <fieldset>
+            <form action="runLottery3" method="GET" id="runLottery3">
+                <label for="runLottery">Choose Event for Lottery:</label>
+                <select id="runLottery1" name="runLottery2">
+                        <% for(i = 0; i < events.length; i++){ %>
+                            <tr>
+                              <% var vals = Object.values(events[i]) %> 
+                              <% for(j = 0; j < vals.length; j++){ %>
+                                <option value="<%= vals[j] %>"><%= vals[j] %></option>
+                              <% } %>
+                            </tr>
+                        <% } %>
+                </select>
+
+                <button class="btn btn-dark" type="submit">Run Lottery</button>
+            </form>
+        </fieldset>
+    </div>
+</body>
+
+</html>
