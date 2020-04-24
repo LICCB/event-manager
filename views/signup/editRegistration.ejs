@@ -12,7 +12,7 @@
 <body>
     <div class="container">
         <fieldset class="fieldset">
-            <form action=<%= "/editRegistration/" + event.eventID + "/" + participants[0].partyID %> method="post" id="publicSignupform">
+            <form action=<%= "/editRegistration/" + event.eventID + "/" + participants[0].partyID %> method="post" id="editRegistrationform">
                 <h1>Edit Registration for: <%=event.eventName%></h1>
                 <h2>Date: <%=event.startTime.toLocaleDateString()%></h2>
                 <h2>Start Time: <%=utils.trimTime(event.startTime.toLocaleTimeString())%></h2>
@@ -36,14 +36,14 @@
                     <h2>Volunteer Information</h2>
                     <div name = "Volunteer Info">
                         <label for="priorVolunteer">Have you been a volunteer before?</label>
-                        <select name="priorVolunteer" form="eventSignupForm" required>
+                        <select name="priorVolunteer" form="editRegistrationform" required>
                             <option value="false" <% if(participants[0].priorVolunteer == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[0].priorVolunteer == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         <br>
 
                         <label for="roleFamiliarity">Are you familiar with the role?</label>
-                        <select name="roleFamiliarity" form="eventSignupForm" required>
+                        <select name="roleFamiliarity" form="editRegistrationform" required>
                             <option value="false" <% if(participants[0].roleFamiliarity == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[0].roleFamiliarity == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
@@ -64,28 +64,28 @@
                         <br>
                         
                         <label for="regadult">Over 18?</label>
-                        <select name="regadult" form="publicSignupform" required>
+                        <select name="regadult" form="editRegistrationform" required>
                             <option value="false" <% if(participants[i].isAdult == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].isAdult == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         <br>
                         
                         <label for="regswim">Swimmer</label>
-                        <select name="regswim" form="publicSignupform" required>
+                        <select name="regswim" form="editRegistrationform" required>
                             <option value="false" <% if(participants[i].canSwim == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].canSwim == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         <br>
                         
                         <label for="regboat">Boating Experience</label>
-                        <select name="regboat" form="publicSignupform" required>
+                        <select name="regboat" form="editRegistrationform" required>
                             <option value="false" <% if(participants[i].boatExperience == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].boatExperience == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         <br>
                         
                         <label for="regcpr">CPR Certification</label>
-                        <select name="regcpr" form="publicSignupform" required>
+                        <select name="regcpr" form="editRegistrationform" required>
                             <option value="false" <% if(participants[i].hasCPRCert == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].hasCPRCert == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
@@ -104,7 +104,7 @@
                         <br>
 
                         <label for="regerelation">Registrant Emergency Contact Relationship:</label>
-                        <input type="text" id="regerelation" name="regerelation" class = "relation" form = "eventSignupForm" value = <%=participants[i].emergencyRelation%> required>
+                        <input type="text" id="regerelation" name="regerelation" class = "relation" form = "editRegistrationform" value = <%=participants[i].emergencyRelation%> required>
                         <br>
 
                         <label for="regephone">Registrant Emergency Contact Phone Number:</label>
@@ -117,7 +117,7 @@
 
                 <br>
                 
-                <div id="newfields" form="eventSignupForm">
+                <div id="newfields" form="editRegistrationform">
                     <%if(participants[0].metadata != '{}' || participants[0].metadata != null || participants[0].metadata != undefined) { %>
                         <% if((event.eventMetadata != '{}' && event.eventMetadata != null) || (eventType.typeMetadata != '{}' && eventType.typeMetadata != null)) { %> 
                             <h2>Additional Questions</h2>
@@ -128,7 +128,11 @@
                             <% for(i=0; i < keys.length; i++){ %>
                                 <label for="<%= keys[i] %>"> <%= keys[i] %></label>
                                 <% if(vals[i] == "checkbox") { %>
-                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true" <%if(metadata[keys[i]] == "true") { %> <%="checked"%> <% } %> > <br>
+                                    <select id="<%=keys[i] %>" name = "<%=keys[i] %>" form="eventSignupForm">
+                                        <option value="false" <%if(metadata[keys[i]] == "false") { %> <%="selected"%> <% } %>>No</option>
+                                        <option value="true" <%if(metadata[keys[i]] == "true") { %> <%="selected"%> <% } %>>Yes</option>
+                                    </select>
+                                    <br>
                                 <% } %>
                                 <% if(vals[i] == "textbox") { %>
                                     <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = <%=metadata[keys[i]]%>> <br>
@@ -141,7 +145,11 @@
                                 <br>
                                 <label for="<%= keys[i] %>"> <%= keys[i] %></label>
                                 <% if(vals[i] == "checkbox") { %>
-                                    <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true" <%if(metadata[keys[i]] == "true") { %> <%="checked"%> <%}%> > <br>
+                                    <select id="<%=keys[i] %>" name = "<%=keys[i] %>" form="eventSignupForm">
+                                        <option value="false" <%if(metadata[keys[i]] == "false") { %> <%="selected"%> <% } %>>No</option>
+                                        <option value="true" <%if(metadata[keys[i]] == "true") { %> <%="selected"%> <% } %>>Yes</option>
+                                    </select>
+                                    <br>
                                 <% } %>
                                 <% if(vals[i] == "textbox") { %>
                                     <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = <%=metadata[keys[i]]%>> <br>
@@ -158,7 +166,7 @@
                     <br>
                     
                     <label for="eventdiscovery">Event Discovery:</label>
-                    <select name="eventdiscovery" form="publicSignupform">
+                    <select name="eventdiscovery" form="editRegistrationform">
                         <option <%if (participants[0].boathouseDisc == ''){ %> <%="selected"%> <%}%> disabled hidden style='display: none' value=''></option>
                         <option value="callendar" <% if(participants[0].eventDisc == "callendar"){ %> <%= "selected" %> <% } %>>LICCB Calendar</option>
                         <option value="subscriber" <% if(participants[0].eventDisc == "subscriber"){ %> <%= "selected" %> <% } %>>LICCB subscriber Newsletter or direct email</option>
@@ -179,7 +187,7 @@
                     <br>
                     
                     <label for="bhdiscovery">Boat House Discovery:</label>
-                    <select name="bhdiscovery" form="publicSignupform">
+                    <select name="bhdiscovery" form="editRegistrationform">
                         <option <%if (participants[0].boathouseDisc == ''){ %> <%="selected"%> <%}%> disabled hidden style='display: none' value=''></option>
                         <option value="facebook" <% if(participants[0].boathouseDisc == "facebook"){ %> <%= "selected" %> <% } %>>Facebook</option>
                         <option value="instagram" <% if(participants[0].boathouseDisc == "instagram"){ %> <%= "selected" %> <% } %>>Instagram</option>
@@ -199,12 +207,12 @@
                     <br>
                     
                     <label for="notes">Additional Notes:</label>
-                    <textarea name="notes" form="publicSignupform"><%= participants[0].regComments %></textarea>
+                    <textarea name="notes" form="editRegistrationform"><%= participants[0].regComments %></textarea>
                 </div>
 
                 <br>
 
-                <div id="partymembers" form="PublicSignup">
+                <div id="partymembers" form="editRegistrationform">
                     <% if(participants.length - 1 > 0) { %>
                         <% for(i=0; i < participants.length; i++){ %>
                             <% if(participants[i].participantID != participants[i].partyID) { %>
@@ -259,7 +267,7 @@
                                     <br>
 
                                     <label for="part<%= i + 2 %>erelation">Participant <%= i + 2 %> Emergency Contact Relationship:</label>
-                                    <input type="text" id="part<%= i + 1 %>erelation" name="part<%= i + 1 %>erelation" class = "relation" form = "eventSignupForm" value = <%=participants[i].emergencyRelation%> required>
+                                    <input type="text" id="part<%= i + 1 %>erelation" name="part<%= i + 1 %>erelation" class = "relation" form = "editRegistrationform" value = <%=participants[i].emergencyRelation%> required>
                                     <br>
                                 
                                     <label for="part<%= i + 2 %>ephone" >Participant <%= i + 2 %> Emergency Contact Phone Number:</label>

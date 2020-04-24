@@ -141,10 +141,15 @@
                         <% for(i=0; i < keys.length; i++){ %>
                             <label for="<%= keys[i] %>"> <%= keys[i] %></label>
                             <% if(vals[i] == "checkbox") { %>
-                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true"> <br>
+                                <select id="<%=keys[i] %>" name = "<%=keys[i] %>" form="eventSignupForm">
+                                    <option selected hidden style='display: none' value=""></option>
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                                <br>
                             <% } %>
                             <% if(vals[i] == "textbox") { %>
-                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required> <br>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>"> <br>
                             <% } %>
                         <% } %>
                     <% } %>
@@ -154,10 +159,15 @@
                             <br>
                             <label for="<%= keys[i] %>"> <%= keys[i] %></label>
                             <% if(vals[i] == "checkbox") { %>
-                                <input type="checkbox" id="<%=keys[i] %>" name = "<%=keys[i] %>" value = "true"> <br>
+                                <select id="<%=keys[i] %>" name = "<%=keys[i] %>" form="eventSignupForm">
+                                    <option selected hidden style='display: none' value=""></option>
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                                <br>
                             <% } %>
                             <% if(vals[i] == "textbox") { %>
-                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>" required> <br>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>"> <br>
                             <% } %>
                         <% } %>
                     <% } %>
