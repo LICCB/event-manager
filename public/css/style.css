@@ -99,23 +99,6 @@ input[type=text], select, input[type=time], span.select2 {
   height: 190px;
 }
 
-/*dark header
-.header {
-  width: 100%;
-  color: #fff;
-  text-align: left;
-  position: relative;
-  padding-left: 33%;
-  padding-top: 40px;
-  font-family: Verdana, Arial, sans-serif;
-  background-color: transparent;
-  background-image: url("/images/img1.png");
-  background-size: 180px 180px;
-  background-position: 20% 50%;
-  background-repeat: no-repeat;
-  height: 190px;
-}*/
-
 /* Slideshow container
 .slideshow-container {
   max-width: 1000px;
@@ -129,18 +112,17 @@ Hide the images by default
 } */
 
 /*Next & previous buttons */
-.prev, .next {
+.previous, .next {
   cursor: pointer;
   position: relative; /*absolute;*/
   padding-top: 20px;
-  color: #fff;
+  color: #000;
   font-family: Verdana, Arial, sans-serif;
   font-size: 16px;
   transition: 0.5s ease;
   user-select: none;
-  /*border-radius: 0 3px 3px 0;*/
+  border-radius: 0 3px 3px 0;
   /*top: 50%;*/
-  /*font-weight: bold;*/
   /*margin-top: -22px;*/
   /*width: auto;
   height: auto;*/
@@ -153,8 +135,8 @@ Hide the images by default
 } */
 
 /* On hover, add a black background color with a little bit see-through */
-.prev:hover, .next:hover {
-  background-color: #082B47;
+.previous:hover, .next:hover {
+  background-color: #082B47 !important;
 }
 
 /* Caption text */
@@ -372,6 +354,18 @@ ul ul a {
   background-color: #fff9d7;
 }
 
+.theme-button {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  transition-duration: 0.3s;
+}
+
+.theme-button:hover {
+  background-color: black;
+  color: white;
+}
+
 /*buttons inside the events table*/
 .tb-button {
   color: #fff6c3;
@@ -380,6 +374,7 @@ ul ul a {
   margin: 5px;
   background-color: #082b47;
   border-radius: 5px;
+  white-space: nowrap;
 }
 
 .tb-button:hover {
@@ -426,6 +421,10 @@ ul ul a {
   background-color: rgba(0,0,0,0.4);
 }
 
+.email {
+  color: #082b47;
+}
+
 .footer {
   padding-top: 15px;
   position: relative;
@@ -434,4 +433,9 @@ ul ul a {
   color: #10368e;
   background-color: transparent;
   font-family: Verdana, Arial, sans-serif;
+}
+
+/*Party view modal*/
+.modal-lg {
+  max-width: 1100px !important;
 }

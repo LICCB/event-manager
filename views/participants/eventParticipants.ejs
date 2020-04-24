@@ -3,7 +3,7 @@
   <head>
     <%- include('../partials/head', {title: event.eventName + " Participants"}) %>
   </head>
-  <body class="bg-gray">
+  <body>
     <%- include('../partials/header', {title: event.eventName + " Participants"}) %>
     <div class="container content">
       <table id="eventParticipantsTable" class="table">
@@ -88,7 +88,7 @@
 
               <!-- Modal footer -->
               <div class="modal-footer">
-                <button type="submit" class="btn btn-danger" form="form<%= participants[i].participantID %>">Save</button>
+                <button type="submit" class="btn button" form="form<%= participants[i].participantID %>">Save</button>
               </div>
 
             </div>
