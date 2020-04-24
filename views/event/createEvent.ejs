@@ -3,11 +3,10 @@
 
 <head>
   <%- include('../partials/head', {title: title}) %>
-  <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 
 <body>
-  <%- include('../partials/header', {title: title}) %>
+  <%- include('../partials/header', {title: title, user: user}) %>
   <div class="container content">
     <fieldset>
       <form action="/createEvent" method="post" id="eventform">

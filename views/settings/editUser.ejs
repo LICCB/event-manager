@@ -6,20 +6,20 @@
 <body>
   <%- include('../partials/header', {title: title, user: user}) %>
   <div class="container content">
-    <form action="/settings/addUser" method="POST">
+    <form action="/settings/editUser/<%= user.userID %>" method="POST">
         <label for="uEmail">User Email: </label>
-        <input type="text" id="uEmail" name="email">
+        <input type="text" id="uEmail" name="email" value="<%= user.email %>">
         <br>
         <label for="fname">First Name: </label>
-        <input type="text" id="fname" name="fname">
+        <input type="text" id="fname" name="fname" value="<%= user.firstName %>">
         <br>
         <label for="lname">Last Name: </label>
-        <input type="text" id="lname" name="lname">
+        <input type="text" id="lname" name="lname" value="<%= user.lastName %>">
         <br>
-        <label for="type">Role: </label>
-        <select name="roleID">
+        <label for="roleID">Role: </label>
+        <select name="roleID" id="roleID">
           <% for(i = 0; i < roles.length; i++) { %>
-            <option value=<%= roles[i].roleID %>> <%= utils.getRoleName(roles[i]) %> </option>
+            <option value=<%= roles[i].roleID %> <% if(roles[i].roleID == user.roleID){ %> <%= "selected" %> <% } %>> <%= utils.getRoleName(roles[i]) %> </option>
           <% } %>
         </select>
         <br>

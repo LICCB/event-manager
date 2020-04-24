@@ -9,6 +9,7 @@
   "author": "LICCB",
   "license": "ISC",
   "dependencies": {
+    "accesscontrol": "^2.2.1",
     "body-parser": "^1.19.0",
     "browser-cookies": "^1.2.0",
     "cookie-session": "^1.4.0",
@@ -24,6 +25,7 @@
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
     "supertest": "^4.0.2",
+    "sequelize": "^5.21.6",
     "uuid": "^3.4.0"
   },
   "jest": {
