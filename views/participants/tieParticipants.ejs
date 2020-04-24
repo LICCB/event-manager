@@ -6,6 +6,7 @@
   <body class="bg-gray">
     <%- include('../partials/header', {title: "Tie Participant"}) %>
     <div class="container content">
+      <button class="button-left" onclick="history.back()">Cancel</button>
       <table id="participantsTable" class="table">
         <thead>
           <tr>
@@ -80,7 +81,7 @@
           <% for(i = 0; i < participants.length; i++){ %>
             <tr>
               <td>
-                <a class="btn btn-primary" href="/participants/tie/<%= selected.participantID %>/<%= participants[i].participantID %>" role="button">
+                <a class="btn tb-button" href="/participants/tie/<%= selected.participantID %>/<%= participants[i].participantID %>" role="button">
                   Tie
                 </a>
               </td>

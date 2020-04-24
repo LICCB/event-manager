@@ -4,7 +4,7 @@
 </h1>
 <div class="wrapper">
 	<nav id="sidebar">
-		<% if(user) { %>
+		<% if(typeof user !== "undefined") { %>
 			<img src="<%= user.pictureURL %>" class="img-thumbnail rounded-circle">
 			<p> <%= `${user.firstName} ${user.lastName}` %> </p>
 		<% } %>
@@ -15,7 +15,7 @@
 				<% } %>
 			><a href="/events">Events</a></li>
 			<li
-				<% if(title == "All Participants" || title == "CheckIn Participants" || title == "Event Participants" || title == "event.eventName + Check In") { %>
+				<% if(title == "All Participants" || title == "CheckIn Participants" || title == "Event Participants" || title == "event.eventName + Check In" || title == "Tie Participant") { %>
 					class="active"
 				<% } %>
 			><a href="/participants">Participants</a></li>
@@ -23,21 +23,23 @@
 				<% if(title == "Lottery") { %>
 					class="active"
 				<% } %>
-			><a href="/lottery">Lottery</a></li>
+			>
+			<!-- <a href="/lottery">Lottery</a></li>
 			<li
 				<% if(title == "Settings") { %>
 					class="active"
 				<% } %>
-			><a href="/settings">Settings</a></li>
+			> -->
+			<a href="/settings">Settings</a></li>
 			<li
 				<% if(title == "Export") { %>
 					class="active"
 				<% } %>
 			><a href="/export">Export</a></li>
-		<% if(user){ %>
+		<% if(typeof user !== "undefined"){ %>
 			<li><a href="/auth/logout">Logout</a></li>
 		<% } %>
         </ul>
     </nav>
-
+    <button class="theme-button" onclick="switchTheme()">Switch Theme</button>
 </div>

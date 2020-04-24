@@ -3,7 +3,7 @@
   <head>
     <%- include('../partials/head', {title: "All Participants"}) %>
   </head>
-  <body class="bg-gray">
+  <body>
     <%- include('../partials/header', {title: "All Participants"}) %>
     <div class="container content">
       <%- include('../partials/alerts') %>
@@ -37,12 +37,12 @@
           <% for(i = 0; i < participants.length; i++){ %>
             <tr>
               <td>
-                <a class="btn btn-primary" href="/participants/tie/<%= participants[i].participantID %>" role="button">
+                <a class="btn tb-button" href="/participants/tie/<%= participants[i].participantID %>" role="button">
                   Tie
                 </a>
               </td>
               <td>
-                <a class="btn btn-primary" href="/participant/<%= participants[i].participantID %>" role="button">
+                <a class="btn tb-button" href="/participant/<%= participants[i].participantID %>" role="button">
                   View
                 </a>
               </td>
@@ -111,7 +111,7 @@
                           <td> <%= participant.email %> </td>
                           <td> <%= participant.zip %> </td>
                         </tr>
-                      <% }) %> 
+                      <% }) %>
                     <% } else { %>
                       <tr>
                         <td> <%= participants[i].eventName %> </td>
@@ -121,17 +121,17 @@
                         <td> <%= participants[i].email %> </td>
                         <td> <%= participants[i].zip %> </td>
                       </tr>
-                    <% } %>  
+                    <% } %>
                   </tbody>
                 </table>
               </div>
 
               <!-- Modal footer -->
               <div class="modal-footer">
-                <a class="btn btn-secondary" href="/event/<%= participants[i].eventID %>">
+                <a class="btn button" href="/event/<%= participants[i].eventID %>">
                   View Event
                 </a>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                <button type="button" class="btn tb-button" data-dismiss="modal">
                   Close
                 </button>
               </div>
