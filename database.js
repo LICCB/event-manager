@@ -59,11 +59,6 @@ async function queryEventsTableData(){
   return events;
 }
 
-async function queryParticipantsByEventID(eventID) {
-  let participants = await sequelize.query(`SELECT * FROM participants WHERE eventID='${eventID}'`, {type: sequelize.QueryTypes.SELECT});
-  return participants;
-}
-
 async function queryParticipantsByEventAttr(eventAttrs) {
   let queryString = `SELECT * FROM events as E, participants as P WHERE `;
 
@@ -795,10 +790,6 @@ async function queryAllRoles(){
 async function queryRoleByID(id){
   let role = await sequelize.query(`SELECT * FROM roles WHERE roleID='${id}'`);
   return role;
-}
-
-async function queryAllRoles(){
-  return await sequelize.query('SELECT * FROM roles;');
 }
 
 async function insertRole(role){
