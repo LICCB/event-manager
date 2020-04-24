@@ -4,7 +4,7 @@
 </h1>
 <div class="wrapper">
 	<nav id="sidebar">
-		<% if(user) { %>
+		<% if(typeof user !== "undefined") { %>
 			<img src="<%= user.pictureURL %>" class="img-thumbnail rounded-circle">
 			<p> <%= `${user.firstName} ${user.lastName}` %> </p>
 		<% } %>
@@ -36,7 +36,7 @@
 					class="active"
 				<% } %>
 			><a href="/export">Export</a></li>
-		<% if(user){ %>
+		<% if(typeof user !== "undefined"){ %>
 			<li><a href="/auth/logout">Logout</a></li>
 		<% } %>
         </ul>
