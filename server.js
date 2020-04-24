@@ -13,9 +13,8 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const config = require('./config.json');
 const logger = require('./logger');
-const rbacSetup = require('./rbac-setup');
+const rbac = require('./rbac');
 const AccessControl = require('accesscontrol');
-var ac = "";
 logger.module = 'server';
 
 app.use(express.static(__dirname + '/public'));
@@ -37,14 +36,6 @@ app.use(cookieSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// initialize rbac
-async function setUpRBAC() {
-  const holder = await rbacSetup.getRolesFromDb();
-  ac = holder;
-};
-setUpRBAC();
-
-
 // setup routes
 app.use('/auth', authRoutes);
 app.use('/settings', settingsRoutes);
@@ -59,11 +50,12 @@ const authCheck = (req, res, next) => {
   }
 };
 
-function permCheck(resource, func) {
+const permCheck = function (resource, func) {
   return async function(req, res, next) {
     const grantInfo = ((await db.queryRoleByID(req.user.roleID))[0][0]).grantInfo;
     const role = (Object.keys(JSON.parse(grantInfo)))[0];
     var perm = {granted : false};
+    var ac = await rbac.getRolesFromDb();
     switch(func) {
       case 'create':
         perm = ac.can(role).createAny(resource);
@@ -109,7 +101,7 @@ app.get('/unauthorized', authCheck, function(req, res){
 /**
  * Renders the createEvent page with the list of possible event managers
  */
-app.get('/createEvent', authCheck, permCheck('events', 'create'), async (req, res) => {
+app.get('/createEvent', authCheck, permCheck('Events', 'create'), async (req, res) => {
   res.render('event/createEvent', {
     user: req.user,
     title: "Create Event",
@@ -129,8 +121,7 @@ app.post('/createEvent', authCheck, async (req, res) => {
 /**
  * Renders the events page with the list of all events
  */
-app.get('/events', authCheck, permCheck('events', 'read'), async (req, res) => {
-  logger.log(`${req.user.firstName} ${req.user.lastName} has successfully accessed the events page`);
+app.get('/events', authCheck, permCheck('Events', 'read'), async (req, res) => {
   res.render('event/events', {
     user: req.user,
     title: "Events",
@@ -360,6 +351,160 @@ app.get('/export', authCheck, async (req, res) => {
     error: null
   });
 });
+
+
+/**
+ * Redirects to the lottery run selection pages
+ */
+app.get('/lottery/', async (req, res) => {
+  res.render('lottery/lotteryLanding', {title:"Lottery Landing Page", events: (await db.queryAllEventNames())});
+});
+// MANUAL
+app.get('/lottery/:id', async (req, res) => {
+  test = (await db.queryParticipantsByEventID(req.params.id));
+  test2 = (await db.queryParticipantsNotReady(req.params.id));
+  if (test[0] == null || test[0] == undefined || test2[0] == null || test2[0] == undefined){
+    res.redirect('/events');
+  } else {
+    res.render('lottery/lotteryEvent', {title: "Manual Selection", participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  }
+});
+// STRATEGY
+app.get('/lottery/random/:id', async (req, res) => {
+  test = (await db.queryParticipantsByEventID(req.params.id));
+  test2 = (await db.queryParticipantsNotReady(req.params.id));
+  test3 = (await db.queryEventStatusByID(req.params.id));
+  // console.log(Object.values(test3[0]));
+  if (test[0] == null || test[0] == undefined || test2[0] == null || test2[0] == undefined || Object.values(test3[0]) == 'Selection Finished') {
+    res.redirect('/events');
+  } else {
+    capacity = await db.getCapacityFromEventID(req.params.id);
+    getParticipants = await db.runSelectionRandom(req.params.id);
+    if (getParticipants.length == 0) {
+      res.redirect('/events');
+      // console.log("No Participants are eligible for selection");
+    } else {
+      res.render('lottery/lotteryEventLocked', {title: "Run Strategy",participants: getParticipants, capacity: Object.values(capacity[0]), event: (await db.queryEventByID(req.params.id))[0]})
+    }
+  }
+});
+
+app.post('/updateSelectedParticipantsStrategy/:id', async (req, res) => {
+  selectedParticipants = await db.runSelectionRandom(req.params.id);
+  delete selectedParticipants.meta;
+
+  for (let i=0; i<selectedParticipants.length; i++) {
+    let output = await db.changeParticipantStatus(selectedParticipants[i].participantID, req.params.id, 'Selected');
+    if (output != "success") {
+      // console.log(`failed to select participantID: ${selectedParticipants[i].participantID} in event: ${eventID}`)
+    }
+  }
+  res.redirect('/events');
+});
+
+
+app.post('/updateSelectedParticipants/:id', async (req, res) => {
+
+  // console.log(req);
+
+  individuallySelectedUsers = [];
+
+  for (var key in req.body) {
+    if (req.body.hasOwnProperty(key)) {
+      let value = req.body[key];
+      // console.log( `value for ${key} is ${value}` )
+      if (String(key).includes("selectUser")) {
+        str = String(key);
+        str = str.replace('selectUser-','');
+        individuallySelectedUsers.push(str);
+      }
+    }
+  }
+  // console.log(individuallySelectedUsers)
+    // update inidividually selected users
+
+  for (let i=0; i<individuallySelectedUsers.length; i++) {
+    let output = await db.changeParticipantStatus(individuallySelectedUsers[i], req.params.id, 'Selected');
+    if (output != "success") {
+      // console.log(`failed to select participantID: ${individuallySelectedUsers[i]} in event: ${eventID}`)
+    }
+  }  
+
+  // filterParticipants = {
+  //   "regStatus" : req.body.regStatus == "Registered" ? "Registered" : "",
+  //   "isAdult" : req.body.isAdult == "yes" ? 1 : "",
+  //   "canSwim" : req.body.canSwim == "yes" ? 1 : "",
+  //   "hasCPRCert" : req.body.hasCPRCert == "yes" ? 1 : "",
+  //   "boatExperience" : req.body.boatExperience == "yes" ? 1 : "",
+  //   "priorVolunteer" : req.body.priorVolunteer == "yes" ? 1 : "",
+  //   "roleFamiliarity": req.body.roleFamiliarity == "yes" ? 1 : "",
+  //   "volunteer" : req.body.volunteer == "yes" ? 1 : "",
+  // }
+  // console.log(filterParticipants);
+
+  // let eventID = req.params.id;
+  // let selectedParticipants = await db.queryParticipantsByParticpantAttr(eventID, filterParticipants);
+  // delete selectedParticipants.meta;
+  // console.log(selectedParticipants);
+
+  // // update filtered users
+  // for (let i=0; i<selectedParticipants.length; i++) {
+  //   let output = await db.changeParticipantStatus(selectedParticipants[i].participantID, eventID, 'Selected');
+  //   if (output != "success") {
+  //     console.log(`failed to select participantID: ${selectedParticipants[i].participantID} in event: ${eventID}`)
+  //   }
+  // }
+
+  res.redirect('/events');
+});
+
+app.get('/lottery/:eventid/changeStatusIndividualUser/:status/:userid', async (req, res) => {
+  res.redirect('back');
+  status = ""
+  if (req.params.status == "select") {
+    status = "Selected"
+  }
+  switch (req.params.status) {
+    case "select": 
+      status = "Selected";
+      break;
+    case "reject":
+      status = "Not Selected";
+      break;
+    case "standby":
+      status = "Standby";
+      break;
+    case "awaitingConfirmation":
+      status = "Awaiting Confirmation";
+      break;
+    case "notConfirmed":
+      status = "Not Confirmed";
+      break;
+    case "registered":
+      status = "Registered";
+      break;
+    case "cancelled":
+      status = "Cancelled";
+      break;
+    case "sameDayCancel":
+      status = "Same Day Cancel";
+      break;
+    default:
+      return;
+  }
+  let selectIndividualUser = await db.changeParticipantStatus(req.params.userid, req.params.eventid, status)
+});
+
+app.get('/lottery/resetSelection/:id', async (req, res) => {
+  res.redirect('/events');
+  resetParticipants = await db.resetParticipantsStatus(req.params.id);
+});
+
+app.get('/lottery/selectAll/:id', async (req, res) => {
+  res.redirect('/events');
+  resetParticipants = await db.selectAllParticipantStatus(req.params.id);
+});
+
 
 /**
  * Export participants from a certain list of eventId's

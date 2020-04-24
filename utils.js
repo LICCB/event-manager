@@ -1,4 +1,5 @@
 const logger = require('./logger');
+const rbac = require('./rbac');
 logger.module = 'utils';
 
 /**
@@ -109,9 +110,96 @@ function trimTime(time){
     return timeStr.slice(0, stop);
 }
 
+function getResourcePermissions(res){
+    if(res == undefined){return '';}
+    var crud = '';
+    var perms = rbac.acPermissions;
+    var newPerms = rbac.permissions;
+    for(var i=0;i<perms.length;i++){
+        if(res[perms[i]]){
+            if(crud.length > 0){crud += ', '};
+            crud += newPerms[i];
+        }
+    }
+    return crud;
+}
+
+function getPermissions(role){
+    var permissions = [];
+    var grantInfo = JSON.parse(role.grantInfo);
+    var vals = (Object.values(grantInfo))[0];
+    var resources = rbac.resources;
+    for(var i=0;i<resources.length;i++){
+        permissions.push(getResourcePermissions(vals[resources[i].replace(' ', '')]));
+    }
+    return permissions;
+}
+
+function getResourcePermissionsMatrix(res){
+    if(res == undefined){return '';}
+    var crud = [];
+    var perms = rbac.acPermissions;
+    for(var i=0;i<perms.length;i++){
+        if(res[perms[i]]){
+            crud.push(1);
+        } else {
+            crud.push(0);
+        }
+    }
+    return crud;
+}
+
+function getPermissionsMatrix(role){
+    var permissions = [];
+    var grantInfo = JSON.parse(role.grantInfo);
+    var vals = (Object.values(grantInfo))[0];
+    var resources = rbac.resources;
+    for(var i=0;i<resources.length;i++){
+        permissions.push(getResourcePermissionsMatrix(vals[resources[i].replace(' ', '')]));
+    }
+    return permissions;
+}
+
+function getRoleName(role){
+    return (Object.keys(JSON.parse(role.grantInfo)))[0];
+}
+
+function getGrantInfoForDb(role){
+    const resources = rbac.resources;
+    const permissions = rbac.permissions;
+    const internal = rbac.internalPermissions;
+    var json = `{ "${role.roleName}": {`;
+    var resPerm = '';
+    var permCount;
+    for(var j = 0; j < resources.length; j++){ 
+      permCount =0;
+      json += `"${resources[j].replace(' ', '')}" : {`;
+      for(var i = 0; i < permissions.length; i++){ 
+        resPerm = (permissions[i] + resources[j]).replace(' ', '');
+        if(role[resPerm].length != 1){
+          if(permCount > 0){
+            json += ', '
+          }
+          json += internal[i];
+          permCount++;
+        }
+      }
+      json += '}'; 
+      if(j != resources.length - 1){
+       json += ', ' 
+      }
+    }
+    json += '}}'; 
+    return JSON.stringify(JSON.parse(json));
+}
+
 module.exports.getTime = getTime;
 module.exports.getDate = getDate;
 module.exports.getEventMetadata = getEventMetadata;
 module.exports.cleanupEventData = cleanupEventData;
 module.exports.getDateTime = getDateTime;
 module.exports.eventMetadataWrapper = eventMetadataWrapper;
+module.exports.getPermissions = getPermissions;
+module.exports.getRoleName = getRoleName;
+module.exports.getGrantInfoForDb = getGrantInfoForDb;
+module.exports.getPermissionsMatrix = getPermissionsMatrix;

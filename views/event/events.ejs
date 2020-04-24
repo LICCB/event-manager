@@ -9,10 +9,10 @@
   <%- include('../partials/header', {title: title, user: user}) %>
   <div class="container content">
     <button class="button-left"><a href="createEvent">Create New Event</a></button>
-    <label for="archived">Archived</label>
+    <!-- <label for="archived">Archived</label>
     <input type="checkbox" id="archived" checked=checked>
     <label for="cancelled">Cancelled</label>
-    <input type="checkbox" id="cancelled" checked=checked>
+    <input type="checkbox" id="cancelled" checked=checked> -->
     <table class="table" id="eventsTable">
       <thead>
         <% var keys = Object.keys(events[0]) %>
@@ -40,8 +40,11 @@
             <a href=<%= "archiveEvent/" + events[i].eventID %>>Archive</a> <br>
             <a href=<%= "cancelEvent/" + events[i].eventID %>>Cancel</a> <br>
             <a href=<%= "deleteEvent/" + events[i].eventID %>>Delete</a>
+            <a href=<%= "lottery/" + events[i].eventID %>>Manual Selection</a> 
+            <a href=<%= "lottery/random/" + events[i].eventID %>>Run Strategy</a> 
+            <a href=<%= "lottery/resetSelection/" + events[i].eventID %>>Reset Selection</a>
           </p>
-
+          
           </td>
             <td> <%=  events[i].eventName %> </td>
             <td> <%=  events[i].Manager %> </td>

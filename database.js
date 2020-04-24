@@ -34,12 +34,20 @@ async function queryAllCols(tableName) {
 }
 
 async function queryAllUsers() {
-  let users = await sequelize.query("SELECT * FROM users", {type: sequelize.QueryTypes.SELECT});
+  const query = 'SELECT * ' +
+                'FROM users JOIN roles ' + 
+                'ON users.roleID = roles.roleID;';
+  let users = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return users;
 }
 
 async function queryAllEvents() {
   let events = await sequelize.query("SELECT * FROM events", {type: sequelize.QueryTypes.SELECT});
+  return events;
+}
+
+async function queryAllEventNames() {
+  let events = await sequelize.query("SELECT eventID FROM LICCB.events", {type: sequelize.QueryTypes.SELECT});
   return events;
 }
 
@@ -77,6 +85,18 @@ async function queryEventTypeIDByName(eventTypeName) {
   return participants;
 }
 
+async function queryParticipantsNotReady(eventID) {
+  status = "Awaiting Confirmation";
+  status2='Not Confirmed';
+  status3='Not Selected';
+  status4= 'Standby';
+  status5='Selected';
+  status6='Cancelled';
+  status7='Same Day Cancel';
+  let participants = await sequelize.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}' AND regStatus='${status}' OR regStatus='${status2}' OR regStatus='${status3}' OR regStatus='${status4}' OR regStatus='${status5}' OR regStatus='${status6}' OR regStatus='${status7}'`, {type: sequelize.QueryTypes.SELECT})
+  return participants;  
+}
+
 async function queryEventByID(eventID) {
   let event = await sequelize.query("SELECT * FROM events WHERE eventID= ?",
   {
@@ -98,6 +118,15 @@ async function queryEventTypeMetadata(eventID) {
   const query = `SELECT typeMetadata FROM eventTypes WHERE typeID= (SELECT eventType FROM events WHERE eventID = '${eventID}')`;
   let metadata = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return metadata;
+}
+
+async function queryEventStatusByID(eventID) {
+  status="status";
+  let event = await sequelize.query("SELECT eventStatus " +
+                               "FROM LICCB.events " +  
+                               "WHERE eventID = '" + eventID + "'"
+                              , {type: sequelize.QueryTypes.SELECT});
+  return event;  
 }
 
 async function queryParticipants() {
@@ -174,6 +203,45 @@ async function tieParticipants(participantID, tieWithParticipantID) {
   return result;
 }
 
+async function changeParticipantStatus(participantID, eventID, statusToChange) {
+  let updateParticipant = await sequelize.query("UPDATE LICCB.participants " +
+                                           `SET regStatus = '${statusToChange}' ` +
+                                           "WHERE LICCB.participants.participantID = '" + participantID + "' " +
+                                           "AND LICCB.participants.eventID = '" + eventID + "'", {type: sequelize.QueryTypes.UPDATE});
+  return "success";
+}
+
+async function queryParticipantsByParticpantAttr(eventID, participantAttrs) {
+  let queryString = `SELECT P.participantID FROM LICCB.events as E, LICCB.participants as P WHERE `;
+
+  // Add all selected attributes to query
+  let attrKeys = Object.keys(participantAttrs);
+  for (let i = 0; i < attrKeys.length; i++) {
+    if (participantAttrs[attrKeys[i]] != '') {
+      queryString += `P.${attrKeys[i]} = '${participantAttrs[attrKeys[i]]}' AND `
+    }
+  }
+  // Join events table with participants table to get participant data
+  queryString += `E.eventID = P.eventID AND E.eventID='${eventID}'`
+  let participants = await sequelize.query(queryString, {type: sequelize.QueryTypes.SELECT});
+  return participants;
+}
+
+async function resetParticipantsStatus(eventID) {
+  let resetParticipants = await sequelize.query("UPDATE LICCB.participants " +
+                                           "SET regStatus='Registered' " +
+                                           "WHERE LICCB.participants.regStatus = 'Selected' " +
+                                           "AND LICCB.participants.eventID = '" + eventID + "'", {type: sequelize.QueryTypes.UPDATE});
+  return resetParticipants;
+}
+
+async function selectAllParticipantStatus(eventID) {
+  let selectAll = await sequelize.query("UPDATE LICCB.participants " +
+                                           "SET regStatus='Selected' " +
+                                           "AND LICCB.participants.eventID = '" + eventID + "'", {type: sequelize.QueryTypes.UPDATE});
+  return selectAll;
+}
+
 async function checkinParticipant(participantID, eventID) {
   let participant = await sequelize.query("UPDATE participants " +
                                           "SET checkinStatus = 'Checked In' " +
@@ -196,6 +264,35 @@ async function editUserComments(participantID, eventID, comment) {
     type: sequelize.QueryTypes.UPDATE
   });
   return participant;
+}
+
+// initializes run selection process
+async function runSelectionDefault(eventID) {
+  // populate all contenders into new table
+  let returnSelectedRegistrants = await sequelize.query("SELECT * " +  
+                                                    "FROM LICCB.participants " +  
+                                                    "WHERE eventID = '" + eventID + "'" +
+                                                    "ORDER BY regTime", {type: sequelize.QueryTypes.SELECT});
+  return returnSelectedRegistrants;
+}
+// initializes run selection process
+async function runSelectionRandom(eventID) {
+  let returnSelectedRegistrants = await sequelize.query("SELECT * " +
+                                                    " FROM LICCB.participants" +  
+                                                    " WHERE eventID = '" + eventID + "'" +
+                                                    " AND regStatus='Registered'" +
+                                                    " AND isAdult='1'" +
+                                                    " ORDER BY regTime"
+                                                    , {type: sequelize.QueryTypes.SELECT});
+  return returnSelectedRegistrants;
+}
+
+async function getCapacityFromEventID(eventID) {
+  let capacity = await sequelize.query("SELECT capacity " +  
+                                  "FROM LICCB.events " +  
+                                  "WHERE eventID = '" + eventID + "'"
+                                  , {type: sequelize.QueryTypes.SELECT});
+  return capacity;  
 }
 
 async function deleteEvent(id) {
@@ -604,7 +701,14 @@ async function updateUser(email, googleID, pictureURL){
   const query = 'UPDATE users ' +
                 `SET googleID='${googleID}', pictureURL='${pictureURL}' ` +
                 `WHERE email='${email}';`;
-  logger.log(query);
+  let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
+  return upd;
+}
+
+async function editUser(id,email, fName, lName, roleID){
+  const query = 'UPDATE users ' +
+                `SET email='${email}', firstName='${fName}', lastName='${lName}', roleID='${roleID}' ` +
+                `WHERE userID='${id}';`;
   let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
   return upd;
 }
@@ -693,6 +797,26 @@ async function queryRoleByID(id){
   return role;
 }
 
+async function queryAllRoles(){
+  return await sequelize.query('SELECT * FROM roles;');
+}
+
+async function insertRole(role){
+  const grantInfo = utils.getGrantInfoForDb(role);
+  const query = `INSERT INTO roles (roleID, grantInfo) VALUES('${uuidv4()}', '${grantInfo}');`;
+  return await sequelize.query(query);
+}
+
+async function deleteRole(id){
+  return await sequelize.query(`DELETE FROM roles WHERE roleID='${id}'`);
+}
+
+async function updateRole(id, roleInfo){
+  const grantInfo = utils.getGrantInfoForDb(roleInfo);
+  const query = `UPDATE roles SET grantInfo='${grantInfo}' WHERE roleID='${id}';`;
+  return await sequelize.query(query);
+}
+
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
@@ -720,7 +844,6 @@ module.exports.queryRegistrantEmailsByEventID = queryRegistrantEmailsByEventID;
 module.exports.queryParticipantsByEventAttr = queryParticipantsByEventAttr;
 module.exports.queryEventTypeIDByName = queryEventTypeIDByName;
 module.exports.querySpecificEvents = querySpecificEvents;
-module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryUserByEmail = queryUserByEmail;
 module.exports.queryUserByID = queryUserByID;
 module.exports.updateUser = updateUser;
@@ -736,3 +859,13 @@ module.exports.updateEventType = updateEventType;
 module.exports.queryEventTypeMetadata = queryEventTypeMetadata;
 module.exports.queryAllRoles = queryAllRoles;
 module.exports.queryRoleByID = queryRoleByID;
+module.exports.queryAllEventNames = queryAllEventNames;
+module.exports.runSelectionDefault = runSelectionDefault;
+module.exports.runSelectionRandom = runSelectionRandom;
+module.exports.getCapacityFromEventID = getCapacityFromEventID;
+module.exports.queryParticipantsNotReady = queryParticipantsNotReady;
+module.exports.queryEventStatusByID = queryEventStatusByID;
+module.exports.changeParticipantStatus = changeParticipantStatus;
+module.exports.resetParticipantsStatus = resetParticipantsStatus;
+module.exports.selectAllParticipantStatus = selectAllParticipantStatus;
+module.exports.queryParticipantsByParticpantAttr = queryParticipantsByParticpantAttr;
