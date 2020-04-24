@@ -47,7 +47,7 @@
             <td> <%= selected.regStatus %> </td>
             <td> <%= selected.checkinStatus %> </td>
             <td> <%= selected.volunteer %> </td>
-            <td> <%= selected.regTime %> </td>
+            <td> <%= selected.regTime.toLocaleDateString() + " " + utils.trimRegTime(selected.regTime.toLocaleTimeString()) %> </td>
             <td> <%= selected.userComments %> </td>
           </tr>
         </tbody>
@@ -100,7 +100,7 @@
               <td> <%= participants[i].regStatus %> </td>
               <td> <%= participants[i].checkinStatus %> </td>
               <td> <%= participants[i].volunteer %> </td>
-              <td> <%= participants[i].regTime %> </td>
+              <td> <%= participants[i].regTime.toLocaleDateString() + " " + utils.trimRegTime(participants[i].regTime.toLocaleTimeString()) %> </td>
               <td> <%= participants[i].userComments %> </td>
             </tr>
           <% } %>

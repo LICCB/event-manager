@@ -16,8 +16,8 @@
             <p>Manager: <%= `${event.firstName} ${event.lastName}` %></p>
             <p>Max Party Size: <%= event.maxPartySize %></p>
             <p>Private Event: <%= event.isPrivate ? "Yes" : "No" %></p>
-            <p>Start Time: <%= event.startTime.toString() %></p>
-            <p>End Time: <%= event.endTime.toString() %></p>
+            <p>Start Time: <%= event.startTime.toLocaleDateString() + " " + utils.trimTime(event.startTime.toLocaleTimeString()) %></p>
+            <p>End Time: <%= event.endTime.toLocaleDateString() + " " + utils.trimTime(event.endTime.toLocaleTimeString()) %></p>
           </div>
           <div class="right">
             <p>Status: <%= event.eventStatus %></p>
@@ -91,7 +91,7 @@
                   <td> <%= participants[i].regStatus %> </td>
                   <td> <%= participants[i].checkinStatus %> </td>
                   <td> <%= participants[i].volunteer %> </td>
-                  <td> <%= participants[i].regTime %> </td>
+                  <td> <%= participants[i].regTime.toLocaleDateString() + " " + utils.trimRegTime(participants[i].regTime.toLocaleTimeString()) %> </td>
                   <td>
                     <button type="button" class="tb-button" data-toggle="modal" data-target="#comments<%= participants[i].participantID %>">
                       Comments

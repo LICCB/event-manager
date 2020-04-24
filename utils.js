@@ -38,7 +38,7 @@ function getDateTime() {
     miliseconds = now.getMilliseconds().toString();
 
     return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + miliseconds;
-};
+}
 
 /**
  * Returns the date in YYYY-MM-DD from the JS Date object
@@ -96,8 +96,8 @@ function eventMetadataWrapper(signup, metadata) {
 
 function cleanupEventData(events){
     for(i = 0; i < events.length; i++){
-        events[i].startTime = trimTime(events[i].startTime);
-        events[i].endTime = trimTime(events[i].endTime);
+        events[i].startTime = events[i].startTime.toLocaleDateString() + " " + trimTime(events[i].startTime.toLocaleTimeString());
+        events[i].endTime = events[i].endTime.toLocaleDateString() + " " + trimTime(events[i].endTime.toLocaleTimeString());
         events[i]["Manager"] = `${events[i].firstName} ${events[i].lastName}`;
         delete events[i].firstName;
         delete events[i].lastName;
@@ -106,15 +106,15 @@ function cleanupEventData(events){
 }
 
 function trimTime(time){
-    var timeStr = time.toString();
-    const stop = timeStr.indexOf(":00 ");
-    return timeStr.slice(0, stop);
+    return time.slice(0, time.length-6) + " " + time.slice(time.length-2);
 }
 
-function trimTimeAMPM(time){
-    var timeStr = time.toString();
-    const stop = timeStr.indexOf(":00 ");
-    return timeStr.slice(0, stop) + " " + timeStr.slice(timeStr.length-2);
+function trimRegTime(time){
+    if(time.slice(0, time.length-6).length == 4) {
+        return "0" + time.slice(0, time.length-6) + " " + time.slice(time.length-2);
+    }else {
+        return time.slice(0, time.length-6) + " " + time.slice(time.length-2);
+    } 
 }
 
 function getResourcePermissions(res){
@@ -210,4 +210,5 @@ module.exports.getPermissions = getPermissions;
 module.exports.getRoleName = getRoleName;
 module.exports.getGrantInfoForDb = getGrantInfoForDb;
 module.exports.getPermissionsMatrix = getPermissionsMatrix;
-module.exports.trimTimeAMPM = trimTimeAMPM;
+module.exports.trimTime = trimTime;
+module.exports.trimRegTime = trimRegTime;

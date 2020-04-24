@@ -267,7 +267,8 @@ app.get('/cancelEvent/:id', authCheck, async (req, res) => {
 app.get('/participants', authCheck, async (req, res) => {
   res.render('participants/allParticipants', {
     user: req.user,
-    participants: await db.queryParticipants()
+    participants: await db.queryParticipants(),
+    utils: utils
   });
 });
 
@@ -289,7 +290,8 @@ app.get('/participant/:id', authCheck, async (req, res) => {
   res.render('participants/singleParticipant', {
     user: req.user,
     participants: await db.queryParticipantByID(req.params.id),
-    event: (await db.queryEventByID(req.params.id))[0]
+    event: (await db.queryEventByID(req.params.id))[0],
+    utils: utils
   });
 });
 

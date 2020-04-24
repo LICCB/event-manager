@@ -22,8 +22,8 @@
         <% for(i = 0; i < events.length; i++){ %>
         <tr>
             <td> <%=  events[i].eventName %> </td>
-            <td> <%=  events[i].startTime.toLocaleDateString() + " " + utils.trimTimeAMPM(events[i].startTime.toLocaleTimeString()) %> </td>
-            <td> <%=  events[i].endTime.toLocaleDateString() + " " + utils.trimTimeAMPM(events[i].endTime.toLocaleTimeString()) %> </td>
+            <td> <%=  events[i].startTime.toLocaleDateString() + " " + utils.trimTime(events[i].startTime.toLocaleTimeString()) %> </td>
+            <td> <%=  events[i].endTime.toLocaleDateString() + " " + utils.trimTime(events[i].endTime.toLocaleTimeString()) %> </td>
             <td> <%=  events[i].eventDesc %> </td>
             <td>
                 <a class="tb-button" href=<%= "/eventSignup/" + events[i].eventID + "/" + volunteerStatus %>>Sign Up</a>
