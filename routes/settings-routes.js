@@ -51,6 +51,7 @@ router.get('/editUser/:id', authCheck, async (req, res) => {
   res.render('settings/editUser', {
     title: "Edit User",
     user: req.user,
+    editUser: (await db.queryUserByID(req.params.id))[0],
     roles: (await db.queryAllRoles())[0],
     utils: utils
   });
