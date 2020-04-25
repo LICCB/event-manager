@@ -66,33 +66,37 @@ const authCheck = (req, res, next) => {
 
 const permCheck = function (resource, func) {
   return async function(req, res, next) {
-    const grantInfo = ((await db.queryRoleByID(req.user.roleID))[0][0]).grantInfo;
-    const role = (Object.keys(JSON.parse(grantInfo)))[0];
-    var perm = {granted : false};
-    var ac = await rbac.getRolesFromDb();
-    switch(func) {
-      case 'create':
-        perm = ac.can(role).createAny(resource);
-        break;
-      case 'read':
-        perm = ac.can(role).readAny(resource);
-        break;   
-      case 'update':
-        perm = ac.can(role).updateAny(resource);
-        break;
-      case 'delete':
-        perm = ac.can(role).deleteAny(resource);
-        break;
-      default:
-        break;
-    }
-    if(perm.granted){
-      logger.log(`${req.user.firstName} ${req.user.lastName} was granted access to ${resource} for ${func}`)
+    if (process.env.TESTING == undefined) {
+      const grantInfo = ((await db.queryRoleByID(req.user.roleID))[0][0]).grantInfo;
+      const role = (Object.keys(JSON.parse(grantInfo)))[0];
+      var perm = {granted : false};
+      var ac = await rbac.getRolesFromDb();
+      switch(func) {
+        case 'create':
+          perm = ac.can(role).createAny(resource);
+          break;
+        case 'read':
+          perm = ac.can(role).readAny(resource);
+          break;   
+        case 'update':
+          perm = ac.can(role).updateAny(resource);
+          break;
+        case 'delete':
+          perm = ac.can(role).deleteAny(resource);
+          break;
+        default:
+          break;
+      }
+      if(perm.granted){
+        logger.log(`${req.user.firstName} ${req.user.lastName} was granted access to ${resource} for ${func}`)
+        next();
+      }
+      else{
+        logger.log(`${req.user.firstName} ${req.user.lastName} was denied access to ${resource} for ${func}`)
+        res.redirect('unauthorized');
+      }
+    } else {
       next();
-    }
-    else{
-      logger.log(`${req.user.firstName} ${req.user.lastName} was denied access to ${resource} for ${func}`)
-      res.redirect('unauthorized');
     }
   }
 }
