@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "pretest": "cat dbschema.sql dummyRows.sql | mysql -h www.polomoto.com -u 'test' --password='test' test",
-    "test": "jest",
+    "test": "jest --forceExit",
     "posttest": "sed -n '1{p;q}' ./dbschema.sql | mysql -h www.polomoto.com -u 'test' --password='test' test"
   },
   "author": "LICCB",
