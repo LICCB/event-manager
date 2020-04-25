@@ -17,7 +17,7 @@ This is the repository for the LICCB Event Manager.
 ## Running the Application
 1. Navigate to the root project folder in a terminal
 2. Start the application with:  
-  `npm run start`  
+  `npm start`  
 3. Access the application at the URL:  
   `localhost:3000`
 
