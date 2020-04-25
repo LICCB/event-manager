@@ -8,7 +8,7 @@
     "test": "jest --forceExit",
     "posttest": "sed -n '1{p;q}' ./dbschema.sql | mysql -h www.polomoto.com -u 'test' --password='test' test",
     "start": "node launch.js",
-    "dev": "export DEV=yes && npm start"
+    "dev": "DEV=yes npm start"
   },
   "author": "LICCB",
   "license": "ISC",
