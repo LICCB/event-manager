@@ -1,9 +1,12 @@
+const logger = require('./logger');
+logger.module = 'server'
+
 var config;
 var passportSetup;
 var passport;
 var mailer;
 if (process.env.TESTING !== undefined) {
-  console.log("RUNNING IN TEST MODE")
+  logger.log("RUNNING IN TEST MODE")
   config = require('./test-config.json');
 } else {
   config = require('./config.json');
@@ -24,9 +27,6 @@ const settingsRoutes = require('./routes/settings-routes');
 const cookieSession = require('cookie-session');
 const rbac = require('./rbac');
 const AccessControl = require('accesscontrol');
-
-const logger = require('./logger');
-logger.module = 'server'
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/views'));
