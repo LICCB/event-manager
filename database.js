@@ -1,11 +1,14 @@
-const config = require('./config.json');
+if (process.env.TESTING !== undefined) {
+  const config = require('./test-config.json');
+} else {
+  const config = require('./config.json');
+}
+
 const Sequelize = require('sequelize');
 const utils = require('./utils');
 
 // Initiate Sequelize with production database and connection pool
-const sequelize = new Sequelize(((process.env.TESTING == undefined) ? 'LICCB' : 'test'),
-                                ((process.env.TESTING == undefined) ? config.database.user : 'test'),
-                                ((process.env.TESTING == undefined) ? config.database.password : 'test'), {
+const sequelize = new Sequelize('LICCB', config.database.user, config.database.password, {
   host: config.database.host,
   dialect: 'mariadb',
   pool: {
