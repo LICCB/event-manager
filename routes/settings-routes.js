@@ -52,6 +52,7 @@ router.get('/editUser/:id', authCheck, async (req, res) => {
   res.render('settings/editUser', {
     title: "Edit User",
     user: req.user,
+    editUser: (await db.queryUserByID(req.params.id))[0],
     roles: (await db.queryAllRoles())[0],
     utils: utils
   });
@@ -59,7 +60,7 @@ router.get('/editUser/:id', authCheck, async (req, res) => {
 
 router.post('/editUser/:id', authCheck, async (req, res) => {
   const u = req.body;
-  await db.editUser(req.user.userID, u.email, u.fname, u.lname, u.roleID);
+  await db.editUser(req.params.id, u.email, u.fname, u.lname, u.roleID);
   res.redirect('/settings/users');
 });
 
