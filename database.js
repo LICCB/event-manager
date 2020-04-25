@@ -3,7 +3,9 @@ const Sequelize = require('sequelize');
 const utils = require('./utils');
 
 // Initiate Sequelize with production database and connection pool
-const sequelize = new Sequelize('LICCB', config.database.user, config.database.password, {
+const sequelize = new Sequelize(((process.env.TESTING == undefined) ? 'LICCB' : 'test'),
+                                ((process.env.TESTING == undefined) ? config.database.user : 'test'),
+                                ((process.env.TESTING == undefined) ? config.database.password : 'test'), {
   host: config.database.host,
   dialect: 'mariadb',
   pool: {
@@ -47,7 +49,7 @@ async function queryAllEvents() {
 }
 
 async function queryAllEventNames() {
-  let events = await sequelize.query("SELECT eventID FROM LICCB.events", {type: sequelize.QueryTypes.SELECT});
+  let events = await sequelize.query("SELECT eventID FROM events", {type: sequelize.QueryTypes.SELECT});
   return events;
 }
 
@@ -88,7 +90,7 @@ async function queryParticipantsNotReady(eventID) {
   status5='Selected';
   status6='Cancelled';
   status7='Same Day Cancel';
-  let participants = await sequelize.query(`SELECT * FROM LICCB.participants WHERE eventID='${eventID}' AND regStatus='${status}' OR regStatus='${status2}' OR regStatus='${status3}' OR regStatus='${status4}' OR regStatus='${status5}' OR regStatus='${status6}' OR regStatus='${status7}'`, {type: sequelize.QueryTypes.SELECT})
+  let participants = await sequelize.query(`SELECT * FROM participants WHERE eventID='${eventID}' AND regStatus='${status}' OR regStatus='${status2}' OR regStatus='${status3}' OR regStatus='${status4}' OR regStatus='${status5}' OR regStatus='${status6}' OR regStatus='${status7}'`, {type: sequelize.QueryTypes.SELECT})
   return participants;  
 }
 
@@ -118,7 +120,7 @@ async function queryEventTypeMetadata(eventID) {
 async function queryEventStatusByID(eventID) {
   status="status";
   let event = await sequelize.query("SELECT eventStatus " +
-                               "FROM LICCB.events " +  
+                               "FROM events " +  
                                "WHERE eventID = '" + eventID + "'"
                               , {type: sequelize.QueryTypes.SELECT});
   return event;  
@@ -199,15 +201,15 @@ async function tieParticipants(participantID, tieWithParticipantID) {
 }
 
 async function changeParticipantStatus(participantID, eventID, statusToChange) {
-  let updateParticipant = await sequelize.query("UPDATE LICCB.participants " +
+  let updateParticipant = await sequelize.query("UPDATE participants " +
                                            `SET regStatus = '${statusToChange}' ` +
-                                           "WHERE LICCB.participants.participantID = '" + participantID + "' " +
-                                           "AND LICCB.participants.eventID = '" + eventID + "'", {type: sequelize.QueryTypes.UPDATE});
+                                           "WHERE participants.participantID = '" + participantID + "' " +
+                                           "AND participants.eventID = '" + eventID + "'", {type: sequelize.QueryTypes.UPDATE});
   return "success";
 }
 
 async function queryParticipantsByParticpantAttr(eventID, participantAttrs) {
-  let queryString = `SELECT P.participantID FROM LICCB.events as E, LICCB.participants as P WHERE `;
+  let queryString = `SELECT P.participantID FROM events as E, participants as P WHERE `;
 
   // Add all selected attributes to query
   let attrKeys = Object.keys(participantAttrs);
@@ -223,17 +225,17 @@ async function queryParticipantsByParticpantAttr(eventID, participantAttrs) {
 }
 
 async function resetParticipantsStatus(eventID) {
-  let resetParticipants = await sequelize.query("UPDATE LICCB.participants " +
+  let resetParticipants = await sequelize.query("UPDATE participants " +
                                            "SET regStatus='Registered' " +
-                                           "WHERE LICCB.participants.regStatus = 'Selected' " +
-                                           "AND LICCB.participants.eventID = '" + eventID + "'", {type: sequelize.QueryTypes.UPDATE});
+                                           "WHERE participants.regStatus = 'Selected' " +
+                                           "AND participants.eventID = '" + eventID + "'", {type: sequelize.QueryTypes.UPDATE});
   return resetParticipants;
 }
 
 async function selectAllParticipantStatus(eventID) {
-  let selectAll = await sequelize.query("UPDATE LICCB.participants " +
+  let selectAll = await sequelize.query("UPDATE participants " +
                                            "SET regStatus='Selected' " +
-                                           "AND LICCB.participants.eventID = '" + eventID + "'", {type: sequelize.QueryTypes.UPDATE});
+                                           "AND participants.eventID = '" + eventID + "'", {type: sequelize.QueryTypes.UPDATE});
   return selectAll;
 }
 
@@ -265,7 +267,7 @@ async function editUserComments(participantID, eventID, comment) {
 async function runSelectionDefault(eventID) {
   // populate all contenders into new table
   let returnSelectedRegistrants = await sequelize.query("SELECT * " +  
-                                                    "FROM LICCB.participants " +  
+                                                    "FROM participants " +  
                                                     "WHERE eventID = '" + eventID + "'" +
                                                     "ORDER BY regTime", {type: sequelize.QueryTypes.SELECT});
   return returnSelectedRegistrants;
@@ -273,7 +275,7 @@ async function runSelectionDefault(eventID) {
 // initializes run selection process
 async function runSelectionRandom(eventID) {
   let returnSelectedRegistrants = await sequelize.query("SELECT * " +
-                                                    " FROM LICCB.participants" +  
+                                                    " FROM participants" +  
                                                     " WHERE eventID = '" + eventID + "'" +
                                                     " AND regStatus='Registered'" +
                                                     " AND isAdult='1'" +
@@ -284,7 +286,7 @@ async function runSelectionRandom(eventID) {
 
 async function getCapacityFromEventID(eventID) {
   let capacity = await sequelize.query("SELECT capacity " +  
-                                  "FROM LICCB.events " +  
+                                  "FROM events " +  
                                   "WHERE eventID = '" + eventID + "'"
                                   , {type: sequelize.QueryTypes.SELECT});
   return capacity;  
