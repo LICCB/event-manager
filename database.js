@@ -1,9 +1,4 @@
-if (process.env.TESTING !== undefined) {
-  const config = require('./test-config.json');
-} else {
-  const config = require('./config.json');
-}
-
+const config = require((process.env.TESTING !== undefined) ? './test-config.json': './config.json');
 const Sequelize = require('sequelize');
 const utils = require('./utils');
 
