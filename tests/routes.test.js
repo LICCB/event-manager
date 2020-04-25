@@ -18,3 +18,11 @@ describe('Participants', () => {
     expect(res.statusCode).toEqual(200)
   })
 })
+
+describe('Events', () => {
+  it('All events test', async () => {
+    const res = await request(app)
+      .get('/events/')
+    expect(res.statusCode).toEqual(200)
+  })
+})
