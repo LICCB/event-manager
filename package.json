@@ -4,8 +4,9 @@
   "description": "LICCB Event Manager",
   "main": "server.js",
   "scripts": {
-    "pretest": "cat dbschema.sql dummyRows.sql | mariadb -h www.polomoto.com -u 'test' --password='test' test",
-    "test": "jest"
+    "pretest": "cat dbschema.sql dummyRows.sql | mysql -h www.polomoto.com -u 'test' --password='test' test",
+    "test": "jest",
+    "posttest": "sed -n '1{p;q}' ./dbschema.sql | mysql -h www.polomoto.com -u 'test' --password='test' test"
   },
   "author": "LICCB",
   "license": "ISC",
