@@ -6,7 +6,9 @@
   "scripts": {
     "pretest": "cat dbschema.sql dummyRows.sql | mysql -h www.polomoto.com -u 'test' --password='test' test",
     "test": "jest --forceExit",
-    "posttest": "sed -n '1{p;q}' ./dbschema.sql | mysql -h www.polomoto.com -u 'test' --password='test' test"
+    "posttest": "sed -n '1{p;q}' ./dbschema.sql | mysql -h www.polomoto.com -u 'test' --password='test' test",
+    "start": "node launch.js",
+    "dev": "export DEV=yes && npm start"
   },
   "author": "LICCB",
   "license": "ISC",

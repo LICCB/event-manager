@@ -1,4 +1,3 @@
-console.log("TESTING = " + process.env.TESTING);
 var config;
 var passportSetup;
 var passport;
@@ -23,9 +22,11 @@ const { Parser } = require('json2csv');
 const authRoutes = require('./routes/auth-routes');
 const settingsRoutes = require('./routes/settings-routes');
 const cookieSession = require('cookie-session');
-const logger = require('./logger');
 const rbac = require('./rbac');
 const AccessControl = require('accesscontrol');
+
+const logger = require('./logger');
+logger.module = 'server'
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/views'));
@@ -320,7 +321,7 @@ app.post('/participant/comment/:eventID/:participantID', authCheck, async (req, 
 /**
  * Renders the participant check in list for the specified event
  */
-app.get('/participants/checkin/:id', authCheck, async (req, res) => {
+app.get('/event/:id/checkin', authCheck, async (req, res) => {
   res.render('participants/checkinParticipants', {participants: await db.queryParticipantsByEventID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
 });
 
@@ -585,10 +586,6 @@ app.post('/export/exportData', authCheck, async (req, res) => {
 
 app.get('/loginFailed', async (req, res) => {
   res.render('loginFailed', {user: null});
-});
-
-app.listen(3000, function () {
-  logger.log('Listening on port 3000!', 'info');
 });
 
 module.exports = app;
