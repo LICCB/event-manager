@@ -1,3 +1,5 @@
+const logger = require('./logger');
+logger.module = 'database';
 const config = require((process.env.TESTING !== undefined) ? './test-config.json': './config.json');
 const Sequelize = require('sequelize');
 const utils = require('./utils');
@@ -6,6 +8,7 @@ const utils = require('./utils');
 const sequelize = new Sequelize('LICCB', config.database.user, config.database.password, {
   host: config.database.host,
   dialect: 'mariadb',
+  logging: logger.log,
   pool: {
     max: 10,
     min: 0,
@@ -18,14 +21,13 @@ const sequelize = new Sequelize('LICCB', config.database.user, config.database.p
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Database connection has been established successfully.');
+    logger.log('Database connection has been established successfully.', 'info');
   })
   .catch(err => {
-    console.error('Unable to connect to the database: ', err);
+    logger.log('Unable to connect to the database:', 'error');
+    logger.log(err, 'error');
   });
 
-const logger = require('./logger');
-logger.module = 'database';
 const uuidv4 = require('uuid/v4');
 
 async function queryAllCols(tableName) {
