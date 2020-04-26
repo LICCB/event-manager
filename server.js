@@ -56,10 +56,8 @@ app.use('/settings', settingsRoutes);
 const authCheck = (req, res, next) => {
   if(!req.user && process.env.TESTING == undefined){
       // if not logged in
-      console.log('bouncing');
       res.redirect('/auth/google');
   } else {
-      console.log('success');
       // if logged in
       next();
   }
