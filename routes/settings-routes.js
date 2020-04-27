@@ -5,9 +5,8 @@ const utils = require('../utils');
 const rbac = require('../rbac');
 logger.module = 'settings-routes';
 
-
 const authCheck = (req, res, next) => {
-  if(!req.user){
+  if(!req.user && process.env.TESTING == undefined){
       // if not logged in
       res.redirect('/auth/google');
   } else {

@@ -1,11 +1,11 @@
-DROP TABLE IF EXISTS LICCB.participants, LICCB.events, LICCB.eventTypes, LICCB.users, LICCB.roles;
+DROP TABLE IF EXISTS participants, events, eventTypes, users, roles;
 
-CREATE TABLE LICCB.roles(
+CREATE TABLE roles(
     roleID      CHAR(36) NOT NULL PRIMARY KEY,
     grantInfo   TEXT NOT NULL
 );
 
-CREATE TABLE LICCB.users(
+CREATE TABLE users(
     userID      CHAR(36) NOT NULL,
     email       VARCHAR(36) NOT NULL,
     googleID    VARCHAR(36) NOT NULL,
@@ -21,13 +21,13 @@ CREATE TABLE LICCB.users(
         REFERENCES roles(roleID)
 );
 
-CREATE TABLE LICCB.eventTypes(
+CREATE TABLE eventTypes(
     typeID          CHAR(36) NOT NULL PRIMARY KEY,
     typeMetadata    TEXT NOT NULL,
     typeName        VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE LICCB.events(
+CREATE TABLE events(
     -- IDs
     eventID             CHAR(36) NOT NULL PRIMARY KEY,
     managerID           CHAR(36) NOT NULL,              -- 'userID' of the user assigned to the event
@@ -60,7 +60,7 @@ CREATE TABLE LICCB.events(
         REFERENCES eventTypes(typeID)
 );
 
-CREATE TABLE LICCB.participants(
+CREATE TABLE participants(
     -- IDs
     participantID       CHAR(36) NOT NULL,
     partyID             CHAR(36) DEFAULT NULL,  -- 'participantID' of the party leader

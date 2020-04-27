@@ -17,9 +17,11 @@ This is the repository for the LICCB Event Manager.
 ## Running the Application
 1. Navigate to the root project folder in a terminal
 2. Start the application with:  
-  `node server.js`  
+    1. `npm start` For production (requires administrator privileges)
+    2. `npm run dev`  For development
 3. Access the application at the URL:  
-  `localhost:3000`
+    1. `localhost` For production
+    2. `localhost:3000` For development
 
 ## Software Choice
 One of the main reasons for picking a NodeJS/Bootstrap stack was because we all have some level of familiarity or experience with this stack. Several of us have taken web development classes that used NodeJS. NodeJS also has one of the biggest sets of existing code with the modules provided by npm. The decision over Flask or Django was mostly due to preference and our group's experience with NodeJS or lack of experience with Flask or Django.
