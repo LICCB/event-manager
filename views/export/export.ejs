@@ -5,8 +5,9 @@
     <%- include('../partials/head', {title: title}) %>
 </head>
 
-<body class="bg-gray">
-    <%- include('../partials/header', {title: title}) %>
+<body>
+    <%- include('../partials/header', {title: title, user: user}) %>
+
     <div class="container content">
         <% if (error) { %>
         <div class="alert alert-danger" role="alert">
@@ -21,7 +22,11 @@
                 <label for="eventNameCheck">Event Name</label>
                 <input type="checkbox" id="eventNameCheck" name="eventNameCheck">
                 <br>
-                <input type="text" id="eventNameVal" name="eventNameVal" class="optAttr">
+                <select id="eventNameVal" name="eventNameVal" class="optAttr">
+                    <% for(i = 0; i < events.length; i++) { %>
+                        <option value="<%= events[i].eventName %>"> <%= events[i].eventName %> </option>
+                    <% } %>
+                </select>
                 <br>
 
                 <label for="eventStatusCheck">Event Status</label>
@@ -36,7 +41,7 @@
                     <option value="Archived">Archived</option>
                 </select>
                 <br>
-                
+
                 <label for="eventTypeCheck">Event Type</label>
                 <input type="checkbox" id="eventTypeCheck" name="eventTypeCheck">
                 <br>
@@ -48,8 +53,8 @@
                 <br>
                 <select id="managerNameVal" name="managerNameVal" class="optAttr">
                     <% for(i = 0; i < users.length; i++) { %>
-                        <option value=<%= users[i].userID %>> <%= users[i].firstName + ' ' + users[i].lastName %> </option>
-                      <% } %>
+                        <option value="<%= users[i].userID %>"> <%= users[i].firstName + ' ' + users[i].lastName %> </option>
+                    <% } %>
                 </select>
                 <br>
 
@@ -58,8 +63,8 @@
                 <br>
                 <select id="creatorNameVal" name="creatorNameVal" class="optAttr">
                     <% for(i = 0; i < users.length; i++) { %>
-                        <option value=<%= users[i].userID %>> <%= users[i].firstName + ' ' + users[i].lastName %> </option>
-                      <% } %>
+                        <option value="<%= users[i].userID %>"> <%= users[i].firstName + ' ' + users[i].lastName %> </option>
+                    <% } %>
                 </select>
                 <br>
 
@@ -78,6 +83,8 @@
 
     <%- include('../partials/scripts') %>
     <script src="../scripts/exportPage.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 </body>
 
 </html>

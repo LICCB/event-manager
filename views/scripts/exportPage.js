@@ -1,14 +1,22 @@
 $().ready(function() {
+    // Documentation of Select 2: https://select2.org/
+    $("#eventNameVal").select2();
+    $("#eventNameVal").data('select2').$container.addClass('optAttr');
+    $("#managerNameVal").select2();
+    $("#managerNameVal").data('select2').$container.addClass('optAttr');
+    $("#creatorNameVal").select2();
+    $("#creatorNameVal").data('select2').$container.addClass('optAttr');
+
     let optAttrs = $(".optAttr");
     for (let i = 0; i < optAttrs.length; i++) {
         $(optAttrs[i]).attr('style', 'display: none;');
     }
     $("#eventNameCheck").on('change', function() {
         if ($(this).prop('checked')) {
-            $("#eventNameVal").attr('style', 'display: inline-block;');
+            $("#eventNameVal").data('select2').$container.attr('style', 'display: inline-block;');
         }
         else {
-            $("#eventNameVal").attr('style', 'display: none;');
+            $("#eventNameVal").data('select2').$container.attr('style', 'display: none;');
         }
     });
     $("#eventStatusCheck").on('change', function() {
@@ -29,18 +37,18 @@ $().ready(function() {
     });
     $("#managerNameCheck").on('change', function() {
         if ($(this).prop('checked')) {
-            $("#managerNameVal").attr('style', 'display: inline-block;');
+            $("#managerNameVal").data('select2').$container.attr('style', 'display: inline-block;');
         }
         else {
-            $("#managerNameVal").attr('style', 'display: none;');
+            $("#managerNameVal").data('select2').$container.attr('style', 'display: none;');
         }
     });
     $("#creatorNameCheck").on('change', function() {
         if ($(this).prop('checked')) {
-            $("#creatorNameVal").attr('style', 'display: inline-block;');
+            $("#creatorNameVal").data('select2').$container.attr('style', 'display: inline-block;');
         }
         else {
-            $("#creatorNameVal").attr('style', 'display: none;');
+            $("#creatorNameVal").data('select2').$container.attr('style', 'display: none;');
         }
     });
 });

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head', {title: "Home"}) %>
+  </head>
+  <body class="bg-gray">
+    <%- include('partials/header', {title: "Home", user: user}) %>
+    <div class="container content">
+      <p>There was a failure during your login attempt.</p>
+      <p>You either do not have an account with the LICCB or your account has been disabled.</p>
+      <p>If you believe this is a mistake, contact your system administrator.</p>
+      <button class="button" value="Go Back" onclick="history.back()">Go Back</button>
+      <footer class="footer">
+        <%- include('partials/footer') %>
+      </footer>
+    </div>
+
+    <%- include('partials/scripts') %>
+  </body>
+</html>

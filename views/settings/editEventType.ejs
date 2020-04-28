@@ -5,8 +5,9 @@
     <%- include('../partials/head', {title: title}) %>
 </head>
 
-<body class="bg-gray">
-    <%- include('../partials/header', {title: title}) %>
+<body>
+    <%- include('../partials/header', {title: title, user: user}) %>
+
     <div class="content container">
         <br><br><br><br>
         <fieldset>
@@ -51,7 +52,7 @@
     <footer>
         <%- include('../partials/footer') %>
     </footer>
-    </div>
+   </div>
     <%- include('../partials/scripts') %>
     <script src="/scripts/addFields.js" metadata="<%= type.typeMetadata %>"></script>
 </body>

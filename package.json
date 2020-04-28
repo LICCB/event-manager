@@ -2,19 +2,25 @@
   "name": "eventmanager",
   "version": "1.0.0",
   "description": "LICCB Event Manager",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "test"
+    "pretest": "cat dbschema.sql dummyRows.sql | mysql -h www.polomoto.com -u 'test' --password='test' test",
+    "test": "jest --forceExit",
+    "posttest": "sed -n '1{p;q}' ./dbschema.sql | mysql -h www.polomoto.com -u 'test' --password='test' test",
+    "start": "node launch.js",
+    "dev": "DEV=yes npm start"
   },
   "author": "LICCB",
   "license": "ISC",
   "dependencies": {
+    "accesscontrol": "^2.2.1",
     "body-parser": "^1.19.0",
     "browser-cookies": "^1.2.0",
     "cookie-session": "^1.4.0",
     "dc-tableview": "^2.0.1",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
+    "jest": "^25.2.7",
     "jquery": "^3.4.1",
     "jsdom": "^16.2.1",
     "json2csv": "^4.5.4",
@@ -22,6 +28,14 @@
     "nodemailer": "^6.4.2",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
+    "supertest": "^4.0.2",
+    "sequelize": "^5.21.6",
     "uuid": "^3.4.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }

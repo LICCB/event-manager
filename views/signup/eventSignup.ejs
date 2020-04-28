@@ -12,46 +12,50 @@
 
 <body>
     <div class="container">
-      <div class="note">
-      <h1 class="header">Public Event Registration</h1>
-      <p> <b>NOTE:</b> Events displayed on the public calendars will not be available for registration until their
-          registration windows officially open (typically a few weeks ahead of the event date). If you don't
-          see the event you seek available for selection, check back at a later date.</p>
-
-      <p>For trips open to the public, Parties are selected by lottery when demand is greater than
-          availability (this is typical).
-          Selected registrants will receive email notification before the start of the trip. The first round
-          of selections will usually take place 3 to 2 days ahead of the trip. A final round of selections are
-          usually made the day before, along with the Declines.</p>
-        </div>
-      <br>
-
-
         <fieldset class="fieldset">
             <form action=<%= `/eventSignup/${eventID}/${volunteerStatus}` %> method="post" id="eventSignupForm">
+                <h1>Event Registration Form</h1>
+                <h2>Event: <%=event.eventName%></h2>
+                <h2>Date: <%=event.startTime.toLocaleDateString()%></h2>
+                <h2>Start Time: <%=utils.trimTime(event.startTime.toLocaleTimeString())%></h2>
+                <h2>End Time: <%=utils.trimTime(event.endTime.toLocaleTimeString())%></h2>
+                <p>Events displayed on the public calendars will not be available for registration until their
+                    registration windows officially open (typically a few weeks ahead of the event date). If you don't
+                    see the event you seek available for selection, check back at a later date.</p>
+
+                <p>For trips open to the public, Parties are selected by lottery when demand is greater than
+                    availability (this is typical).
+                    Selected registrants will receive email notification before the start of the trip. The first round
+                    of selections will usually take place 3 to 2 days ahead of the trip. A final round of selections are
+                    usually made the day before, along with the Declines.</p>
+                <br>
+
+                <%if(event.eventNotes != null) { %>
+                    <h1><%=event.eventNotes%></h1>
+                <% } %>
+
                 <%if(volunteerStatus == 1) { %>
-                  <!--  <h2>Volunteer Information</h2> -->
-                    <div style="text-align:right; padding-right:25%;" name = "Volunteer Info">
-                      <h2>Volunteer Information</h2>
+                    <h2>Volunteer Information</h2>
+                    <div name = "Volunteer Info">
                         <label for="priorVolunteer">Have you been a volunteer before?</label>
                         <select name="priorVolunteer" form="eventSignupForm" class="volunteer"  >
                             <option selected disabled hidden style='display: none' value=''></option>
-                            <option value=0>No</option>
-                            <option value=1>Yes</option>
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
                         </select>
                         <br>
 
                         <label for="roleFamiliarity">Are you familiar with the role?</label>
                         <select name="roleFamiliarity" form="eventSignupForm" class="volunteer" >
                             <option selected disabled hidden style='display: none' value=''></option>
-                            <option value=0>No</option>
-                            <option value=1>Yes</option>
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
                         </select>
                     </div>
 
                 <% } %>
 
-                <div style="text-align:right; padding-right:25%;" class="reginfo">
+                <div-left class="reginfo">
                     <h2>Registrant Information</h2>
                     <label for="regfirstname">Registrant First Name:</label>
                     <input type="text" id="regfirstname" name="regfirstname" class = "name"placeholder="Your First Name Here"  >
@@ -73,15 +77,23 @@
                     <input type="text" id="regename" name="regename" class = "eContactName" placeholder="Emergency Contact Name"  >
                     <br>
 
+                    <label for="regerelation">Registrant Emergency Contact Relationship:</label>
+                    <input type="text" id="regerelation" name="regerelation" class = "relation" form = "eventSignupForm" placeholder = "Emergency Contact Relationship" required>
+                    <br>
+
                     <label for="regephone">Registrant Emergency Contact Phone Number:</label>
                     <input type="text" id="regephone" name="regephone" class = "eContactPhone "placeholder="Emergency Contact Phone Number"  >
                     <br>
+                  </div-left>
 
+                  <br>
+
+                  <div-right class="reginfo">
                     <label for="regadult">Over 18?</label>
                     <select name="regadult" form="eventSignupForm" class="select"  >
                         <option selected disabled hidden style='display: none' value=''></option>
-                        <option value=0>No</option>
-                        <option value=1>Yes</option>
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
                     </select>
                     <br>
 
@@ -91,8 +103,8 @@
                     </div2>
                     <select name="regswim" form="eventSignupForm" class="select"  >
                         <option selected disabled hidden style='display: none' value=''></option>
-                        <option value=0>No</option>
-                        <option value=1>Yes</option>
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
                     </select>
                     <br>
 
@@ -102,8 +114,8 @@
                     </div2>
                     <select name="regboat" form="eventSignupForm" class="select"  >
                         <option selected disabled hidden style='display: none' value=''></option>
-                        <option value=0>No</option>
-                        <option value=1>Yes</option>
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
                     </select>
                     <br>
 
@@ -113,29 +125,57 @@
                     </div2>
                     <select name="regcpr" form="eventSignupForm" class="select"  >
                         <option selected disabled hidden style='display: none' value=''></option>
-                        <option value=0>No</option>
-                        <option value=1>Yes</option>
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
                     </select>
-              </div>
-                <br>
-
-                <!--Insert Dynamic Fields-->
-                <!--Insert Event Type Specific Fields-->
-
-                <div>
-                    <div class="reginfo">
-                      <label for="partysize"></label>
-                      <input type="button" value="Add a Party Member" class="button" id="addpart" />
-                    </div>
                     <br>
+                </div-right>
 
-                    <div id="partymembers" form="PublicSignup"> </div> <br>
-                    <input id="remove" type="button" class="button" value="Remove Last Party Member"/>
-                </div>
                 <br>
 
-                <!--Event Discovery fields-->
-                <div style="text-align:right; padding-right:25%;" class="discinfo">
+                <div id="newfields" form="eventSignupForm">
+                    <% if((event.eventMetadata != '{}' && event.eventMetadata != null) || (eventType.typeMetadata != '{}' && eventType.typeMetadata != null)) { %> 
+                        <h2>Additional Questions</h2>
+                    <% } %>
+                    <% if(event.eventMetadata != '{}' && event.eventMetadata != null) { %>
+                        <% var md = JSON.parse(event.eventMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
+                        <% for(i=0; i < keys.length; i++){ %>
+                            <label for="<%= keys[i] %>"> <%= keys[i] %></label>
+                            <% if(vals[i] == "checkbox") { %>
+                                <select id="<%=keys[i] %>" name = "<%=keys[i] %>" form="eventSignupForm">
+                                    <option selected hidden style='display: none' value=""></option>
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                                <br>
+                            <% } %>
+                            <% if(vals[i] == "textbox") { %>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>"> <br>
+                            <% } %>
+                        <% } %>
+                    <% } %>
+                    <% if(eventType.typeMetadata != '{}' && eventType.typeMetadata != null) { %>
+                        <% var md = JSON.parse(eventType.typeMetadata); var keys = Object.keys(md); var vals = Object.values(md); %>
+                        <% for(i=0; i < keys.length; i++){ %>
+                            <br>
+                            <label for="<%= keys[i] %>"> <%= keys[i] %></label>
+                            <% if(vals[i] == "checkbox") { %>
+                                <select id="<%=keys[i] %>" name = "<%=keys[i] %>" form="eventSignupForm">
+                                    <option selected hidden style='display: none' value=""></option>
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                                <br>
+                            <% } %>
+                            <% if(vals[i] == "textbox") { %>
+                                <input type="text" id="<%=keys[i] %>" name = "<%=keys[i] %>"> <br>
+                            <% } %>
+                        <% } %>
+                    <% } %>
+                </div>
+
+                <div-right class="discinfo">
+                    <h2>Discovery Information</h2>
                     <label for="zip">Zip Code:</label>
                     <input type="text" id="zip" name="zipcode" class ="zip" placeholder="Zip Code"  >
                     <br>
@@ -182,23 +222,35 @@
                     <br>
 
                     <label for="notes">Additional Notes:</label>
-                    <textarea name="notes" form="eventSignupForm"></textarea>
+                    <textarea style="width:100px" name="notes" form="eventSignupForm"></textarea>
+                </div-right>
+                <div>
+                    <div-center class="reginfo">
+                      <label for="partysize"></label>
+                      
+                    </div-center>
+
+                    <div id="partymembers" form="PublicSignup"> </div>
+
+
+
+            
+                    <input type="button" value="Add a Party Member" class="button" id="addpart"  maxSize = "<%=event.maxPartySize%>"/>
+
+                    <input id = "remove" type = "button" class = "button" value="Remove Last Party Member"/>
+                    <br>
+
                 </div>
-                <br>
-
                 <input type="submit" value="Submit Registration">
-
             </form>
         </fieldset>
     </div>
-    <br>
-    <footer style="color:#eef4fd;" class="footer">
+    <footer class="footer">
         <%- include('../partials/footer') %>
       </footer>
     </div>
     <br>
 </body>
-
 
 <script src="/scripts/addParticipant.js"></script>
 <script src="/scripts/validator.js"></script>

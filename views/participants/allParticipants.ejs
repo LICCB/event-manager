@@ -6,10 +6,13 @@
   <body>
     <%- include('../partials/header', {title: "All Participants"}) %>
     <div class="container content">
+      <%- include('../partials/alerts') %>
       <table id="participantsTable" class="table">
         <thead>
           <tr>
+            <th scope="col"> Tie Participant</th>
             <th scope="col"> History </th>
+            <th scope="col"> Party </th>
             <th scope="col"> Event </th>
             <th scope="col"> First Name </th>
             <th scope="col"> Last Name </th>
@@ -34,9 +37,19 @@
           <% for(i = 0; i < participants.length; i++){ %>
             <tr>
               <td>
-                <a class="tb-button" href="/participant/<%= participants[i].participantID %>" role="button">
+                <a class="btn tb-button" href="/participants/tie/<%= participants[i].participantID %>" role="button">
+                  Tie
+                </a>
+              </td>
+              <td>
+                <a class="btn tb-button" href="/participant/<%= participants[i].participantID %>" role="button">
                   View
                 </a>
+              </td>
+              <td>
+                <button type="button" class="tb-button" data-toggle="modal" data-target="#party<%= participants[i].participantID %>-<%= participants[i].eventID %>">
+                  View
+                </button>
               </td>
               <td> <%= participants[i].eventName %> </td>
               <td> <%= participants[i].firstName %> </td>
@@ -54,13 +67,79 @@
               <td> <%= participants[i].regStatus %> </td>
               <td> <%= participants[i].checkinStatus %> </td>
               <td> <%= participants[i].volunteer %> </td>
-              <td> <%= participants[i].regTime %> </td>
+              <td> <%= participants[i].regTime.toLocaleDateString() + " " + utils.trimRegTime(participants[i].regTime.toLocaleTimeString()) %> </td>
               <td> <%= participants[i].userComments %> </td>
             </tr>
           <% } %>
 
         </tbody>
       </table>
+
+      <!-- View Party modal -->
+      <% for(i = 0; i < participants.length; i++) { %>
+        <div class="modal" id="party<%= participants[i].participantID %>-<%= participants[i].eventID %>">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Party for <%= participants[i].firstName + " " + participants[i].lastName %></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+
+              <!-- Modal body -->
+              <div class="modal-body">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col"> Event </th>
+                      <th scope="col"> First Name </th>
+                      <th scope="col"> Last Name </th>
+                      <th scope="col"> Phone # </th>
+                      <th scope="col"> Email </th>
+                      <th scope="col"> Zipcode </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if (participants[i].partyID != null) { %>
+                      <% participants.filter(function(p){return (p.eventID == participants[i].eventID && p.partyID == participants[i].partyID)}).forEach((participant) => { %>
+                        <tr>
+                          <td> <%= participant.eventName %> </td>
+                          <td> <%= participant.firstName %> </td>
+                          <td> <%= participant.lastName %> </td>
+                          <td> <%= participant.phone %> </td>
+                          <td> <%= participant.email %> </td>
+                          <td> <%= participant.zip %> </td>
+                        </tr>
+                      <% }) %>
+                    <% } else { %>
+                      <tr>
+                        <td> <%= participants[i].eventName %> </td>
+                        <td> <%= participants[i].firstName %> </td>
+                        <td> <%= participants[i].lastName %> </td>
+                        <td> <%= participants[i].phone %> </td>
+                        <td> <%= participants[i].email %> </td>
+                        <td> <%= participants[i].zip %> </td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <a class="btn button" href="/event/<%= participants[i].eventID %>">
+                  View Event
+                </a>
+                <button type="button" class="btn tb-button" data-dismiss="modal">
+                  Close
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      <% } %>
       <footer class="footer">
         <%- include('../partials/footer') %>
       </footer>
