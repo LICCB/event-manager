@@ -1,6 +1,6 @@
 const logger = require('./logger');
 logger.module = 'database';
-const config = require((process.env.TESTING !== undefined) ? './test-config.json': './config.json');
+const config = require((process.env.LICCB_MODE !== undefined && process.env.LICCB_MODE == 'testing') ? './test-config.json': './config.json');
 const Sequelize = require('sequelize');
 const utils = require('./utils');
 
