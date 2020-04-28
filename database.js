@@ -992,3 +992,4 @@ module.exports.changeParticipantStatus = changeParticipantStatus;
 module.exports.resetParticipantsStatus = resetParticipantsStatus;
 module.exports.selectAllParticipantStatus = selectAllParticipantStatus;
 module.exports.queryParticipantsByParticpantAttr = queryParticipantsByParticpantAttr;
+module.exports.editUser = editUser;
