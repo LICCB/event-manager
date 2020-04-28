@@ -92,7 +92,7 @@ const permCheck = function (resource, func) {
       }
       else{
         logger.log(`${req.user.firstName} ${req.user.lastName} was denied access to ${resource} for ${func}`)
-        res.redirect('unauthorized');
+        res.redirect('/unauthorized');
       }
     } else {
       next();
@@ -118,7 +118,7 @@ app.get('/unauthorized', authCheck, function(req, res){
 /**
  * Renders the createEvent page with the list of possible event managers
  */
-app.get('/createEvent', authCheck, permCheck('Events', 'create'), async (req, res) => {
+app.get('/createEvent', authCheck, permCheck(rbac.events, rbac.create), async (req, res) => {
   res.render('event/createEvent', {
     user: req.user,
     title: "Create Event",
@@ -130,7 +130,7 @@ app.get('/createEvent', authCheck, permCheck('Events', 'create'), async (req, re
 /**
  * Redirects to the events page after inserting the new event into the database and creating its participant table
  */
-app.post('/createEvent', authCheck, async (req, res) => {
+app.post('/createEvent', authCheck, permCheck(rbac.events, rbac.create), async (req, res) => {
   await db.insertEvent(req.body);
   res.redirect('/events');
 });
@@ -138,7 +138,7 @@ app.post('/createEvent', authCheck, async (req, res) => {
 /**
  * Renders the events page with the list of all events
  */
-app.get('/events', authCheck, permCheck('Events', 'read'), async (req, res) => {
+app.get('/events', authCheck, permCheck(rbac.events, rbac.read), async (req, res) => {
   res.render('event/events', {
     user: req.user,
     title: "Events",
@@ -146,7 +146,7 @@ app.get('/events', authCheck, permCheck('Events', 'read'), async (req, res) => {
   });
 });
 
-app.get('/event/:id', authCheck, async (req, res) => {
+app.get('/event/:id', authCheck, permCheck(rbac.events, rbac.read), async (req, res) => {
   const e = await db.queryEventDetailsByID(req.params.id);
   res.render('event/event', {
     user: req.user,
@@ -223,7 +223,7 @@ app.post('/editRegistration/:eventid/:partyid', async (req, res) => {
 /**
  * Renders the editEvent page with the properties of the given event
  */
-app.get('/editEvent/:id', authCheck, async (req, res) => {
+app.get('/editEvent/:id', authCheck, permCheck(rbac.events, rbac.update),  async (req, res) => {
   res.render("event/editEvent", {
     user: req.user,
     title: "Edit Event",
@@ -237,7 +237,7 @@ app.get('/editEvent/:id', authCheck, async (req, res) => {
 /**
  * Redirects to the events page after updating the event in the database
  */
-app.post('/editEvent/:id', authCheck, async (req, res) => {
+app.post('/editEvent/:id', authCheck, permCheck(rbac.events, rbac.update), async (req, res) => {
   const {oldStart, oldEnd, newStart, newEnd} = await db.updateEvent(req.body, req.params.id);
   if((oldStart.getTime() !== newStart.getTime()) || (oldEnd.getTime() !== newEnd.getTime())){
     const emails = await db.queryRegistrantEmailsByEventID(req.params.id);
@@ -249,7 +249,7 @@ app.post('/editEvent/:id', authCheck, async (req, res) => {
 /**
  * Redirects to the events page after deleting a given event
  */
-app.get('/deleteEvent/:id', authCheck, async (req, res) => {
+app.get('/deleteEvent/:id', authCheck, permCheck(rbac.events, rbac.del), async (req, res) => {
   await db.deleteEvent(req.params.id);
   res.redirect('/events');
 });
@@ -257,7 +257,7 @@ app.get('/deleteEvent/:id', authCheck, async (req, res) => {
 /**
  * Redirects to the events page after archiving a given event
  */
-app.get('/archiveEvent/:id', authCheck, async (req, res) => {
+app.get('/archiveEvent/:id', authCheck, permCheck(rbac.events, rbac.update), async (req, res) => {
   await db.archiveEvent(req.params.id);
   res.redirect('/events');
 });
@@ -265,7 +265,7 @@ app.get('/archiveEvent/:id', authCheck, async (req, res) => {
 /**
 * Redirects to the events page after publishing a given event
 */
-app.get('/publishEvent/:id', authCheck, async (req, res) => {
+app.get('/publishEvent/:id', authCheck, permCheck(rbac.events, rbac.update), async (req, res) => {
  await db.publishEvent(req.params.id);
  res.redirect('/events');
 });
@@ -273,7 +273,7 @@ app.get('/publishEvent/:id', authCheck, async (req, res) => {
 /**
  * Redirects to the events page after cancelling a given event
  */
-app.get('/cancelEvent/:id', authCheck, async (req, res) => {
+app.get('/cancelEvent/:id', authCheck, permCheck(rbac.events, rbac.update), async (req, res) => {
   await db.cancelEvent(req.params.id);
   res.redirect('/events');
 });
@@ -281,7 +281,7 @@ app.get('/cancelEvent/:id', authCheck, async (req, res) => {
 /**
  * Renders the complete participant list
  */
-app.get('/participants', authCheck, async (req, res) => {
+app.get('/participants', authCheck, permCheck(rbac.participants, rbac.read), async (req, res) => {
   res.render('participants/allParticipants', {
     user: req.user,
     participants: await db.queryParticipants(),
@@ -292,7 +292,7 @@ app.get('/participants', authCheck, async (req, res) => {
 /**
  * Renders the participant list for the specified event
  */
-app.get('/participants/:id', authCheck, async (req, res) => {
+app.get('/participants/:id', authCheck, permCheck(rbac.participants, rbac.read), async (req, res) => {
   res.render('participants/eventParticipants', {
     user: req.user,
     participants: await db.queryParticipantsByEventID(req.params.id),
@@ -303,7 +303,7 @@ app.get('/participants/:id', authCheck, async (req, res) => {
 /**
  * Renders the participant list for the specified participant
  */
-app.get('/participant/:id', authCheck, async (req, res) => {
+app.get('/participant/:id', authCheck, permCheck(rbac.participants, rbac.read), async (req, res) => {
   res.render('participants/singleParticipant', {
     user: req.user,
     participants: await db.queryParticipantByID(req.params.id),
@@ -315,14 +315,14 @@ app.get('/participant/:id', authCheck, async (req, res) => {
 /**
  * Renders the participant list to tie with the selected participant
  */
-app.get('/participants/tie/:id', authCheck, async (req, res) => {
+app.get('/participants/tie/:id', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => {
   res.render('participants/tieParticipants', {selected: (await db.queryParticipantByID(req.params.id))[0], utils: utils, participants: await db.queryParticipantsByNotID(req.params.id)})
 });
 
 /**
  * Ties two participants together and renders the all participants view with a success alert
  */
-app.get('/participants/tie/:id/:idwith', authCheck, async (req, res) => {
+app.get('/participants/tie/:id/:idwith', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => {
   await db.tieParticipants(req.params.id, req.params.idwith);
   res.redirect('/participants');
 });
@@ -330,7 +330,7 @@ app.get('/participants/tie/:id/:idwith', authCheck, async (req, res) => {
 /**
  * Updates the userCommets for the participant
  */
-app.post('/participant/comment/:eventID/:participantID', authCheck, async (req, res) => {
+app.post('/participant/comment/:eventID/:participantID', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => {
   await db.editUserComments(req.params.participantID, req.params.eventID, req.body.comment)
   res.redirect('/participants/' + req.params.eventID)
 });
@@ -359,7 +359,7 @@ app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
 /**
  * Redirects to the export page where the user can export participant data based on certain attributes
  */
-app.get('/export', authCheck, async (req, res) => {
+app.get('/export', authCheck, permCheck(rbac.participants, rbac.read), async (req, res) => {
   let events = await db.queryAllEvents();;
   delete events.meta;
   let users = await db.queryAllUsers();
@@ -377,21 +377,30 @@ app.get('/export', authCheck, async (req, res) => {
 /**
  * Redirects to the lottery run selection pages
  */
-app.get('/lottery/', async (req, res) => {
-  res.render('lottery/lotteryLanding', {title:"Lottery Landing Page", events: (await db.queryAllEventNames())});
+app.get('/lottery/', authCheck, permCheck(rbac.events, rbac.read), async (req, res) => {
+  res.render('lottery/lotteryLanding', {
+    user: req.user,
+    title:"Lottery Landing Page",
+    events: (await db.queryAllEventNames())});
 });
+
 // MANUAL
-app.get('/lottery/:id', async (req, res) => {
+app.get('/lottery/:id', authCheck, async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
   test2 = (await db.queryParticipantsNotReady(req.params.id));
   if (test[0] == null || test[0] == undefined || test2[0] == null || test2[0] == undefined){
     res.redirect('/events');
   } else {
-    res.render('lottery/lotteryEvent', {title: "Manual Selection", participants: await db.runSelectionDefault(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+    res.render('lottery/lotteryEvent', {
+      user: req.user,
+      title: "Manual Selection",
+      participants: await db.runSelectionDefault(req.params.id),
+      event: (await db.queryEventByID(req.params.id))[0]
+    });
   }
 });
 // STRATEGY
-app.get('/lottery/random/:id', async (req, res) => {
+app.get('/lottery/random/:id', authCheck, async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
   test2 = (await db.queryParticipantsNotReady(req.params.id));
   test3 = (await db.queryEventStatusByID(req.params.id));
@@ -532,7 +541,7 @@ app.get('/lottery/selectAll/:id', async (req, res) => {
  * EventId lists would be built later on based on certain attributes
  * For now, only one ID is received explicitly from the form
  */
-app.post('/export/exportData', authCheck, async (req, res) => {
+app.post('/export/exportData', authCheck, permCheck(rbac.events, rbac.read), async (req, res) => {
   let fileName = "ParticipantData.csv";
   if (req.body.fileName != '') {
     fileName = `${req.body.fileName}.csv`;

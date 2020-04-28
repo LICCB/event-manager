@@ -2,12 +2,23 @@
 const db = require('./database');
 const AccessControl = require('accesscontrol');
 
-// global permissions variables
-var resources = ['Events', 'Event Types', 'Participants', 'Users'];
-var permissions = ['Create', 'Read', 'Update', 'Delete'];
-var acPermissions = ['create:any', 'read:any', 'update:any', 'delete:any'];
+// permissions variables
+const resources = ['Events', 'Event Types', 'Participants', 'Users'];
+const permissions = ['Create', 'Read', 'Update', 'Delete'];
+const acPermissions = ['create:any', 'read:any', 'update:any', 'delete:any'];
 const internalPermissions = ['"create:any":["*"]','"read:any":["*"]','"update:any":["*"]','"delete:any":["*"]'];
 
+// permissions
+const create = 'create';
+const read = 'read';
+const update = 'update';
+const del = 'delete'; // delete is a reserved word
+
+// resources
+const events = 'Events';
+const eventTypes = 'Event Types';
+const participants = 'Participants';
+const users = 'Users';
 
 async function getRolesFromDb(){
     var grants = await db.queryAllRoles();
@@ -32,3 +43,11 @@ module.exports.permissions = permissions;
 module.exports.acPermissions = acPermissions;
 module.exports.getRolesFromDb = getRolesFromDb;
 module.exports.internalPermissions = internalPermissions;
+module.exports.create = create;
+module.exports.read = read;
+module.exports.update = update;
+module.exports.del = del;
+module.exports.events = events;
+module.exports.eventTypes = eventTypes;
+module.exports.participants = participants;
+module.exports.users = users;
