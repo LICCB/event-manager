@@ -4,7 +4,7 @@
     <%- include('../partials/head', {title: "Tie Participant"}) %>
   </head>
   <body class="bg-gray">
-    <%- include('../partials/header', {title: "Tie Participant"}) %>
+    <%- include('../partials/header', {title: "Tie Participant", user: user}) %>
     <div class="container content">
       <button class="button-left" onclick="history.back()">Cancel</button>
       <table id="participantsTable" class="table">

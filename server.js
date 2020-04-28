@@ -316,7 +316,11 @@ app.get('/participant/:id', authCheck, async (req, res) => {
  * Renders the participant list to tie with the selected participant
  */
 app.get('/participants/tie/:id', authCheck, async (req, res) => {
-  res.render('participants/tieParticipants', {selected: (await db.queryParticipantByID(req.params.id))[0], utils: utils, participants: await db.queryParticipantsByNotID(req.params.id)})
+  res.render('participants/tieParticipants', {
+    user: req.user,
+    selected: (await db.queryParticipantByID(req.params.id))[0],
+    utils: utils,
+    participants: await db.queryParticipantsByNotID(req.params.id)})
 });
 
 /**
