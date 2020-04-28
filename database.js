@@ -940,6 +940,14 @@ async function updateRole(id, roleInfo){
   return await sequelize.query(query);
 }
 
+async function editUser(id,email, fName, lName, roleID){
+  const query = 'UPDATE users ' +
+                `SET email='${email}', firstName='${fName}', lastName='${lName}', roleID='${roleID}' ` +
+                `WHERE userID='${id}';`;
+  let upd = await sequelize.query(query, {type: sequelize.QueryTypes.UPDATE});
+  return upd;
+}
+
 module.exports.queryAllUsers = queryAllUsers;
 module.exports.queryEventsTableData = queryEventsTableData;
 module.exports.queryAllEvents = queryAllEvents;
@@ -992,3 +1000,4 @@ module.exports.changeParticipantStatus = changeParticipantStatus;
 module.exports.resetParticipantsStatus = resetParticipantsStatus;
 module.exports.selectAllParticipantStatus = selectAllParticipantStatus;
 module.exports.queryParticipantsByParticpantAttr = queryParticipantsByParticpantAttr;
+module.exports.editUser = editUser;
