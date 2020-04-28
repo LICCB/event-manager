@@ -1,3 +1,5 @@
+$("#addpart").click(add_function);
+
 function add_function(event) {
     var intId = $("#partymembers div").length + 1;
     if(intId < $(this).attr("maxSize")) {
