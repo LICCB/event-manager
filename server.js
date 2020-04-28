@@ -343,7 +343,10 @@ app.post('/participant/comment/:eventID/:participantID', authCheck, async (req, 
  * Renders the participant check in list for the specified event
  */
 app.get('/event/:id/checkin', authCheck, async (req, res) => {
-  res.render('participants/checkinParticipants', {participants: await db.queryParticipantsByEventID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  res.render('participants/checkinParticipants', {
+    user: req.user,
+    participants: await db.queryParticipantsByEventID(req.params.id),
+    event: (await db.queryEventByID(req.params.id))[0]})
 });
 
 /**
