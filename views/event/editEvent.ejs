@@ -13,7 +13,7 @@
             <form action=<%= "/editEvent/" + event.eventID %> method="post" id="eventform">
                 <div class="left">
                     <label for="ename">Event Name:</label>
-                    <input type="text" id="ename" name="eventName" value=<%= event.eventName %> required>
+                    <input type="text" id="ename" name="eventName" value="<%= event.eventName %>" required>
                     <br>
                     <label for="man">Event Manager:</label>
                     <select name="managerID" form="eventform">
