@@ -17,7 +17,7 @@
           <label for="man">Event Manager:</label>
           <select name="managerID" form="eventform">
             <% for(i = 0; i < users.length; i++) { %>
-            <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
+            <option value=<%= users[i].userID %> <% if(user.userID == users[i].userID){ %> <%= "selected" %> <% } %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
             <% } %>
           </select>
 
