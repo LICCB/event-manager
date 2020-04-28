@@ -4,7 +4,7 @@
 </h1>
 <div class="wrapper">
 	<nav id="sidebar">
-		<% if(typeof user !== "undefined") { %>
+		<% if(user) { %>
 			<img src="<%= user.pictureURL %>" class="img-thumbnail rounded-circle">
 			<p> <%= `${user.firstName} ${user.lastName}` %> </p>
 		<% } %>
