@@ -1,31 +1,8 @@
-// json.parse()
-
-let lNameBlacklist = ['TEST', 'BADLASTNAME']
-
+// List of blacklisted regexs to test against
 regexs = {
     phone: [new RegExp(/(800){1}\d{7}/), new RegExp(/(555){1}\d{7}/)],
     email: [new RegExp(/.*(@hotmail)[.](com)/)]
 }
-
-// Tests whether a last name or full name entered in the form match any from the blacklist of last names above
-// To use:
-// 1) Add last name to 'lNameBlacklist' above
-// 2) Add nameBlacklist: lNameBlacklist to a class rule below
-jQuery.validator.addMethod("nameBlacklist", function(value, element, params) {
-    let lastName = value.split(" ")[1];
-    if (lastName) {
-        lastName = lastName.toUpperCase().replace(/\s/g,'');
-    }
-    else {
-        lastName = value.toUpperCase().replace(/\s/g,'');
-    }
-    for (let i = 0; i < params.length; i++) {
-        if (params[i].toUpperCase().replace(/\s/g,'') == lastName) {
-            return false;
-        }
-    }
-    return true;
-}, "Invalid input.");
 
 // Tests whether the input field has a value matching a regular expression defined above
 // To use:
@@ -40,15 +17,14 @@ jQuery.validator.addMethod("checkRegex", function(value, element, params) {
     return true;
 }, "Invalid input.");
 
+// https://jqueryvalidation.org/rules/
+// https://jqueryvalidation.org/jQuery.validator.addClassRules/
 jQuery.validator.addClassRules({
     volunteer: {
         required: true,
     },
     name: {
         required: true,
-    },
-    lname: {
-        nameBlacklist: lNameBlacklist
     },
     pname: {
         required: true,
@@ -88,7 +64,6 @@ jQuery.validator.addClassRules({
     eContactName: {
         required: true,
         testEContactName: true,
-        nameBlacklist: lNameBlacklist
     },
     eContactPhone: {
         required: true,
@@ -116,8 +91,6 @@ jQuery.validator.addMethod("testpName", function(value, element) {
     let currPartId = $(`#${element.id}`).attr('partId');
     let currPartFName = $(`.part${currPartId}`)[0].value.toUpperCase().replace(/\s/g,'');
     let currPartLName = value.toUpperCase().replace(/\s/g,'');
-    console.log('Registrant', regFName+regLName);
-    console.log('Current Participant', currPartFName+currPartLName);
     // If the current participant shares name with registrant, invalid
     if ((currPartFName + currPartLName) == (regFName + regLName)) {
         return false;
@@ -130,7 +103,6 @@ jQuery.validator.addMethod("testpName", function(value, element) {
             if (i+1 != currPartId) {
                 let newPartFName = firstNames[i].value.toUpperCase().replace(/\s/g,'');
                 let newPartLName = lastNames[i].value.toUpperCase().replace(/\s/g,'');
-                console.log('Other Participant', newPartFName+newPartLName);
                 // If current participant shares name with another participant, invalid
                 if ((currPartFName + currPartLName) == (newPartFName + newPartLName)) {
                     return false;
@@ -147,14 +119,12 @@ jQuery.validator.addMethod("testEContactName", function(value, element) {
     // First grab registrant information, as you will always test against it
     let regFName = $("#regfirstname").val().toUpperCase().replace(/\s/g,'');
     let regLName = $("#reglastname").val().toUpperCase().replace(/\s/g,'');
-    console.log('Registrant', regFName+regLName);
     // If the current element is the registrant emergency contact, check that against registrant name
     // If they match, invalid
     if ((element.id == 'regename') && (element.value.toUpperCase().replace(/\s/g,'') == (regFName + regLName))) {
         return false;
     }
     let currEContactName = value.toUpperCase().replace(/\s/g,'');
-    console.log('Current Participant', currEContactName);
     // If current emergency contact name equals registrant name, invalid
     if ((regFName + regLName) == currEContactName) {
         return false;
@@ -165,7 +135,6 @@ jQuery.validator.addMethod("testEContactName", function(value, element) {
         for (let i = 0; i < firstNames.length; i++) {
             let newPartFName = firstNames[i].value.toUpperCase().replace(/\s/g,'');
             let newPartLName = lastNames[i].value.toUpperCase().replace(/\s/g,'');
-            console.log('Other Participant', newPartFName+newPartLName);
             // If current emergency contact name equals a party member's name, invalid
             if (currEContactName == (newPartFName + newPartLName)) {
                 return false;
@@ -180,14 +149,12 @@ jQuery.validator.addMethod("testEContactName", function(value, element) {
 jQuery.validator.addMethod("testEContactPhone", function(value, element) {
     // First grab registrant information, as you will always test against it
     let regPhone = $("#regphone").val().toUpperCase().replace(/\s/g,'');
-    console.log('Registrant', regPhone);
     // If the current element is the registrant emergency contact, check that against registrant name
     // If they match, invalid
     if ((element.id == 'regephone') && (element.value.toUpperCase().replace(/\s/g,'') == regPhone)) {
         return false;
     }
     let currEContactPhone = value.toUpperCase().replace(/\s/g,'');
-    console.log('Current Participant', currEContactPhone);
     // If current emergency contact name equals registrant name, invalid
     if (regPhone == currEContactPhone) {
         return false;
@@ -196,7 +163,6 @@ jQuery.validator.addMethod("testEContactPhone", function(value, element) {
         let phoneNumbers = $(".pphone");
         for (let i = 0; i < phoneNumbers.length; i++) {
             let newPartPhone = phoneNumbers[i].value.toUpperCase().replace(/\s/g,'');
-            console.log('Other Participant', newPartPhone);
             // If current emergency contact number equals a party member's number, invalid
             if (currEContactPhone == newPartPhone) {
                 return false;
