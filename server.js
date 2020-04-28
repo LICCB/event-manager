@@ -103,7 +103,7 @@ const permCheck = function (resource, func) {
 /**
  * Renders the home page
  */
-app.get('/', authCheck, function (req, res) {
+app.get('/', function (req, res) {
   res.render('index', {
     user: req.user
   });
