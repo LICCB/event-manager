@@ -56,11 +56,11 @@
                     <%for(i=0; i < participants.length; i++) { %>
                         <%if(participants[i].participantID == participants[i].partyID) { %>
                         <label for="regfirstname">Registrant First Name:</label>
-                        <input type="text" id="regfirstname" name="regfirstname" class = "fname " value=<%= participants[i].firstName %> disabled required>
+                        <input type="text" id="regfirstname" name="regfirstname" class = "fname " value=<%= participants[i].firstName %> readonly>
                         <br>
 
                         <label for="reglastname">Registrant Last Name:</label>
-                        <input type="text" id="reglastname" name="reglastname" class = "lname" value=<%= participants[i].lastName %> disabled required>
+                        <input type="text" id="reglastname" name="reglastname" class = "lname" value=<%= participants[i].lastName %> readonly>
                         <br>
                         
                         <label for="regadult">Over 18?</label>
@@ -128,7 +128,8 @@
                             <% for(i=0; i < keys.length; i++){ %>
                                 <label for="<%= keys[i] %>"> <%= keys[i] %></label>
                                 <% if(vals[i] == "checkbox") { %>
-                                    <select id="<%=keys[i] %>" name = "<%=keys[i] %>" form="eventSignupForm">
+                                    <select id="<%=keys[i] %>" name = "<%=keys[i] %>" form="editRegistrationform">
+                                        <option value="" selected hidden style='display: none'></option>
                                         <option value="false" <%if(metadata[keys[i]] == "false") { %> <%="selected"%> <% } %>>No</option>
                                         <option value="true" <%if(metadata[keys[i]] == "true") { %> <%="selected"%> <% } %>>Yes</option>
                                     </select>
@@ -145,7 +146,8 @@
                                 <br>
                                 <label for="<%= keys[i] %>"> <%= keys[i] %></label>
                                 <% if(vals[i] == "checkbox") { %>
-                                    <select id="<%=keys[i] %>" name = "<%=keys[i] %>" form="eventSignupForm">
+                                    <select id="<%=keys[i] %>" name = "<%=keys[i] %>" form="editRegistrationform">
+                                        <option value="" selected hidden style='display: none'></option>
                                         <option value="false" <%if(metadata[keys[i]] == "false") { %> <%="selected"%> <% } %>>No</option>
                                         <option value="true" <%if(metadata[keys[i]] == "true") { %> <%="selected"%> <% } %>>Yes</option>
                                     </select>
@@ -214,16 +216,18 @@
 
                 <div id="partymembers" form="editRegistrationform">
                     <% if(participants.length - 1 > 0) { %>
+                        <%var offset = 0;%>
                         <% for(i=0; i < participants.length; i++){ %>
+                            <%if(participants[i].participantID == participants[i].partyID) { offset = 1;}%>
                             <% if(participants[i].participantID != participants[i].partyID) { %>
-                                <div class="partwrapper" id = "part<%= i + 1 %>">
-                                    <h2>Party Member <%= i + 2 %></h2>
-                                    <label for="part<%= i + 2 %>fname" >Participant <%= i + 2 %> First Name:</label>
-                                    <input required type="text" id="part<%= i + 1%>fname" name="part<%= i + 1%>fname" class="fname" value=<%= participants[i].firstName %> disabled>
+                                <div class="partwrapper" id = "part<%= i + 1 - offset %>">
+                                    <h2>Party Member <%= i + 1 - offset %></h2>
+                                    <label for="part<%= i + 1 - offset %>fname" >Participant <%= i + 1 - offset %> First Name:</label>
+                                    <input required type="text" id="part<%= i + 1%>fname" name="part<%= i + 1%>fname" class="fname" value=<%= participants[i].firstName %> readonly>
                                     <br>
                                 
                                     <label for="part<%= i + 2 %>lname" >Participant <%= i + 2 %> Last Name:</label>
-                                    <input required type="text" id="part<%= i + 1 %>lname" name="part<%= i + 1 %>lname" class="lname" value=<%= participants[i].lastName %> disabled>
+                                    <input required type="text" id="part<%= i + 1 %>lname" name="part<%= i + 1 %>lname" class="lname" value=<%= participants[i].lastName %> readonly>
                                     <br>
                                 
                                     <label for="part<%= i + 2 %>age" >Over 18?</label>

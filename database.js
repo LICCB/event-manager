@@ -676,8 +676,8 @@ async function updateParty(signup, eventID, partyID) {
   for(i = 1; i <= partysize; i++) {
     memberCheck[i] = 0;
   }
-  for(i = 0; j < partyMembers.length; i++) {
-    for(j = 1; i <= partysize; j++) {
+  for(i = 0; i < partyMembers.length; i++) {
+    for(j = 1; j <= partysize; j++) {
       if(signup[`part${i}firstName`] + signup[`part${i}lastName`] == partyMembers[j].firstName + partyMembers[j].lastName) {
         update = "UPDATE participants " +
         "SET " +
