@@ -4,7 +4,7 @@
     <%- include('../partials/head', {title: event.eventName + " Check In"}) %>
   </head>
   <body>
-    <%- include('../partials/header', {title: event.eventName + " Check In"}) %>
+    <%- include('../partials/header', {title: event.eventName + " Check In", user: user}) %>
     <div class="container content">
       <table id="checkinTable" class="table">
         <thead>
