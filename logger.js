@@ -3,9 +3,6 @@ var logger = exports;
 // Default minimum level to be output
 logger.debugLevel = 'debug';
 
-// Default module
-logger.module = 'general';
-
 logger.log = function(message, level='debug') {
   // Log levels in order of increasing severity
   // 'error' should always be the highest level
@@ -19,9 +16,9 @@ logger.log = function(message, level='debug') {
 
     // Log errors to stderr and everything else to stdout
     if (levels.indexOf(level) >= levels.indexOf('error')) {
-      console.error('['+level+'] '+logger.module+': '+message);
+      console.error(level+': '+message);
     } else {
-      console.log('['+level+'] '+logger.module+': '+message);
+      console.log(level+': '+message);
     }
   }
 }
