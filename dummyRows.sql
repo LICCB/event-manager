@@ -14,7 +14,7 @@ INSERT INTO users (userID, googleID, pictureURL, email, firstName, lastName, use
     ('858603fb-4980-430b-970c-c80159666dae', '858603fb-4980-430b-970c-c80159666dae', '', 'charlie.harper@gmail.com', 'Charlie', 'Harper', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
     ('c7eff1d1-46da-4c5c-8c22-c808b1886db6', 'c7eff1d1-46da-4c5c-8c22-c808b1886db6', '', 'david.matten@licboathouse.com', 'David', 'Matten', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
     ('4a8cdd30-2d9d-46df-b74a-bf477fa4092a', '4a8cdd30-2d9d-46df-b74a-bf477fa4092a', '', 'dmatten00@gmail.com', 'David', 'Matten', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
-    ('cd521b6d-2b9a-4480-a022-b5ab55aada58', 'cd521b6d-2b9a-4480-a022-b5ab55aada58', '', 'licboathouse@gmail.com,', 'LIC Boathouse', 'Admin', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
+    ('cd521b6d-2b9a-4480-a022-b5ab55aada58', 'cd521b6d-2b9a-4480-a022-b5ab55aada58', '', 'licboathouse@gmail.com', 'LIC Boathouse', 'Admin', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
     ('aa56ca40-a9cb-4f51-a943-c6eec9f763fe', 'aa56ca40-a9cb-4f51-a943-c6eec9f763fe', '', 'licboathouse.ms@gmail.com', 'Michael', 'Smalley', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
     ('27d031a3-ebd5-440c-97fb-052d89c31259', '27d031a3-ebd5-440c-97fb-052d89c31259', '', 'licboathouse.am@gmail.com', 'Agnes', 'Michalek', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
     ('ed54e319-d363-4b46-a9cc-cea878ba8ab3', 'ed54e319-d363-4b46-a9cc-cea878ba8ab3', '', 'liccboathouse@gmail.com', 'LICCB Org', 'Generic Checkin', 1, '7d4666ef-2d92-4f8a-ae4f-6b61d568031b'),
