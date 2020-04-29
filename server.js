@@ -338,13 +338,19 @@ app.post('/participant/comment/:eventID/:participantID', authCheck, permCheck(rb
 /**
  * Renders the participant check in list for the specified event
  */
+// read event and participant? --> event read for now
 app.get('/event/:id/checkin', authCheck, async (req, res) => {
-  res.render('participants/checkinParticipants', {participants: await db.queryParticipantsByEventID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  res.render('participants/checkinParticipants', {
+    user: req.user,
+    participants: await db.queryParticipantsByEventID(req.params.id),
+    event: (await db.queryEventByID(req.params.id))[0]
+  })
 });
 
 /**
  * Checks in a participant and redirects back to the event's check in table
  */
+// update event and participant? --> participants update for now
 app.get('/participants/checkin/:eventid/:participantid', authCheck, async (req, res) => { // Should be changed to POST
   await db.checkinParticipant(req.params.participantid, req.params.eventid);
   res.redirect('/participants/checkin/' + req.params.eventid);
@@ -359,6 +365,7 @@ app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
 /**
  * Redirects to the export page where the user can export participant data based on certain attributes
  */
+// participants read for now
 app.get('/export', authCheck, permCheck(rbac.participants, rbac.read), async (req, res) => {
   let events = await db.queryAllEvents();;
   delete events.meta;
@@ -377,6 +384,8 @@ app.get('/export', authCheck, permCheck(rbac.participants, rbac.read), async (re
 /**
  * Redirects to the lottery run selection pages
  */
+// update event and participant? --> participants update for now
+// Not a real page
 app.get('/lottery/', authCheck, permCheck(rbac.events, rbac.read), async (req, res) => {
   res.render('lottery/lotteryLanding', {
     user: req.user,
@@ -385,6 +394,7 @@ app.get('/lottery/', authCheck, permCheck(rbac.events, rbac.read), async (req, r
 });
 
 // MANUAL
+// read event and participants
 app.get('/lottery/:id', authCheck, async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
   test2 = (await db.queryParticipantsNotReady(req.params.id));
@@ -400,6 +410,7 @@ app.get('/lottery/:id', authCheck, async (req, res) => {
   }
 });
 // STRATEGY
+//update participants
 app.get('/lottery/random/:id', authCheck, async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
   test2 = (await db.queryParticipantsNotReady(req.params.id));
@@ -418,7 +429,7 @@ app.get('/lottery/random/:id', authCheck, async (req, res) => {
     }
   }
 });
-
+// update participants
 app.post('/updateSelectedParticipantsStrategy/:id', async (req, res) => {
   selectedParticipants = await db.runSelectionRandom(req.params.id);
   delete selectedParticipants.meta;
@@ -432,7 +443,7 @@ app.post('/updateSelectedParticipantsStrategy/:id', async (req, res) => {
   res.redirect('/events');
 });
 
-
+// update event and participant? --> participants update for now
 app.post('/updateSelectedParticipants/:id', async (req, res) => {
 
   // console.log(req);
@@ -488,6 +499,7 @@ app.post('/updateSelectedParticipants/:id', async (req, res) => {
   res.redirect('/events');
 });
 
+// update participants
 app.get('/lottery/:eventid/changeStatusIndividualUser/:status/:userid', async (req, res) => {
   res.redirect('back');
   status = ""
@@ -525,11 +537,13 @@ app.get('/lottery/:eventid/changeStatusIndividualUser/:status/:userid', async (r
   let selectIndividualUser = await db.changeParticipantStatus(req.params.userid, req.params.eventid, status)
 });
 
+// update participants
 app.get('/lottery/resetSelection/:id', async (req, res) => {
   res.redirect('/events');
   resetParticipants = await db.resetParticipantsStatus(req.params.id);
 });
 
+// update participants
 app.get('/lottery/selectAll/:id', async (req, res) => {
   res.redirect('/events');
   resetParticipants = await db.selectAllParticipantStatus(req.params.id);
