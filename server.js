@@ -316,7 +316,11 @@ app.get('/participant/:id', authCheck, async (req, res) => {
  * Renders the participant list to tie with the selected participant
  */
 app.get('/participants/tie/:id', authCheck, async (req, res) => {
-  res.render('participants/tieParticipants', {selected: (await db.queryParticipantByID(req.params.id))[0], utils: utils, participants: await db.queryParticipantsByNotID(req.params.id)})
+  res.render('participants/tieParticipants', {
+    user: req.user,
+    selected: (await db.queryParticipantByID(req.params.id))[0],
+    utils: utils,
+    participants: await db.queryParticipantsByNotID(req.params.id)})
 });
 
 /**
@@ -339,7 +343,10 @@ app.post('/participant/comment/:eventID/:participantID', authCheck, async (req, 
  * Renders the participant check in list for the specified event
  */
 app.get('/event/:id/checkin', authCheck, async (req, res) => {
-  res.render('participants/checkinParticipants', {participants: await db.queryParticipantsByEventID(req.params.id), event: (await db.queryEventByID(req.params.id))[0]})
+  res.render('participants/checkinParticipants', {
+    user: req.user,
+    participants: await db.queryParticipantsByEventID(req.params.id),
+    event: (await db.queryEventByID(req.params.id))[0]})
 });
 
 /**
