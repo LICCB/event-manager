@@ -52,6 +52,15 @@ input[type=text], select, input[type=time] {
 
   * {box-sizing:border-box}
 
+/* Validation Errors */
+input.validationError, select.validationError {
+  border: solid 2px #ff929d;
+}
+label.validationError {
+  padding-left: 5px;
+  color: #ff2436;
+}
+
 /*Add/Remove participants button*/
 .button {
   color: #082b47;
