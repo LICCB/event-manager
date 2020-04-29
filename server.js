@@ -1,5 +1,4 @@
 const logger = require('./logger');
-logger.module = 'server'
 
 var config;
 var passportSetup;

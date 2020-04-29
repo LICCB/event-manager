@@ -3,7 +3,6 @@ const GoogleStrategy = require('passport-google-oauth20');
 const config = require('./config.json');
 const db = require('./database');
 const logger = require('./logger');
-logger.module = 'passport';
 
 passport.serializeUser((user, done) => {
     if(user){

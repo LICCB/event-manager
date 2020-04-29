@@ -6,7 +6,6 @@ if (process.argv.length == 3 && process.env.LICCB_MODE === undefined) {
 
 const app = require('./server');
 const logger = require('./logger');
-logger.module = 'launch';
 
 if (process.env.LICCB_MODE == 'dev') {
     app.listen(3000, function () {
