@@ -53,7 +53,6 @@ jQuery.validator.addClassRules({
         checkRegex: regexs['phone']
     },
     zip: {
-        required: true,
         digits: true,
         minlength: 5,
         maxlength: 5
