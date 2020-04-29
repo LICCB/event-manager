@@ -1,6 +1,5 @@
 const logger = require('./logger');
 const rbac = require('./rbac');
-logger.module = 'utils';
 
 /**
  * Returns the time in HH:MM from the JS Date object

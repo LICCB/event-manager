@@ -1,11 +1,10 @@
 const logger = require('./logger');
-logger.module = 'server'
 
 var config;
 var passportSetup;
 var passport;
 var mailer;
-if (process.env.TESTING !== undefined) {
+if (process.env.LICCB_MODE == 'testing') {
   logger.log("RUNNING IN TEST MODE")
   config = require('./test-config.json');
 } else {
@@ -37,7 +36,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
-if (process.env.TESTING == undefined) {
+if (process.env.LICCB_MODE != 'testing') {
   // cookies
   app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000,
@@ -54,7 +53,7 @@ app.use('/auth', authRoutes);
 app.use('/settings', settingsRoutes);
 
 const authCheck = (req, res, next) => {
-  if(!req.user && process.env.TESTING == undefined){
+  if(!req.user && process.env.LICCB_MODE != 'testing'){
       // if not logged in
       res.redirect('/auth/google');
   } else {
@@ -65,7 +64,7 @@ const authCheck = (req, res, next) => {
 
 const permCheck = function (resource, func) {
   return async function(req, res, next) {
-    if (process.env.TESTING == undefined) {
+    if (process.env.LICCB_MODE != 'testing') {
       const grantInfo = ((await db.queryRoleByID(req.user.roleID))[0][0]).grantInfo;
       const role = (Object.keys(JSON.parse(grantInfo)))[0];
       var perm = {granted : false};
