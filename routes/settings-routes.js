@@ -3,10 +3,9 @@ const db = require('../database');
 const logger = require('../logger');
 const utils = require('../utils');
 const rbac = require('../rbac');
-logger.module = 'settings-routes';
 
 const authCheck = (req, res, next) => {
-  if(!req.user && process.env.TESTING == undefined){
+  if(!req.user && process.env.LICCB_MODE != 'testing'){
       // if not logged in
       res.redirect('/auth/google');
   } else {

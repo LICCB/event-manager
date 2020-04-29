@@ -1,6 +1,6 @@
 const request = require('supertest')
 
-process.env.TESTING = 1;
+process.env.LICCB_MODE = 'testing';
 const app = require('../server')
 
 describe('Misc', () => {
