@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/css/form.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 </head>
 
 <body>
@@ -37,7 +38,7 @@
                     <h2>Volunteer Information</h2>
                     <div name = "Volunteer Info">
                         <label for="priorVolunteer">Have you been a volunteer before?</label>
-                        <select name="priorVolunteer" form="eventSignupForm" required>
+                        <select name="priorVolunteer" form="eventSignupForm" class="volunteer"  >
                             <option selected disabled hidden style='display: none' value=''></option>
                             <option value="false">No</option>
                             <option value="true">Yes</option>
@@ -45,7 +46,7 @@
                         <br>
 
                         <label for="roleFamiliarity">Are you familiar with the role?</label>
-                        <select name="roleFamiliarity" form="eventSignupForm" required>
+                        <select name="roleFamiliarity" form="eventSignupForm" class="volunteer" >
                             <option selected disabled hidden style='display: none' value=''></option>
                             <option value="false">No</option>
                             <option value="true">Yes</option>
@@ -57,23 +58,23 @@
                 <div-left class="reginfo">
                     <h2>Registrant Information</h2>
                     <label for="regfirstname">Registrant First Name:</label>
-                    <input type="text" id="regfirstname" name="regfirstname" class = "fname "placeholder="Your First Name Here" required>
+                    <input type="text" id="regfirstname" name="regfirstname" class = "name"placeholder="Your First Name Here"  >
                     <br>
 
                     <label for="reglastname">Registrant Last Name:</label>
-                    <input type="text" id="reglastname" name="reglastname" class = "lname" placeholder="Your Last Name Here" required>
+                    <input type="text" id="reglastname" name="reglastname" class = "name lname" placeholder="Your Last Name Here"  >
                     <br>
 
                     <label for="regemail">Registrant Email:</label>
-                    <input type="text" id="regemail" name="regemail" class = "email" placeholder="Your Email Here" required>
+                    <input type="text" id="regemail" name="regemail" class = "email" placeholder="Your Email Here"  >
                     <br>
 
                     <label for="regphone">Registrant Phone Number:</label>
-                    <input type="text" id="regphone" name="regphone" class = "phone" placeholder="Your Phone Number Here" required>
+                    <input type="text" id="regphone" name="regphone" class = "phone" placeholder="Your Phone Number Here"  >
                     <br>
 
                     <label for="regename">Registrant Emergency Contact Name:</label>
-                    <input type="text" id="regename" name="regename" class = "name" placeholder="Emergency Contact Name" required>
+                    <input type="text" id="regename" name="regename" class = "eContactName" placeholder="Emergency Contact Name"  >
                     <br>
 
                     <label for="regerelation">Registrant Emergency Contact Relationship:</label>
@@ -81,7 +82,7 @@
                     <br>
 
                     <label for="regephone">Registrant Emergency Contact Phone Number:</label>
-                    <input type="text" id="regephone" name="regephone" class = "phone "placeholder="Emergency Contact Phone Number" required>
+                    <input type="text" id="regephone" name="regephone" class = "eContactPhone "placeholder="Emergency Contact Phone Number"  >
                     <br>
                   </div-left>
 
@@ -89,7 +90,7 @@
 
                   <div-right class="reginfo">
                     <label for="regadult">Over 18?</label>
-                    <select name="regadult" form="eventSignupForm" required>
+                    <select name="regadult" form="eventSignupForm" class="select"  >
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
                         <option value="true">Yes</option>
@@ -100,7 +101,7 @@
                     <div2 class = "tooltip"><img src="/images/qmark.png" height="15px" width="15px">
                       <span class="tooltiptext">If you fall into water, will you be able to swim to the shore by yourself?</span>
                     </div2>
-                    <select name="regswim" form="eventSignupForm" required>
+                    <select name="regswim" form="eventSignupForm" class="select"  >
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
                         <option value="true">Yes</option>
@@ -111,7 +112,7 @@
                     <div2 class = "tooltip"><img src="/images/qmark.png" height="15px" width="15px">
                       <span class="tooltiptext">Have you ever been on a boat before?</span>
                     </div2>
-                    <select name="regboat" form="eventSignupForm" required>
+                    <select name="regboat" form="eventSignupForm" class="select"  >
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
                         <option value="true">Yes</option>
@@ -122,7 +123,7 @@
                     <div2 class = "tooltip"><img src="/images/qmark.png" height="15px" width="15px">
                       <span class="tooltiptext">Are you certified to perform CPR? Note: This will not affect your chances of being selected for a trip.</span>
                     </div2>
-                    <select name="regcpr" form="eventSignupForm" required>
+                    <select name="regcpr" form="eventSignupForm" class="select"  >
                         <option selected disabled hidden style='display: none' value=''></option>
                         <option value="false">No</option>
                         <option value="true">Yes</option>
@@ -176,7 +177,7 @@
                 <div-right class="discinfo">
                     <h2>Discovery Information</h2>
                     <label for="zip">Zip Code:</label>
-                    <input type="text" id="zip" name="zipcode" class ="zip" placeholder="Zip Code" required>
+                    <input type="text" id="zip" name="zipcode" class ="zip" placeholder="Zip Code"  >
                     <br>
 
                     <label for="eventdiscovery">Event Discovery:</label>
@@ -252,6 +253,6 @@
 </body>
 
 <script src="/scripts/addParticipant.js"></script>
-
+<script src="/scripts/validator.js"></script>
 
 </html>
