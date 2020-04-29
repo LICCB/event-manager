@@ -17,7 +17,7 @@
           <label for="man">Event Manager:</label>
           <select name="managerID" form="eventform">
             <% for(i = 0; i < users.length; i++) { %>
-            <option value=<%= users[i].userID %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
+            <option value=<%= users[i].userID %> <% if(user && user.userID == users[i].userID){ %> <%= "selected" %> <% } %>> <%= users[i].firstName + " " + users[i].lastName %> </option>
             <% } %>
           </select>
 
@@ -43,26 +43,26 @@
 
           <br>
           <label for="notes">Notes:</label>
-          <input type="text" id="notes" name="eventNotes" placeholder="Notes">
+          <textarea id="notes" name="eventNotes" placeholder="Notes" rows="4" cols="50"></textarea>
         </div>
         <div class="right">
-          <label for="stime">Start Time:</label>
-          <input type="time" id="stime" name="startTime" placeholder="Start Time" required>
-          <br>
           <label for="sdate">Start Date:</label>
           <input type="date" id="sdate" name="startDate" placeholder="Start Date" required>
           <br>
-          <label for="etime">End Time:</label>
-          <input type="time" id="etime" name="endTime" placeholder="End Time" required>
+          <label for="stime">Start Time:</label>
+          <input type="time" id="stime" name="startTime" placeholder="Start Time" required>
           <br>
           <label for="edate">End Date:</label>
           <input type="date" id="edate" name="endDate" placeholder="End Date" required>
+          <br>
+          <label for="etime">End Time:</label>
+          <input type="time" id="etime" name="endTime" placeholder="End Time" required>
           <br>
           <label for="sratio">Staff Ratio:</label>
           <input type="text" id="sratio" name="staffRatio" placeholder="Staff Ratio" required>
           <br>
           <label for="desc">Description:</label>
-          <input type="text" id="desc" name="eventDesc" placeholder="Notes">
+          <textarea id="desc" name="eventDesc" rows="4" cols="50"></textarea>
           <br>
 
           <input type="button" value="Add a field" class="addfield" id="addfield" />
