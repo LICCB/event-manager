@@ -88,7 +88,7 @@ jQuery.validator.addMethod("testpName", function(value, element) {
     let regLName = $("#reglastname").val().toUpperCase().replace(/\s/g,'');
     // Grab current participant id from element
     let currPartId = $(`#${element.id}`).attr('partId');
-    let currPartFName = $(`.part${currPartId}`)[0].value.toUpperCase().replace(/\s/g,'');
+    let currPartFName = $(`#part${currPartId}fname`)[0].value.toUpperCase().replace(/\s/g,'');
     let currPartLName = value.toUpperCase().replace(/\s/g,'');
     // If the current participant shares name with registrant, invalid
     if ((currPartFName + currPartLName) == (regFName + regLName)) {

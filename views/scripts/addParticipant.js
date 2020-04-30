@@ -8,9 +8,9 @@ function add_function(event) {
 
         var pLabel = $(`<h2>Party Member ${intId + 1}</h2>`);
         var pFNameLabel = $(`<label for="part${intId}fname">Participant ${intId + 1} First Name: </label>`);
-        var pFName = $(`<input required type="text" id="part${intId}fname" name="part${intId}fname" class="name" placeholder="Party Member First Name Here"><br>`);
+        var pFName = $(`<input required type="text" id="part${intId}fname" name="part${intId}fname" class="partFName name" placeholder="Party Member First Name Here"><br>`);
         var pLNameLabel = $(`<label for="part${intId}lname" >Participant ${intId + 1} Last Name: </label>`);
-        var pLName = $(`<input required type="text" id="part${intId}lname" name="part${intId}lname" class="pname" placeholder="Party Member Last Name Here"><br>`);
+        var pLName = $(`<input required type="text" id="part${intId}lname" partId=${intId} name="part${intId}lname" class="partLName pname" placeholder="Party Member Last Name Here"><br>`);
         var pAgeLabel = $(`<label for="part${intId}age" >Over 18? </label>`);
         var pAge = $(`<select required name= "part${intId}age" class="select"><option selected disabled hidden style="display: none" value=""></option><option value=0>No</option><option value=1>Yes</option></select><br>`);
         var pSwimLabel = $(`<label for="part${intId}swim" >Can they swim? </label>`);
