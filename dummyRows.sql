@@ -1,7 +1,7 @@
 INSERT INTO roles (roleID, grantInfo)
     VALUES
-    ('7d4666ef-2d92-4f8a-ae4f-6b61d568031b', '{"Admin" :{"Events": {"create:any": ["*"], "read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"EventTypes" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"Participants": {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"Users" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]}}}'),
-    ('7d4666ef-2d92-4f8a-ae4f-6b61d568045b', '{"Read Only" :{"Events": {"read:any": ["*"]},"EventTypes" : {"read:any": ["*"]},"Participants": {"read:any": ["*"]},"Users" : {"read:any": ["*"]}}}');
+    ('7d4666ef-2d92-4f8a-ae4f-6b61d568031b', '{"Admin" :{"Events": {"create:any": ["*"], "read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"EventTypes" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"Participants": {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]},"Users" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]}, "Roles" : {"create:any": ["*"],"read:any": ["*"],"update:any": ["*"], "delete:any": ["*"]}}}'),
+    ('7d4666ef-2d92-4f8a-ae4f-6b61d568045b', '{"Read Only" :{"Events": {"read:any": ["*"]},"EventTypes" : {"read:any": ["*"]},"Participants": {"read:any": ["*"]},"Users" : {"read:any": ["*"]},  "Roles" : {"read:any": ["*"]}}}');
 
 INSERT INTO users (userID, googleID, pictureURL, email, firstName, lastName, userEnabled, roleID)
     VALUES
