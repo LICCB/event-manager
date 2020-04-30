@@ -145,7 +145,7 @@ app.get('/events', authCheck, permCheck(rbac.events, rbac.read), async (req, res
   });
 });
 
-app.get('/event/:id', authCheck, permCheck(rbac.events, rbac.read), async (req, res) => {
+app.get('/event/:id', authCheck, permCheck(rbac.events, rbac.read), permCheck(rbac.participants, rbac.read), async (req, res) => {
   const e = await db.queryEventDetailsByID(req.params.id);
   res.render('event/event', {
     user: req.user,
