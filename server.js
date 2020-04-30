@@ -5,7 +5,7 @@ var passportSetup;
 var passport;
 var mailer;
 if (process.env.LICCB_MODE == 'testing') {
-  logger.log("RUNNING IN TEST MODE")
+  logger.log("RUNNING IN TEST MODE");
   config = require('./test-config.json');
 } else {
   config = require('./config.json');
@@ -86,18 +86,18 @@ const permCheck = function (resource, func) {
           break;
       }
       if(perm.granted){
-        logger.log(`${req.user.firstName} ${req.user.lastName} was granted access to ${resource} for ${func}`)
+        logger.log(`${req.user.firstName} ${req.user.lastName} was granted access to ${resource} for ${func}`);
         next();
       }
       else{
-        logger.log(`${req.user.firstName} ${req.user.lastName} was denied access to ${resource} for ${func}`)
+        logger.log(`${req.user.firstName} ${req.user.lastName} was denied access to ${resource} for ${func}`);
         res.redirect('unauthorized');
       }
     } else {
       next();
     }
-  }
-}
+  };
+};
 
 /**
  * Renders the home page
@@ -111,7 +111,7 @@ app.get('/', authCheck, function (req, res) {
 app.get('/unauthorized', authCheck, function(req, res){
   res.render('unauthorized', {
     user: req.user
-  })
+  });
 });
 
 /**
@@ -216,7 +216,11 @@ app.get('/editRegistration/:eventid/:partyid', async (req, res) => {
 
 app.post('/editRegistration/:eventid/:partyid', async (req, res) => {
   await db.updateParty(req.body, req.params.eventid, req.params.partyid);
-  res.redirect('/signupThanks');
+  res.redirect('signup/editThanks');
+});
+
+app.get('/signup/editThanks', function(req, res) {
+  res.render('signup/editThanks')
 });
 
 /**

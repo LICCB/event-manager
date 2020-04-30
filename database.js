@@ -67,11 +67,11 @@ async function queryParticipantsByEventAttr(eventAttrs) {
   let attrKeys = Object.keys(eventAttrs);
   for (let i = 0; i < attrKeys.length; i++) {
     if (eventAttrs[attrKeys[i]] != '') {
-      queryString += `E.${attrKeys[i]} = '${eventAttrs[attrKeys[i]]}' AND `
+      queryString += `E.${attrKeys[i]} = '${eventAttrs[attrKeys[i]]}' AND `;
     }
   }
   // Join events table with participants table to get participant data
-  queryString += "E.eventID = P.eventID"
+  queryString += "E.eventID = P.eventID";
   let participants = await sequelize.query(queryString, {type: sequelize.QueryTypes.SELECT});
   return participants;
 }
@@ -89,7 +89,7 @@ async function queryParticipantsNotReady(eventID) {
   status5='Selected';
   status6='Cancelled';
   status7='Same Day Cancel';
-  let participants = await sequelize.query(`SELECT * FROM participants WHERE eventID='${eventID}' AND regStatus='${status}' OR regStatus='${status2}' OR regStatus='${status3}' OR regStatus='${status4}' OR regStatus='${status5}' OR regStatus='${status6}' OR regStatus='${status7}'`, {type: sequelize.QueryTypes.SELECT})
+  let participants = await sequelize.query(`SELECT * FROM participants WHERE eventID='${eventID}' AND regStatus='${status}' OR regStatus='${status2}' OR regStatus='${status3}' OR regStatus='${status4}' OR regStatus='${status5}' OR regStatus='${status6}' OR regStatus='${status7}'`, {type: sequelize.QueryTypes.SELECT});
   return participants;  
 }
 
@@ -105,7 +105,7 @@ async function queryEventByID(eventID) {
 async function queryEventDetailsByID(eventID) {
   const query = "SELECT * " + 
                 `FROM (SELECT * FROM events WHERE eventID='${eventID}') as E JOIN (SELECT * FROM users) AS U on E.managerID=U.userID ` +
-                      `JOIN (SELECT * FROM eventTypes) AS T on E.eventType=T.typeID;`
+                      `JOIN (SELECT * FROM eventTypes) AS T on E.eventType=T.typeID;`;
   let event = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return event;
 }
@@ -120,8 +120,8 @@ async function queryEventStatusByID(eventID) {
   status="status";
   let event = await sequelize.query("SELECT eventStatus " +
                                "FROM events " +  
-                               "WHERE eventID = '" + eventID + "'"
-                              , {type: sequelize.QueryTypes.SELECT});
+                               "WHERE eventID = '" + eventID + "'",
+                              {type: sequelize.QueryTypes.SELECT});
   return event;  
 }
 
@@ -214,11 +214,11 @@ async function queryParticipantsByParticpantAttr(eventID, participantAttrs) {
   let attrKeys = Object.keys(participantAttrs);
   for (let i = 0; i < attrKeys.length; i++) {
     if (participantAttrs[attrKeys[i]] != '') {
-      queryString += `P.${attrKeys[i]} = '${participantAttrs[attrKeys[i]]}' AND `
+      queryString += `P.${attrKeys[i]} = '${participantAttrs[attrKeys[i]]}' AND `;
     }
   }
   // Join events table with participants table to get participant data
-  queryString += `E.eventID = P.eventID AND E.eventID='${eventID}'`
+  queryString += `E.eventID = P.eventID AND E.eventID='${eventID}'`;
   let participants = await sequelize.query(queryString, {type: sequelize.QueryTypes.SELECT});
   return participants;
 }
@@ -278,16 +278,16 @@ async function runSelectionRandom(eventID) {
                                                     " WHERE eventID = '" + eventID + "'" +
                                                     " AND regStatus='Registered'" +
                                                     " AND isAdult='1'" +
-                                                    " ORDER BY regTime"
-                                                    , {type: sequelize.QueryTypes.SELECT});
+                                                    " ORDER BY regTime",
+                                                    {type: sequelize.QueryTypes.SELECT});
   return returnSelectedRegistrants;
 }
 
 async function getCapacityFromEventID(eventID) {
   let capacity = await sequelize.query("SELECT capacity " +  
                                   "FROM events " +  
-                                  "WHERE eventID = '" + eventID + "'"
-                                  , {type: sequelize.QueryTypes.SELECT});
+                                  "WHERE eventID = '" + eventID + "'",
+                                  {type: sequelize.QueryTypes.SELECT});
   return capacity;  
 }
 
@@ -378,7 +378,7 @@ async function updateEvent(event, id) {
                   "eventNotes='" + event.eventNotes + "', " +
                   "eventMetadata='" + eventMetadata + "', " +                  
                   "eventType='" + event.typeID + "' " +                  
-                "WHERE eventID='" + id + "';"
+                "WHERE eventID='" + id + "';";
   let oldDateTimes = await sequelize.query(dateTimeQuery, {type: sequelize.QueryTypes.SELECT});
   let upd = await sequelize.query(update, {type: sequelize.QueryTypes.UPDATE});
   return {
@@ -406,7 +406,7 @@ async function confirmEmail(eventID, registrantID){
 }
 
 async function insertParty(signup, eventID, volunteerStatus) {
-  logger.log(signup);
+  logger.log("Signup: " + signup);
   const date = utils.getDateTime();
   var signupkeys = Object.keys(signup).length;
   var partysize = 0;
@@ -454,8 +454,8 @@ async function insertParty(signup, eventID, volunteerStatus) {
     eventTypeMetadata = JSON.parse(eventTypeMetadata);
     eventTypeMetadata = Object.assign({}, eventTypeMetadata);
   }
-  logger.log("eventSpecificMetadata:" + eventSpecificMetadata);
-  logger.log("eventTypeMetadata:" + eventTypeMetadata);
+  logger.log("eventSpecificMetadata:" + JSON.stringify(eventSpecificMetadata));
+  logger.log("eventTypeMetadata:" + JSON.stringify(eventTypeMetadata));
   if((eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') && (eventTypeMetadata == undefined || eventTypeMetadata == '{}')) {
     metadata = {};
   } else if(eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') {
@@ -540,7 +540,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
       "?, " + //emergencyName
       "?, " + //emergencyRelation
       "?, " + //zipcode
-      signup[`part${i}age`] + ", " + //isAdult
+      signup[`part${i}adult`] + ", " + //isAdult
       signup[`part${i}cpr`] + ", " + //CPR
       signup[`part${i}swim`] + ", " + //swim
       signup[`part${i}boat`] + ", " + //boat
@@ -551,8 +551,8 @@ async function insertParty(signup, eventID, volunteerStatus) {
         insertStmt1 += signup.priorVolunteer + ", " + //priorVolunteer
         signup.roleFamiliarity + ", ";//roleFamiliarity
       } else { //Make volunteer fields null if they are not
-        insertStmt1 += "NULL, " + //priorVolunteer
-        "NULL, ";//roleFamiliarity
+        insertStmt1 += "null, " + //priorVolunteer
+        "null, ";//roleFamiliarity
       }
       insertStmt1 += "'Awaiting Confirmation', " + //regStatus
       "'Pending', " + //checkinStatus
@@ -574,7 +574,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
 }
 
 async function updateParty(signup, eventID, partyID) {
-  logger.log(signup);
+  logger.log("updateParty: " + signup);
   const date = utils.getDateTime();
   var signupkeys = Object.keys(signup).length;
   var partysize = 0;
@@ -597,9 +597,9 @@ async function updateParty(signup, eventID, partyID) {
   if(eventTypeFields != '{}' && eventTypeFields != null) {
     metadataFieldsCount += Object.keys(JSON.parse(eventTypeFields)).length;
   }
-  logger.log("Before metadata:" + signupkeys);
+  logger.log("updateParty: Before metadata:" + signupkeys);
   signupkeys = signupkeys - metadataFieldsCount;
-  logger.log("After metadata:" + signupkeys);
+  logger.log("updateParty: After metadata:" + signupkeys);
 
   const volunteerStatusQueryStmt = "SELECT volunteer FROM participants WHERE eventID = ? AND participantID = ?;";
   const volunteerStatusQuery = await sequelize.query(volunteerStatusQueryStmt,
@@ -608,7 +608,7 @@ async function updateParty(signup, eventID, partyID) {
     type: sequelize.QueryTypes.SELECT
   });
   const volunteerStatus = volunteerStatusQuery[0].volunteer;
-  logger.log("volunteerStatus:" + volunteerStatus);
+  logger.log("updateParty: volunteerStatus:" + volunteerStatus);
 
   if(volunteerStatus == 1) {
     signupkeys = signupkeys - 2;
@@ -631,8 +631,8 @@ async function updateParty(signup, eventID, partyID) {
     eventTypeMetadata = JSON.parse(eventTypeMetadata);
     eventTypeMetadata = Object.assign({}, eventTypeMetadata);
   }
-  logger.log("eventSpecificMetadata:" + eventSpecificMetadata);
-  logger.log("eventTypeMetadata:" + eventTypeMetadata);
+  logger.log("updateParty: eventSpecificMetadata:" + JSON.stringify(eventSpecificMetadata));
+  logger.log("updateParty: eventTypeMetadata:" + JSON.stringify(eventTypeMetadata));
   if((eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') && (eventTypeMetadata == undefined || eventTypeMetadata == '{}')) {
     metadata = {};
   } else if(eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') {
@@ -675,9 +675,18 @@ async function updateParty(signup, eventID, partyID) {
   for(i = 1; i <= partysize; i++) {
     memberCheck[i] = 0;
   }
+  console.log(partyMembers);
+  console.log(partyMembers.length);
+  var del = 0;
   for(i = 0; i < partyMembers.length; i++) {
+    console.log(partyMembers[i]);
+    if(partysize < 1) { del = 1; }
     for(j = 1; j <= partysize; j++) {
-      if(signup[`part${i}firstName`] + signup[`part${i}lastName`] == partyMembers[j].firstName + partyMembers[j].lastName) {
+      del = 0;
+      console.log(signup[`part${j}fname`] + signup[`part${j}lname`]);
+      console.log(partyMembers[i].firstName + partyMembers[i].lastName);
+      console.log(signup[`part${j}fname`] + signup[`part${j}lname`] == partyMembers[i].firstName + partyMembers[i].lastName);
+      if(signup[`part${j}fname`] + signup[`part${j}lname`] == partyMembers[i].firstName + partyMembers[i].lastName) {
         update = "UPDATE participants " +
         "SET " +
         "phone=?, " + //phone
@@ -686,10 +695,10 @@ async function updateParty(signup, eventID, partyID) {
         "emergencyName=?, " + //emergencyName
         "emergencyRelation=?, " + //emergencyRelation
         "zip=?, " + //zip
-        "isAdult=" + signup[`part${i}adult`] + " ," + //isAdult
-        "hasCPRCert=" + signup[`part${i}cpr`] + " ," + //hasCPRCert
-        "canSwim=" + signup[`part${i}swim`] + " ," + //canSwim
-        "boatExperience=" + signup[`part${i}boat`] + " ," + //boatExperience
+        "isAdult=" + signup[`part${j}adult`] + " ," + //isAdult
+        "hasCPRCert=" + signup[`part${j}cpr`] + " ," + //hasCPRCert
+        "canSwim=" + signup[`part${j}swim`] + " ," + //canSwim
+        "boatExperience=" + signup[`part${j}boat`] + " ," + //boatExperience
         "boathouseDisc=?, " + //boathouse discovery
         "eventDisc=?, " + //event discvoery
         "regComments=?, "; //regComments
@@ -701,23 +710,34 @@ async function updateParty(signup, eventID, partyID) {
         "WHERE eventID=? AND partyID=? AND participantID=?;";
         let insert = await sequelize.query(update,
         {
-          replacements: [signup[`part${i}phone`], signup[`part${i}email`], signup[`part${i}ephone`], signup[`part${i}ename`], signup[`part${i}erelation`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, JSON.stringify(metadata), eventID, partyID, partyMembers[i].participantID],
+          replacements: [signup[`part${j}phone`], signup[`part${j}email`], signup[`part${j}ephone`], signup[`part${j}ename`], signup[`part${j}erelation`], signup.zipcode, signup.bhdiscovery, signup.eventdiscovery, signup.notes, JSON.stringify(metadata), eventID, partyID, partyMembers[i].participantID],
           type: sequelize.QueryTypes.UPDATE
         });
+        logger.log(`updateParty: Participant: ${partyMembers[i].participantID} updated their registration for event: ${eventID}`,'info');
+        // memberCheck[j] --;
+        del = 0;
+        break;
       } else {
-        memberCheck[j] ++;
+        memberCheck[i] ++;
+        del = 1;
       }
     }
-    deleteStmt = "UPDATE participants " +
-      "SET " +
-      "partyID='' " + 
-      "WHERE eventID=? AND partyID=? AND participantID=?;";
+    console.log(partyMembers[i]);
+    console.log("del: " + del);
+    if(del == 1) {//check if part needs to be removed. 
+      deleteStmt = "UPDATE participants " +
+        "SET " +
+        "partyID=null, " + 
+        "regStatus = 'Cancelled' " +
+        "WHERE eventID=? AND partyID=? AND participantID=?;";
       let deletion = await sequelize.query(deleteStmt,
       {
         replacements: [eventID, partyID, partyMembers[i].participantID],
         type: sequelize.QueryTypes.UPDATE
       });
-    deleteCount++;
+      logger.log(`updateParty: Participant: ${partyMembers[i].participantID} was removed from party: ${partyID} for event: ${eventID}`,'info');
+      deleteCount++;
+    }
   }
 
   for(i = 1; i <= partysize; i++) {
@@ -739,7 +759,7 @@ async function updateParty(signup, eventID, partyID) {
         "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata)" +
         "VALUES(" +
         "'" + newParticipantID + "', " + //participantID
-        "'" + registrantID + "', " + //partyID
+        "'" + partyID + "', " + //partyID
         "?, " + //eventID
         "?, " + //firstName
         "?, " + //lastName
@@ -749,7 +769,7 @@ async function updateParty(signup, eventID, partyID) {
         "?, " + //emergencyName
         "?, " + //emergencyRelation
         "?, " + //zipcode
-        signup[`part${i}age`] + ", " + //isAdult
+        signup[`part${i}adult`] + ", " + //isAdult
         signup[`part${i}cpr`] + ", " + //CPR
         signup[`part${i}swim`] + ", " + //swim
         signup[`part${i}boat`] + ", " + //boat
@@ -778,7 +798,7 @@ async function updateParty(signup, eventID, partyID) {
       newCount++;
     }
   }
-  logger.log(`updateParty: Party: ${partyID} for event: ${eventID} was updated. ${newCount} new participants were added to the party. ${deleteCount} participants were removed from the party`, 'info');
+  logger.log(`updateParty: Party: ${partyID} for event: ${eventID} was updated. ${newCount} new participants added to the party. ${deleteCount} participants removed from the party`, 'info');
   return partyID;
 }
 
@@ -874,14 +894,14 @@ async function queryEventTypes(){
   const query = 'SELECT DISTINCT eventTypes.typeID, eventTypes.typeName, eventTypes.typeMetadata, IF(events.eventType IS NULL, FALSE, TRUE) as inUse ' + 
                 'FROM eventTypes ' +
                 'LEFT JOIN events ON (eventTypes.typeID = events.eventType)';
-  let types = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT})
+  let types = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   // logger.log(types);
   return types;
 }
 
 async function queryEventTypeByID(id){
   const query = `SELECT * FROM eventTypes WHERE typeID='${id}';`;
-  let types = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT})
+  let types = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return types;
 }
 
