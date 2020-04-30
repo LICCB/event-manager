@@ -1,6 +1,5 @@
 const logger = require('./logger');
-logger.module = 'database';
-const config = require((process.env.TESTING !== undefined) ? './test-config.json': './config.json');
+const config = require((process.env.LICCB_MODE !== undefined && process.env.LICCB_MODE == 'testing') ? './test-config.json': './config.json');
 const Sequelize = require('sequelize');
 const utils = require('./utils');
 
@@ -38,7 +37,8 @@ async function queryAllCols(tableName) {
 async function queryAllUsers() {
   const query = 'SELECT * ' +
                 'FROM users JOIN roles ' + 
-                'ON users.roleID = roles.roleID;';
+                'ON users.roleID = roles.roleID ' + 
+                'ORDER BY users.lastName, users.firstName;';
   let users = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return users;
 }
@@ -874,7 +874,8 @@ async function deleteUser(id){
 async function queryEventTypes(){
   const query = 'SELECT DISTINCT eventTypes.typeID, eventTypes.typeName, eventTypes.typeMetadata, IF(events.eventType IS NULL, FALSE, TRUE) as inUse ' + 
                 'FROM eventTypes ' +
-                'LEFT JOIN events ON (eventTypes.typeID = events.eventType)';
+                'LEFT JOIN events ON (eventTypes.typeID = events.eventType) ' + 
+                'ORDER BY eventTypes.typeName';
   let types = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT})
   // logger.log(types);
   return types;
@@ -915,7 +916,7 @@ async function updateEventType(id, type){
 }
 
 async function queryAllRoles(){
-  let roles = await sequelize.query("SELECT * FROM roles");
+  let roles = await sequelize.query("SELECT * FROM roles ORDER BY roles.grantInfo");
   return roles;
 }
 
@@ -992,3 +993,7 @@ module.exports.changeParticipantStatus = changeParticipantStatus;
 module.exports.resetParticipantsStatus = resetParticipantsStatus;
 module.exports.selectAllParticipantStatus = selectAllParticipantStatus;
 module.exports.queryParticipantsByParticpantAttr = queryParticipantsByParticpantAttr;
+module.exports.editUser = editUser;
+module.exports.insertRole = insertRole;
+module.exports.updateRole = updateRole;
+module.exports.deleteRole = deleteRole;

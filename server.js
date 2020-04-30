@@ -1,11 +1,10 @@
 const logger = require('./logger');
-logger.module = 'server'
 
 var config;
 var passportSetup;
 var passport;
 var mailer;
-if (process.env.TESTING !== undefined) {
+if (process.env.LICCB_MODE == 'testing') {
   logger.log("RUNNING IN TEST MODE")
   config = require('./test-config.json');
 } else {
@@ -37,7 +36,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
-if (process.env.TESTING == undefined) {
+if (process.env.LICCB_MODE != 'testing') {
   // cookies
   app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000,
@@ -54,7 +53,7 @@ app.use('/auth', authRoutes);
 app.use('/settings', settingsRoutes);
 
 const authCheck = (req, res, next) => {
-  if(!req.user && process.env.TESTING == undefined){
+  if(!req.user && process.env.LICCB_MODE != 'testing'){
       // if not logged in
       res.redirect('/auth/google');
   } else {
@@ -65,7 +64,7 @@ const authCheck = (req, res, next) => {
 
 const permCheck = function (resource, func) {
   return async function(req, res, next) {
-    if (process.env.TESTING == undefined) {
+    if (process.env.LICCB_MODE != 'testing') {
       const grantInfo = ((await db.queryRoleByID(req.user.roleID))[0][0]).grantInfo;
       const role = (Object.keys(JSON.parse(grantInfo)))[0];
       var perm = {granted : false};
@@ -103,7 +102,7 @@ const permCheck = function (resource, func) {
 /**
  * Renders the home page
  */
-app.get('/', authCheck, function (req, res) {
+app.get('/', function (req, res) {
   res.render('index', {
     user: req.user
   });
@@ -190,6 +189,7 @@ app.get('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
 });
 
 app.post('/eventSignup/:eventID/:volunteerStatus', async (req, res) => {
+  console.log(req.body);
   await db.insertParty(req.body, req.params.eventID, req.params.volunteerStatus);
   res.redirect('/signup/signupThanks');
 });
@@ -316,7 +316,11 @@ app.get('/participant/:id', authCheck, permCheck(rbac.participants, rbac.read), 
  * Renders the participant list to tie with the selected participant
  */
 app.get('/participants/tie/:id', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => {
-  res.render('participants/tieParticipants', {selected: (await db.queryParticipantByID(req.params.id))[0], utils: utils, participants: await db.queryParticipantsByNotID(req.params.id)})
+  res.render('participants/tieParticipants', {
+    user: req.user,
+    selected: (await db.queryParticipantByID(req.params.id))[0],
+    utils: utils,
+    participants: await db.queryParticipantsByNotID(req.params.id)})
 });
 
 /**
