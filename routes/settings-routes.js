@@ -14,6 +14,43 @@ const authCheck = (req, res, next) => {
   }
 };
 
+const permCheck = function (resource, func) {
+  return async function(req, res, next) {
+    if (process.env.LICCB_MODE != 'testing') {
+      const grantInfo = ((await db.queryRoleByID(req.user.roleID))[0][0]).grantInfo;
+      const role = (Object.keys(JSON.parse(grantInfo)))[0];
+      var perm = {granted : false};
+      var ac = await rbac.getRolesFromDb();
+      switch(func) {
+        case 'create':
+          perm = ac.can(role).createAny(resource);
+          break;
+        case 'read':
+          perm = ac.can(role).readAny(resource);
+          break;   
+        case 'update':
+          perm = ac.can(role).updateAny(resource);
+          break;
+        case 'delete':
+          perm = ac.can(role).deleteAny(resource);
+          break;
+        default:
+          break;
+      }
+      if(perm.granted){
+        logger.log(`${req.user.firstName} ${req.user.lastName} was granted access to ${resource} for ${func}`)
+        next();
+      }
+      else{
+        logger.log(`${req.user.firstName} ${req.user.lastName} was denied access to ${resource} for ${func}`)
+        res.redirect('/unauthorized');
+      }
+    } else {
+      next();
+    }
+  }
+}
+
 router.get('/', authCheck, (req, res) => {
     res.render('settings/settings', {
       user: req.user,
@@ -21,7 +58,7 @@ router.get('/', authCheck, (req, res) => {
     });
 });
 
-router.get('/addUser', authCheck, async (req, res) => {
+router.get('/addUser', authCheck, permCheck(rbac.users, rbac.create), async (req, res) => {
   res.render('settings/addUser', {
     user: req.user,
     title: "Add User",
@@ -30,22 +67,22 @@ router.get('/addUser', authCheck, async (req, res) => {
   });
 });
 
-router.post('/addUser', authCheck, async (req, res) => {
+router.post('/addUser', authCheck, permCheck(rbac.users, rbac.create), async (req, res) => {
     await db.insertUser(req.body.email, req.body.fname, req.body.lname);
     res.redirect('/settings/users');
 });
 
-router.get('/deleteUser/:id', authCheck, async (req, res) => {
+router.get('/deleteUser/:id', authCheck, permCheck(rbac.users, rbac.del), async (req, res) => {
     await db.deleteUser(req.params.id);
     res.redirect('/settings/users');
 });
 
-router.get('/enableUser/:id', authCheck, async (req, res) => {
+router.get('/enableUser/:id', authCheck, permCheck(rbac.users, rbac.update), async (req, res) => {
     await db.enableUser(req.params.id);
     res.redirect('/settings/users');
 });
 
-router.get('/editUser/:id', authCheck, async (req, res) => {
+router.get('/editUser/:id', authCheck, permCheck(rbac.users, rbac.update), async (req, res) => {
   res.render('settings/editUser', {
     title: "Edit User",
     user: req.user,
@@ -55,23 +92,23 @@ router.get('/editUser/:id', authCheck, async (req, res) => {
   });
 });
 
-router.post('/editUser/:id', authCheck, async (req, res) => {
+router.post('/editUser/:id', authCheck, permCheck(rbac.users, rbac.update), async (req, res) => {
   const u = req.body;
   await db.editUser(req.params.id, u.email, u.fname, u.lname, u.roleID);
   res.redirect('/settings/users');
 });
 
-router.get('/disableUser/:id', authCheck, async (req, res) => {
+router.get('/disableUser/:id', authCheck, permCheck(rbac.users, rbac.update), async (req, res) => {
   await db.disableUser(req.params.id);
   res.redirect('/settings/users');
 });
 
-router.get('/deleteUser/:id', authCheck, async (req, res) => {
+router.get('/deleteUser/:id', authCheck, permCheck(rbac.users, rbac.update), async (req, res) => {
     await db.deleteUser(req.params.id);
     res.redirect('/settings/users');
 });
 
-router.get('/users', authCheck, async (req, res) => {
+router.get('/users', authCheck, permCheck(rbac.users, rbac.read), async (req, res) => {
     const users = await db.queryAllUsers();
     res.render('settings/users', {
       user: req.user,
@@ -81,19 +118,19 @@ router.get('/users', authCheck, async (req, res) => {
     });
 });
 
-router.get('/createEventType', authCheck, async (req, res) => {
+router.get('/createEventType', authCheck, permCheck(rbac.eventTypes, rbac.create),async (req, res) => {
     res.render("settings/createEventType", {
       user: req.user,
       title: "Creat Event Type"
     });
   });
   
-router.post('/createEventType', authCheck, async (req, res) => {
+router.post('/createEventType', authCheck, permCheck(rbac.eventTypes, rbac.create), async (req, res) => {
   await db.insertEventType(req.body);
   res.redirect("/settings/eventTypes");
 });
 
-router.get('/eventTypes', authCheck, async (req, res) => {
+router.get('/eventTypes', authCheck, permCheck(rbac.eventTypes, rbac.read), async (req, res) => {
   const eventTypes = await db.queryEventTypes();
   res.render("settings/eventTypes", {
     user: req.user,
@@ -102,7 +139,7 @@ router.get('/eventTypes', authCheck, async (req, res) => {
   });
 });
 
-router.get('/editEventType/:id', authCheck, async (req, res) => {
+router.get('/editEventType/:id', authCheck, permCheck(rbac.eventTypes, rbac.update), async (req, res) => {
   const type = await db.queryEventTypeByID(req.params.id);
   res.render("settings/editEventType", {
     user: req.user,
@@ -111,12 +148,12 @@ router.get('/editEventType/:id', authCheck, async (req, res) => {
   });
 });
   
-router.post('/editEventType/:id', authCheck, async (req, res) => {
+router.post('/editEventType/:id', authCheck, permCheck(rbac.eventTypes, rbac.update), async (req, res) => {
   await db.updateEventType(req.params.id, req.body);
   res.redirect('/settings/eventTypes');
 });
 
-router.get('/deleteEventType/:id', authCheck, async (req, res) => {
+router.get('/deleteEventType/:id', authCheck, permCheck(rbac.eventTypes, rbac.del), async (req, res) => {
   await db.deleteEventType(req.params.id);
   res.redirect('/settings/eventTypes');
 });
