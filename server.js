@@ -385,7 +385,6 @@ app.get('/export', authCheck, permCheck(rbac.participants, rbac.read), async (re
 /**
  * Redirects to the lottery run selection pages
  */
-// update event and participant? --> participants update for now
 // Not a real page
 app.get('/lottery/', authCheck, permCheck(rbac.events, rbac.read), async (req, res) => {
   res.render('lottery/lotteryLanding', {
@@ -395,7 +394,6 @@ app.get('/lottery/', authCheck, permCheck(rbac.events, rbac.read), async (req, r
 });
 
 // MANUAL
-// read event and participants
 app.get('/lottery/:id', authCheck, permCheck(rbac.events, rbac.read), permCheck(rbac.participants, rbac.read), async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
   test2 = (await db.queryParticipantsNotReady(req.params.id));
@@ -412,7 +410,6 @@ app.get('/lottery/:id', authCheck, permCheck(rbac.events, rbac.read), permCheck(
 });
 
 // STRATEGY
-//update participants
 app.get('/lottery/random/:id', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
   test2 = (await db.queryParticipantsNotReady(req.params.id));
@@ -427,13 +424,18 @@ app.get('/lottery/random/:id', authCheck, permCheck(rbac.participants, rbac.upda
       res.redirect('/events');
       // console.log("No Participants are eligible for selection");
     } else {
-      res.render('lottery/lotteryEventLocked', {title: "Run Strategy",participants: getParticipants, capacity: Object.values(capacity[0]), event: (await db.queryEventByID(req.params.id))[0]})
+      res.render('lottery/lotteryEventLocked', {
+        user: req.user,
+        title: "Run Strategy",
+        participants: getParticipants,
+        capacity: Object.values(capacity[0]),
+        event: (await db.queryEventByID(req.params.id))[0]
+      })
     }
   }
 });
 
-// update participants
-app.post('/updateSelectedParticipantsStrategy/:id', permCheck(rbac.participants, rbac.update), async (req, res) => {
+app.post('/updateSelectedParticipantsStrategy/:id', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => {
   selectedParticipants = await db.runSelectionRandom(req.params.id);
   delete selectedParticipants.meta;
 
@@ -446,8 +448,7 @@ app.post('/updateSelectedParticipantsStrategy/:id', permCheck(rbac.participants,
   res.redirect('/events');
 });
 
-// update event and participant? --> participants update for now
-app.post('/updateSelectedParticipants/:id', permCheck(rbac.participants, rbac.update), async (req, res) => {
+app.post('/updateSelectedParticipants/:id', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => {
 
   individuallySelectedUsers = [];
 
@@ -473,7 +474,7 @@ app.post('/updateSelectedParticipants/:id', permCheck(rbac.participants, rbac.up
 });
 
 // update participants
-app.get('/lottery/:eventid/changeStatusIndividualUser/:status/:userid', permCheck(rbac.participants, rbac.update), async (req, res) => {
+app.get('/lottery/:eventid/changeStatusIndividualUser/:status/:userid', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => {
   res.redirect('back');
   status = ""
   if (req.params.status == "select") {
@@ -511,13 +512,13 @@ app.get('/lottery/:eventid/changeStatusIndividualUser/:status/:userid', permChec
 });
 
 // update participants
-app.get('/lottery/resetSelection/:id', permCheck(rbac.participants, rbac.update), async (req, res) => {
+app.get('/lottery/resetSelection/:id', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => {
   res.redirect('/events');
   resetParticipants = await db.resetParticipantsStatus(req.params.id);
 });
 
 // update participants
-app.get('/lottery/selectAll/:id', permCheck(rbac.participants, rbac.update), async (req, res) => {
+app.get('/lottery/selectAll/:id', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => {
   res.redirect('/events');
   resetParticipants = await db.selectAllParticipantStatus(req.params.id);
 });
