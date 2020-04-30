@@ -158,7 +158,7 @@ router.get('/deleteEventType/:id', authCheck, permCheck(rbac.eventTypes, rbac.de
   res.redirect('/settings/eventTypes');
 });
 
-router.get('/createRole', authCheck, async (req, res) => {
+router.get('/createRole', authCheck, permCheck(rbac.roles, rbac.create), async (req, res) => {
   res.render('settings/createRole', {
     user: req.user,
     title: 'Create Role',
@@ -167,12 +167,12 @@ router.get('/createRole', authCheck, async (req, res) => {
   });
 });
 
-router.post('/createRole', authCheck, async (req, res) => {
+router.post('/createRole', authCheck, permCheck(rbac.roles, rbac.create), async (req, res) => {
   await db.insertRole(req.body);
   res.redirect('/settings/roles');
 });
 
-router.get('/roles', authCheck, async (req, res) => {
+router.get('/roles', authCheck, permCheck(rbac.roles, rbac.read), async (req, res) => {
   res.render('settings/roles', {
     user: req.user,
     title: 'Roles',
@@ -182,12 +182,12 @@ router.get('/roles', authCheck, async (req, res) => {
   });
 });
 
-router.get('/deleteRole/:id', authCheck, async (req, res) => {
+router.get('/deleteRole/:id', authCheck, permCheck(rbac.roles, rbac.del), async (req, res) => {
   await db.deleteRole(req.params.id);
   res.redirect('/settings/roles');
 });
 
-router.get('/editRole/:id', authCheck, async (req, res) => {
+router.get('/editRole/:id', authCheck, permCheck(rbac.roles, rbac.update), async (req, res) => {
   const role = (await db.queryRoleByID(req.params.id))[0][0];
   const permissions = utils.getPermissionsMatrix(role);
   res.render('settings/editRole', {
@@ -201,7 +201,7 @@ router.get('/editRole/:id', authCheck, async (req, res) => {
   });
 });
 
-router.post('/editRole/:id', authCheck, async (req, res) => {
+router.post('/editRole/:id', authCheck, permCheck(rbac.roles, rbac.update), async (req, res) => {
   await db.updateRole(req.params.id, req.body);
   res.redirect('/settings/roles');
 });
