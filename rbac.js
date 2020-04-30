@@ -3,7 +3,7 @@ const db = require('./database');
 const AccessControl = require('accesscontrol');
 
 // permissions variables
-const resources = ['Events', 'Event Types', 'Participants', 'Users'];
+const resources = ['Events', 'Event Types', 'Participants', 'Users', 'Roles'];
 const permissions = ['Create', 'Read', 'Update', 'Delete'];
 const acPermissions = ['create:any', 'read:any', 'update:any', 'delete:any'];
 const internalPermissions = ['"create:any":["*"]','"read:any":["*"]','"update:any":["*"]','"delete:any":["*"]'];
@@ -19,6 +19,7 @@ const events = 'Events';
 const eventTypes = 'Event Types';
 const participants = 'Participants';
 const users = 'Users';
+const roles = 'Roles';
 
 async function getRolesFromDb(){
     var grants = await db.queryAllRoles();
@@ -51,3 +52,4 @@ module.exports.events = events;
 module.exports.eventTypes = eventTypes;
 module.exports.participants = participants;
 module.exports.users = users;
+module.exports.roles = roles;

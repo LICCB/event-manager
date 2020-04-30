@@ -176,6 +176,7 @@ router.get('/roles', authCheck, async (req, res) => {
   res.render('settings/roles', {
     user: req.user,
     title: 'Roles',
+    resources: rbac.resources,
     roles: (await db.queryAllRoles())[0],
     utils: utils
   });
