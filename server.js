@@ -338,8 +338,7 @@ app.post('/participant/comment/:eventID/:participantID', authCheck, permCheck(rb
 /**
  * Renders the participant check in list for the specified event
  */
-// read event and participant? --> event read for now
-app.get('/event/:id/checkin', authCheck, async (req, res) => {
+app.get('/event/:id/checkin', authCheck, permCheck(rbac.events, rbac.read), async (req, res) => {
   res.render('participants/checkinParticipants', {
     user: req.user,
     participants: await db.queryParticipantsByEventID(req.params.id),
@@ -350,8 +349,7 @@ app.get('/event/:id/checkin', authCheck, async (req, res) => {
 /**
  * Checks in a participant and redirects back to the event's check in table
  */
-// update event and participant? --> participants update for now
-app.get('/participants/checkin/:eventid/:participantid', authCheck, async (req, res) => { // Should be changed to POST
+app.get('/participants/checkin/:eventid/:participantid', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => { // Should be changed to POST
   await db.checkinParticipant(req.params.participantid, req.params.eventid);
   res.redirect('/participants/checkin/' + req.params.eventid);
 });
@@ -365,7 +363,6 @@ app.get('/confirmEmail/:eventID/:registrantID', async (req, res) => {
 /**
  * Redirects to the export page where the user can export participant data based on certain attributes
  */
-// participants read for now
 app.get('/export', authCheck, permCheck(rbac.participants, rbac.read), async (req, res) => {
   let events = await db.queryAllEvents();;
   delete events.meta;
@@ -395,7 +392,7 @@ app.get('/lottery/', authCheck, permCheck(rbac.events, rbac.read), async (req, r
 
 // MANUAL
 // read event and participants
-app.get('/lottery/:id', authCheck, async (req, res) => {
+app.get('/lottery/:id', authCheck, permCheck(rbac.events, rbac.read), permCheck(rbac.participants, rbac.read), async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
   test2 = (await db.queryParticipantsNotReady(req.params.id));
   if (test[0] == null || test[0] == undefined || test2[0] == null || test2[0] == undefined){
@@ -409,9 +406,10 @@ app.get('/lottery/:id', authCheck, async (req, res) => {
     });
   }
 });
+
 // STRATEGY
 //update participants
-app.get('/lottery/random/:id', authCheck, async (req, res) => {
+app.get('/lottery/random/:id', authCheck, permCheck(rbac.participants, rbac.update), async (req, res) => {
   test = (await db.queryParticipantsByEventID(req.params.id));
   test2 = (await db.queryParticipantsNotReady(req.params.id));
   test3 = (await db.queryEventStatusByID(req.params.id));
@@ -429,8 +427,9 @@ app.get('/lottery/random/:id', authCheck, async (req, res) => {
     }
   }
 });
+
 // update participants
-app.post('/updateSelectedParticipantsStrategy/:id', async (req, res) => {
+app.post('/updateSelectedParticipantsStrategy/:id', permCheck(rbac.participants, rbac.update), async (req, res) => {
   selectedParticipants = await db.runSelectionRandom(req.params.id);
   delete selectedParticipants.meta;
 
@@ -444,9 +443,7 @@ app.post('/updateSelectedParticipantsStrategy/:id', async (req, res) => {
 });
 
 // update event and participant? --> participants update for now
-app.post('/updateSelectedParticipants/:id', async (req, res) => {
-
-  // console.log(req);
+app.post('/updateSelectedParticipants/:id', permCheck(rbac.participants, rbac.update), async (req, res) => {
 
   individuallySelectedUsers = [];
 
@@ -461,8 +458,6 @@ app.post('/updateSelectedParticipants/:id', async (req, res) => {
       }
     }
   }
-  // console.log(individuallySelectedUsers)
-    // update inidividually selected users
 
   for (let i=0; i<individuallySelectedUsers.length; i++) {
     let output = await db.changeParticipantStatus(individuallySelectedUsers[i], req.params.id, 'Selected');
@@ -470,37 +465,11 @@ app.post('/updateSelectedParticipants/:id', async (req, res) => {
       // console.log(`failed to select participantID: ${individuallySelectedUsers[i]} in event: ${eventID}`)
     }
   }  
-
-  // filterParticipants = {
-  //   "regStatus" : req.body.regStatus == "Registered" ? "Registered" : "",
-  //   "isAdult" : req.body.isAdult == "yes" ? 1 : "",
-  //   "canSwim" : req.body.canSwim == "yes" ? 1 : "",
-  //   "hasCPRCert" : req.body.hasCPRCert == "yes" ? 1 : "",
-  //   "boatExperience" : req.body.boatExperience == "yes" ? 1 : "",
-  //   "priorVolunteer" : req.body.priorVolunteer == "yes" ? 1 : "",
-  //   "roleFamiliarity": req.body.roleFamiliarity == "yes" ? 1 : "",
-  //   "volunteer" : req.body.volunteer == "yes" ? 1 : "",
-  // }
-  // console.log(filterParticipants);
-
-  // let eventID = req.params.id;
-  // let selectedParticipants = await db.queryParticipantsByParticpantAttr(eventID, filterParticipants);
-  // delete selectedParticipants.meta;
-  // console.log(selectedParticipants);
-
-  // // update filtered users
-  // for (let i=0; i<selectedParticipants.length; i++) {
-  //   let output = await db.changeParticipantStatus(selectedParticipants[i].participantID, eventID, 'Selected');
-  //   if (output != "success") {
-  //     console.log(`failed to select participantID: ${selectedParticipants[i].participantID} in event: ${eventID}`)
-  //   }
-  // }
-
   res.redirect('/events');
 });
 
 // update participants
-app.get('/lottery/:eventid/changeStatusIndividualUser/:status/:userid', async (req, res) => {
+app.get('/lottery/:eventid/changeStatusIndividualUser/:status/:userid', permCheck(rbac.participants, rbac.update), async (req, res) => {
   res.redirect('back');
   status = ""
   if (req.params.status == "select") {
@@ -538,13 +507,13 @@ app.get('/lottery/:eventid/changeStatusIndividualUser/:status/:userid', async (r
 });
 
 // update participants
-app.get('/lottery/resetSelection/:id', async (req, res) => {
+app.get('/lottery/resetSelection/:id', permCheck(rbac.participants, rbac.update), async (req, res) => {
   res.redirect('/events');
   resetParticipants = await db.resetParticipantsStatus(req.params.id);
 });
 
 // update participants
-app.get('/lottery/selectAll/:id', async (req, res) => {
+app.get('/lottery/selectAll/:id', permCheck(rbac.participants, rbac.update), async (req, res) => {
   res.redirect('/events');
   resetParticipants = await db.selectAllParticipantStatus(req.params.id);
 });
