@@ -6,7 +6,7 @@
   <body>
     <%- include('../partials/header', {title: "All Participants"}) %>
     <div class="container content">
-      <table class="table">
+      <table id="singleParticipantTable" class="table">
         <thead>
           <tr>
             <th scope="col"> Event </th>
@@ -63,5 +63,6 @@
     </div>
 
     <%- include('../partials/scripts') %>
+    <script src="/scripts/jQueryDataTables.js"></script>
   </body>
 </html>

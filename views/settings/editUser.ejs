@@ -7,7 +7,7 @@
   <%- include('../partials/header', {title: title, user: user}) %>
   <div class="container content">
     <form action="/settings/editUser/<%= editUser.userID %>" method="POST">
-        <label for="uEmail">editUser Email: </label>
+        <label for="uEmail">User ID (Gmail): </label>
         <input type="text" id="uEmail" name="email" value="<%= editUser.email %>">
         <br>
         <label for="fname">First Name: </label>
@@ -23,7 +23,8 @@
           <% } %>
         </select>
         <br>
-        <button class="button" type="submit" value="Create Event">Submit</button>
+        <button class="button" type="submit" value="Create Event">Update</button>
+        <button class="button" value="Go Back" onclick="history.back()">Go Back</button>
     </form>
     <br>
     <footer class="footer">

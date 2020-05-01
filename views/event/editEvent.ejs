@@ -13,7 +13,7 @@
             <form action=<%= "/editEvent/" + event.eventID %> method="post" id="eventform">
                 <div class="left">
                     <label for="ename">Event Name:</label>
-                    <input type="text" id="ename" name="eventName" value=<%= event.eventName %> required>
+                    <input type="text" id="ename" name="eventName" value="<%= event.eventName %>" required>
                     <br>
                     <label for="man">Event Manager:</label>
                     <select name="managerID" form="eventform">
@@ -44,7 +44,7 @@
                     </select>
                     <br>
                     <label for="desc">Description:</label>
-                    <input type="text" id="desc" name="eventDesc" value="<%= event.eventDesc %>">
+                    <textarea id="desc" name="eventDesc" rows="4" cols="50"><%= event.eventDesc %></textarea>
                 </div>
                 <div class="right">
                     <label for="stime">Start Time:</label>
@@ -63,7 +63,7 @@
                     <input type="text" id="sratio" name="staffRatio" value=<%= event.staffRatio %> required>
                     <br>
                     <label for="notes">Notes:</label>
-                    <input type="text" id="notes" name="eventNotes" value="<%= event.eventNotes %>">
+                    <textarea id="notes" name="eventNotes" placeholder="Notes" rows="4" cols="50"><%= event.eventNotes %></textarea>
                     <br>
                     <input type="button" value="Add a field" class="addfield" id="addfield" />
                     <div id="newfields" form="eventform">

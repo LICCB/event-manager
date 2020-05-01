@@ -15,11 +15,10 @@
         <% var keys = Object.keys(roles[0]) %>
         <tr>
           <th></th>
-            <th scope="col">Name</th>
-            <th scope="col">Events</th>
-            <th scope="col">Event Types</th>
-            <th scope="col">Participants</th>
-            <th scope="col">Users</th>
+          <th scope="col">Role Name</th>
+          <% for(var i = 0; i < resources.length; i++) { %>
+            <th scope="col"><%= resources[i] %></th>
+          <% } %>
         </tr>
       </thead>
       <tbody>
