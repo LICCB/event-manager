@@ -36,14 +36,14 @@
                     <h2>Volunteer Information</h2>
                     <div name = "Volunteer Info">
                         <label for="priorVolunteer">Have you been a volunteer before?</label>
-                        <select name="priorVolunteer" form="editRegistrationform" required>
+                        <select name="priorVolunteer" form="editRegistrationform" class="volunteer">
                             <option value="false" <% if(participants[0].priorVolunteer == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[0].priorVolunteer == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         <br>
 
                         <label for="roleFamiliarity">Are you familiar with the role?</label>
-                        <select name="roleFamiliarity" form="editRegistrationform" required>
+                        <select name="roleFamiliarity" form="editRegistrationform" class="volunteer">
                             <option value="false" <% if(participants[0].roleFamiliarity == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[0].roleFamiliarity == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
@@ -56,56 +56,56 @@
                     <%for(i=0; i < participants.length; i++) { %>
                         <%if(participants[i].participantID == participants[i].partyID) { %>
                         <label for="regfirstname">Registrant First Name:</label>
-                        <input type="text" id="regfirstname" name="regfirstname" class = "fname " value=<%= participants[i].firstName %> readonly>
+                        <input type="text" id="regfirstname" name="regfirstname" class = "name " value=<%= participants[i].firstName %> readonly>
                         <br>
 
                         <label for="reglastname">Registrant Last Name:</label>
-                        <input type="text" id="reglastname" name="reglastname" class = "lname" value=<%= participants[i].lastName %> readonly>
+                        <input type="text" id="reglastname" name="reglastname" class = "name lname" value=<%= participants[i].lastName %> readonly>
                         <br>
                         
                         <label for="regemail">Registrant Email:</label>
-                        <input type="text" id="regemail" name="regemail" class = "email" value=<%= participants[i].email %> required>
+                        <input type="text" id="regemail" name="regemail" class = "email" value=<%= participants[i].email %> >
                         <br>
                         
                         <label for="regphone">Registrant Phone Number:</label>
-                        <input type="text" id="regphone" name="regphone" class = "phone" value=<%= participants[i].phone %> required>
+                        <input type="text" id="regphone" name="regphone" class = "phone" value=<%= participants[i].phone %> >
                         <br>
                         
                         <label for="regename">Registrant Emergency Contact Name:</label>
-                        <input type="text" id="regename" name="regename" class = "name" value=<%= participants[i].emergencyName %> required>
+                        <input type="text" id="regename" name="regename" class = "eContactName" value=<%= participants[i].emergencyName %> >
                         <br>
 
                         <label for="regerelation">Registrant Emergency Contact Relationship:</label>
-                        <input type="text" id="regerelation" name="regerelation" class = "relation" form = "editRegistrationform" value = <%=participants[i].emergencyRelation%> required>
+                        <input type="text" id="regerelation" name="regerelation" class = "relation" form = "editRegistrationform" value = <%=participants[i].emergencyRelation%> >
                         <br>
 
                         <label for="regephone">Registrant Emergency Contact Phone Number:</label>
-                        <input type="text" id="regephone" name="regephone" class = "phone" value=<%= participants[i].emergencyPhone %> required>
+                        <input type="text" id="regephone" name="regephone" class = "eContactPhone" value=<%= participants[i].emergencyPhone %> >
                         <br>
 
                         <label for="regadult">Over 18?</label>
-                        <select name="regadult" form="editRegistrationform" required>
+                        <select name="regadult" form="editRegistrationform" class="select">
                             <option value="false" <% if(participants[i].isAdult == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].isAdult == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         <br>
                         
                         <label for="regswim">Swimmer</label>
-                        <select name="regswim" form="editRegistrationform" required>
+                        <select name="regswim" form="editRegistrationform" class="select">
                             <option value="false" <% if(participants[i].canSwim == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].canSwim == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         <br>
                         
                         <label for="regboat">Boating Experience</label>
-                        <select name="regboat" form="editRegistrationform" required>
+                        <select name="regboat" form="editRegistrationform" class="select">
                             <option value="false" <% if(participants[i].boatExperience == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].boatExperience == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
                         <br>
                         
                         <label for="regcpr">CPR Certification</label>
-                        <select name="regcpr" form="editRegistrationform" required>
+                        <select name="regcpr" form="editRegistrationform" class="select">
                             <option value="false" <% if(participants[i].hasCPRCert == false){ %> <%= "selected" %> <% } %>>No</option>
                             <option value="true" <% if(participants[i].hasCPRCert == true){ %> <%= "selected" %> <% } %>>Yes</option>
                         </select>
@@ -222,56 +222,56 @@
                                 <div class="partwrapper" id = "part<%= i + 1 - offset %>">
                                     <h2>Party Member <%= i + 2 - offset %></h2>
                                     <label for="part<%= i + 1 %>fname" >Participant <%= i + 2 - offset %> First Name:</label>
-                                    <input required type="text" id="part<%= i + 1 - offset %>fname" name="part<%= i + 1 - offset%>fname" class="fname" value=<%= participants[i].firstName %> readonly>
+                                    <input type="text" id="part<%= i + 1 - offset %>fname" name="part<%= i + 1 - offset%>fname" class="partFName name" value=<%= participants[i].firstName %> readonly>
                                     <br>
                                 
                                     <label for="part<%= i + 1 %>lname" >Participant <%= i + 2 - offset %> Last Name:</label>
-                                    <input required type="text" id="part<%= i + 1 - offset %>lname" name="part<%= i + 1 - offset %>lname" class="lname" value=<%= participants[i].lastName %> readonly>
+                                    <input type="text" id="part<%= i + 1 - offset %>lname" name="part<%= i + 1 - offset %>lname" class="partLName name" value=<%= participants[i].lastName %> readonly>
                                     <br>
                                 
                                     <label for="part<%= i + 1 %>email" >Participant <%= i + 2 - offset %> Email:</label>
-                                    <input type="text" id="part<%= i + 1 - offset %>email" name="part<%= i + 1 - offset %>email" class="email" value=<%= participants[i].email %>>
+                                    <input type="text" id="part<%= i + 1 - offset %>email" name="part<%= i + 1 - offset %>email" class="pemail" value=<%= participants[i].email %>>
                                     <br>
                                 
                                     <label for="part<%= i + 1 %>phone" >Participant <%= i + 2 - offset %> Phone Number:</label>
-                                    <input type="text" id="part<%= i + 1 - offset %>phone" name="part<%= i + 1 - offset %>phone" class="phone" value=<%= participants[i].phone %>>
+                                    <input type="text" id="part<%= i + 1 - offset %>phone" name="part<%= i + 1 - offset %>phone" class="pphone" value=<%= participants[i].phone %>>
                                     <br>
                                 
                                     <label for="part<%= i + 1 %>ename" >Participant <%= i + 2 - offset %> Emergencey Contact Name:</label>
-                                    <input required type="text" id="part<%= i + 1 - offset %>ename" name="part<%= i + 1 - offset %>ename" class="name" value=<%= participants[i].emergencyName %>>
+                                    <input type="text" id="part<%= i + 1 - offset %>ename" name="part<%= i + 1 - offset %>ename" class="eContactName" value=<%= participants[i].emergencyName %>>
                                     <br>
 
                                     <label for="part<%= i + 1 %>erelation">Participant <%= i + 2 - offset %> Emergency Contact Relationship:</label>
-                                    <input type="text" id="part<%= i + 1 - offset %>erelation" name="part<%= i + 1 - offset %>erelation" class = "relation" form = "editRegistrationform" value = <%=participants[i].emergencyRelation%> required>
+                                    <input type="text" id="part<%= i + 1 - offset %>erelation" name="part<%= i + 1 - offset %>erelation" class = "relation" form = "editRegistrationform" value = <%=participants[i].emergencyRelation%> >
                                     <br>
                                 
                                     <label for="part<%= i + 1 %>ephone" >Participant <%= i + 2 - offset %> Emergency Contact Phone Number:</label>
-                                    <input required type="text" id="part<%= i + 1 - offset %>ephone" name="part<%= i + 1 - offset %>ephone" class="phone" value=<%= participants[i].emergencyPhone %>>
+                                    <input type="text" id="part<%= i + 1 - offset %>ephone" name="part<%= i + 1 - offset %>ephone" class="eContactPhone" value=<%= participants[i].emergencyPhone %>>
                                     <br>
 
                                     <label for="part<%= i + 2 - offset %>adult" >Over 18?</label>
-                                    <select required name= "part<%= i + 1 - offset %>adult">
+                                    <select class="select" name= "part<%= i + 1 - offset %>adult">
                                         <option value="false" <% if(participants[i].isAdult == false){ %> <%= "selected" %> <% } %>>No</option>
                                         <option value="true" <% if(participants[i].isAdult == true){ %> <%= "selected" %> <% } %>>Yes</option>
                                     </select>
                                     <br>
                                 
                                     <label for="part<%= i + 2 - offset %>swim" >Can they swim?</label>
-                                    <select required name="part<%= i + 1 - offset %>swim">
+                                    <select class="select" name="part<%= i + 1 - offset %>swim">
                                         <option value="false" <% if(participants[i].canSwim == false){ %> <%= "selected" %> <% } %>>No</option>
                                         <option value="true" <% if(participants[i].canSwim == true){ %> <%= "selected" %> <% } %>>Yes</option>
                                     </select>
                                     <br>
                                 
                                     <label for="part<%= i + 2 - offset %>boat" >Prior boating experience?</label>
-                                    <select required name="part<%= i + 1 - offset %>boat">
+                                    <select class="select" name="part<%= i + 1 - offset %>boat">
                                         <option value="false" <% if(participants[i].boatExperience == false){ %> <%= "selected" %> <% } %>>No</option>
                                         <option value="true" <% if(participants[i].boatExperience == true){ %> <%= "selected" %> <% } %>>Yes</option>
                                     </select>
                                     <br>
                                 
                                     <label for="part<%= i + - offset %>cpr" >Do they know CPR?</label>
-                                    <select required name="part<%= i + 1 - offset %>cpr">
+                                    <select class="select" name="part<%= i + 1 - offset %>cpr">
                                         <option value="false" <% if(participants[i].hasCPRCert == false){ %> <%= "selected" %> <% } %>>No</option>
                                         <option value="true" <% if(participants[i].hasCPRCert == true){ %> <%= "selected" %> <% } %>>Yes</option>
                                     </select>
