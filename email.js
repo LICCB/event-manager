@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 });
 
 async function sendConfirmationEmail(email, eventID, registrantID) {
-  const link = `http://localhost:3000/confirmEmail/${eventID}/${registrantID}`;
+  const link = config.email.link.emailConfirmation;
   let info = await transporter.sendMail({
     from: '"LICCB Mailer 🚣" <liccb.mailer@gmail.com>', // sender address
     to: email, // list of receivers
@@ -23,7 +23,7 @@ async function sendConfirmationEmail(email, eventID, registrantID) {
 }
 
 async function sendEditRegistrationEmail(email, eventName, eventID, registrantID) {
-  const link = `http://localhost:3000/editRegistration/${eventID}/${registrantID}`;
+  const link = config.email.link.editRegistration;
   let info = await transporter.sendMail({
     from: '"LICCB Mailer 🚣" <liccb.mailer@gmail.com>', // sender address
     to: email, // list of receivers
@@ -34,7 +34,7 @@ async function sendEditRegistrationEmail(email, eventName, eventID, registrantID
 }
 
 async function sendTimeChangeEmail(emails, oldStart, oldEnd, newStart, newEnd, eventName, eventID, registrantID) {
-  const link = `http://localhost:3000/editRegistration/${eventID}/${registrantID}`;
+  const link = config.email.link.timeChange;
   const oldTime = oldStart.toString() + " to " + oldEnd.toString();
   const newTime = newStart.toString() + " to " + newEnd.toString();
   for(var i = 0; i < emails.length; i++){

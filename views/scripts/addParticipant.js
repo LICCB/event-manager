@@ -26,7 +26,7 @@ function add_function(event) {
         var pENameLabel = $(`<label for="part${intId}ename" >Participant ${intId + 1} Emergency Contact Name: </label>`);
         var pEName = $(`<input required type="text" id="part${intId}ename" name="part${intId}ename" class="eContactName" placeholder="Party Member Emergency Contact Name Here"/><br>`);
         var pERelationLabel = $(`<label for="part${intId}erelation" >Participant ${intId + 1} Emergency Contact Relationship: </label>`);
-        var pERelation = $(`<input type="text" id="part${intId}erelation" name="part${intId}erelation" class = "relation" form = "eventSignupForm" required><br>`);
+        var pERelation = $(`<input type="text" id="part${intId}erelation" name="part${intId}erelation" class = "relation" required><br>`);
         var pEPhoneLabel = $(`<label for="part${intId}ephone" >Participant ${intId + 1} Emergency Contact Phone Number: </label>`);
         var pEPhone = $(`<input required type="text" id="part${intId}ephone" name="part${intId}ephone" class="eContactPhone" placeholder="Party Member Emergency Contact Phone Number Here"/><br>`);
 
