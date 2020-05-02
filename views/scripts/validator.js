@@ -175,3 +175,6 @@ jQuery.validator.addMethod("testEContactPhone", function(value, element) {
 $("#eventSignupForm").validate({
     errorClass: "validationError"
 });
+$("#editRegistrationform").validate({
+    errorClass: "validationError"
+});
