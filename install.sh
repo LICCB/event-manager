@@ -115,7 +115,7 @@ EOF
 apt update
 
 # Install certbot
-apt install -y Certbot
+apt install -y certbot
 
 # Request email for LetsEncrypt notifications to be sent to
 echo "Please enter an email to send LetsEncrypt alerts and warnings to: "
