@@ -111,7 +111,7 @@ async function queryEventDetailsByID(eventID) {
   return event;
 }
 
-async function queryEventTypeMetadata(eventID) {
+async function queryEventTypeMetadata(eventID) { //takes in an eventID and returns the metadata for the eventType the event is
   const query = `SELECT typeMetadata FROM eventTypes WHERE typeID= (SELECT eventType FROM events WHERE eventID = '${eventID}')`;
   let metadata = await sequelize.query(query, {type: sequelize.QueryTypes.SELECT});
   return metadata;
@@ -143,7 +143,7 @@ async function queryParticipantsByEventID(eventID) {
   return participants;
 }
 
-async function queryParticipantsByEventAndParty(eventID, partyID) {
+async function queryParticipantsByEventAndParty(eventID, partyID) {//Takes in eventID and partyID and returns the participants in the given party for the given event
   let participants = await sequelize.query("SELECT * FROM participants WHERE eventID = ? AND partyID = ? ORDER BY regTime",
   {
     replacements: [eventID, partyID],
@@ -408,64 +408,64 @@ async function confirmEmail(eventID, registrantID){
 
 async function insertParty(signup, eventID, volunteerStatus) {
   logger.log("Signup: " + signup);
-  const date = utils.getDateTime();
-  var signupkeys = Object.keys(signup).length;
-  var partysize = 0;
-  const event = (await queryEventByID(eventID))[0];
-  var eventTypeFields = (await queryEventTypeMetadata(eventID))[0].typeMetadata;
+  const date = utils.getDateTime(); //use the function in the utils file to get the current date and time(time including milliseconds) and format it correctly to insert into the SQL statment
+  var signupkeys = Object.keys(signup).length; //number of fields in the signup form
+  var partysize = 0; //variable to track the size of the party, used in conjunction with the signup keys to determine how many extra party members need to be inserted
+  const event = (await queryEventByID(eventID))[0]; //used to check the extra questions for the event(defined for that event specifically)
+  var eventTypeFields = (await queryEventTypeMetadata(eventID))[0].typeMetadata; //eventType extra questions 
   var metadataFieldsCount = 0;
-  if(event.eventMetadata != '{}' && event.eventMetadata != null) {
+  if(event.eventMetadata != '{}' && event.eventMetadata != null) { //add number of extra questions asked based on the specific event
     metadataFieldsCount += Object.keys(JSON.parse(event.eventMetadata)).length;
   }
-  if(eventTypeFields != '{}' && eventTypeFields != null) {
+  if(eventTypeFields != '{}' && eventTypeFields != null) { //add number of extra questions asked based on the event type
     metadataFieldsCount += Object.keys(JSON.parse(eventTypeFields)).length;
   }
   logger.log("Before metadata:" + signupkeys);
-  signupkeys = signupkeys - metadataFieldsCount;
+  signupkeys = signupkeys - metadataFieldsCount; //subtract number of extra questions(event type and event specific) from the total number of questions asked
   logger.log("After metadata:" + signupkeys);
-  if(volunteerStatus == 1) {
+  if(volunteerStatus == 1) { //subtracts extra questions asked if they are signing up as a volunteer
     signupkeys = signupkeys - 2;
   }
   logger.log("final:" + signupkeys);
-  if(signupkeys > 15) {
-    partysize = (signupkeys - 15) / 11;
+  if(signupkeys > 15) { //if the new count of signup keys(questions asked on form - extra questions asked) is greater than 15(base amount of questions asked for a single person sign up with no extra questions) the signup has more than 1 person in the party
+    partysize = (signupkeys - 15) / 11; //calculate the number of extra party members signing up on the form(extra party members are asked 11 questions)
 
   }
   logger.log(`insertParty: Party size: ${partysize + 1}`, 'info');
   const queryStmt = "SELECT participantID FROM participants WHERE ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?) AND participantID NOT IN (SELECT participantID FROM participants WHERE eventID = ?);";
-  const query = await sequelize.query(queryStmt,
+  const query = await sequelize.query(queryStmt, //query will return the participantID of the registrant if they have signed up for an event before(but not the current event being signed up for as this will cause a duplicate key error). The first last name combo, phone number, and email are used to search
   {
     replacements: [signup.regfirstname, signup.reglastname, signup.regemail, signup.regphone, eventID],
     type: sequelize.QueryTypes.SELECT
   });
-  var registrantID = uuidv4();
+  var registrantID = uuidv4(); //generates new participantID 
   logger.log(`List of participants possible existing participants: ${query[0]}`);
-  if(query[0] != undefined) {
+  if(query[0] != undefined) { //if the query returned a participantID, they have signed up for an event in the past, and the same participantID instead of the new one just generated above
     registrantID = query[0].participantID;
   }
-  var eventSpecificMetadata;
-  if(event.eventMetadata != '{}' && event.eventMetadata != null) {
+  var eventSpecificMetadata; //variable to hold object that will store the question/answer combinations for the event specific extra questions in the form
+  if(event.eventMetadata != '{}' && event.eventMetadata != null) { //if there are extra event specific questions being asked, add their question name/answer pairs to the object using the utils function written
     eventSpecificMetadata = utils.eventMetadataWrapper(signup, event.eventMetadata);
-    eventSpecificMetadata = JSON.parse(eventSpecificMetadata);
+    eventSpecificMetadata = JSON.parse(eventSpecificMetadata); //utils function returns JSON object as a string, convert it back to an object
     eventSpecificMetadata = Object.assign({}, eventSpecificMetadata);
   }
-  var eventTypeMetadata;
-  if(eventTypeFields != '{}' && eventTypeFields != null){
+  var eventTypeMetadata; //variable to hold object that will store the question/answer combinations for the event type extra questions in the form
+  if(eventTypeFields != '{}' && eventTypeFields != null){ //if there are extra event type questions being asked, add their question name/answer pairs to the object using the utils function written
     eventTypeMetadata = utils.eventMetadataWrapper(signup, eventTypeFields);
-    eventTypeMetadata = JSON.parse(eventTypeMetadata);
+    eventTypeMetadata = JSON.parse(eventTypeMetadata); //utils function returns JSON object as a string, convert it back to an object
     eventTypeMetadata = Object.assign({}, eventTypeMetadata);
   }
   logger.log("eventSpecificMetadata:" + JSON.stringify(eventSpecificMetadata));
   logger.log("eventTypeMetadata:" + JSON.stringify(eventTypeMetadata));
-  if((eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') && (eventTypeMetadata == undefined || eventTypeMetadata == '{}')) {
+  if((eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') && (eventTypeMetadata == undefined || eventTypeMetadata == '{}')) { //if no event type or event specific questions were asked, assign the metadata variable to be an empty JSON object
     metadata = {};
-  } else if(eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') {
+  } else if(eventSpecificMetadata == undefined || eventSpecificMetadata == '{}') { //if there are no event specific questions asked, assign the metadata variable to be object with the event type question/answer pairs
     metadata = eventTypeMetadata;
-  } else if(eventTypeMetadata == undefined || eventTypeMetadata == '{}') {
+  } else if(eventTypeMetadata == undefined || eventTypeMetadata == '{}') { //if there are no event type questions asked, assign the metadata variable to be object with the event type question/answer pairs
     metadata = eventSpecificMetadata;
-  } else {
+  } else { //if there are both event specific and event type questions asked, metadata will be equal to both objects combined with each other
     metadata = Object.assign(eventSpecificMetadata, eventTypeMetadata);
-  }
+  } //metadata variable will be the JSON object that contains the question name and answers from the form that is used to insert into the Database for this signup
   
   logger.log("metadata:" + JSON.stringify(metadata));
   var insertStmt = "INSERT INTO participants " +
@@ -475,7 +475,7 @@ async function insertParty(signup, eventID, volunteerStatus) {
     "eventDisc, regComments, priorVolunteer, roleFamiliarity, regStatus, checkinStatus, volunteer, regTime, userComments, metadata) " +
     "VALUES(" +
     "'" + registrantID + "', " + //participantID
-    "'" + registrantID + "', " + //partyID
+    "'" + registrantID + "', " + //partyID (partyID = registrantID for any signup)
     "?, " + //eventID
     "?, " + //firstName
     "?, " + //lastName
@@ -513,13 +513,13 @@ async function insertParty(signup, eventID, volunteerStatus) {
   });
   logger.log(`insertParty: Registrant: ${registrantID} signed up for event:${eventID} successfully`, 'info');
   
-  for(i = 1; i <= partysize; i++) {
+  for(i = 1; i <= partysize; i++) { //loop to add extra party members, if there are any, according to partysize variable calculated above
     const queryStmt = "SELECT participantID FROM participants WHERE ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?) AND participantID NOT IN (SELECT participantID FROM participants WHERE eventID = ?);";
     const query = await sequelize.query(queryStmt,
     {
       replacements: [signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], eventID],
       type: sequelize.QueryTypes.SELECT
-    });
+    }); //check to make sure the extra party member has signed up for an event in the past, similar to check done above for registrant
     var newParticipantID = uuidv4();
     if(query[0] != undefined) {
       newParticipantID = query[0].participantID;
@@ -590,8 +590,8 @@ async function updateParty(signup, eventID, partyID) {
   {
     replacements: [eventID, partyID, partyID],
     type: sequelize.QueryTypes.SELECT
-  });
-
+  }); //query returns list of participants, minus the registrant, in the given party for the given event that is currently signed up, before edit takes place
+  //field count is the same as insertParty function
   if(event.eventMetadata != '{}' && event.eventMetadata != null) {
     metadataFieldsCount += Object.keys(JSON.parse(event.eventMetadata)).length;
   }
@@ -643,7 +643,7 @@ async function updateParty(signup, eventID, partyID) {
   } else {
     metadata = Object.assign(eventSpecificMetadata, eventTypeMetadata);
   }
-  var update = "UPDATE participants " +
+  var update = "UPDATE participants " + //update SQL statment for updating the registrant
     "SET " +
     "phone=?, " + //phone
     "email=?, " + //email
@@ -672,22 +672,18 @@ async function updateParty(signup, eventID, partyID) {
 
   logger.log(`updateParty: Registrant: ${partyID} updated their registration for event: ${eventID}`,'info');
 
-  var memberCheck = {};
+  var memberCheck = {}; //object used to count if a party member a new party member, not an update, and needs to be added to the party
   for(i = 1; i <= partysize; i++) {
     memberCheck[i] = 0;
   }
-  console.log(partyMembers);
-  console.log(partyMembers.length);
+
   var del = 0;
-  for(i = 0; i < partyMembers.length; i++) {
-    console.log(partyMembers[i]);
-    if(partysize < 1) { del = 1; }
-    for(j = 1; j <= partysize; j++) {
+  for(i = 0; i < partyMembers.length; i++) { //loops through party members in the pre update party 
+    if(partysize < 1) { del = 1; } //if the new signup has no additional party members, delete currently selected party member in pre update party members list
+    for(j = 1; j <= partysize; j++) { //loop through party members in the updated signup form
       del = 0;
-      console.log(signup[`part${j}fname`] + signup[`part${j}lname`]);
-      console.log(partyMembers[i].firstName + partyMembers[i].lastName);
-      console.log(signup[`part${j}fname`] + signup[`part${j}lname`] == partyMembers[i].firstName + partyMembers[i].lastName);
-      if(signup[`part${j}fname`] + signup[`part${j}lname`] == partyMembers[i].firstName + partyMembers[i].lastName) {
+      
+      if(signup[`part${j}fname`] + signup[`part${j}lname`] == partyMembers[i].firstName + partyMembers[i].lastName) { //if current party member in the signup form is the party member in the partyMembers list, update
         update = "UPDATE participants " +
         "SET " +
         "phone=?, " + //phone
@@ -715,22 +711,20 @@ async function updateParty(signup, eventID, partyID) {
           type: sequelize.QueryTypes.UPDATE
         });
         logger.log(`updateParty: Participant: ${partyMembers[i].participantID} updated their registration for event: ${eventID}`,'info');
-        // memberCheck[j] --;
         del = 0;
         break;
-      } else {
+      } else { //if the current partymember in the list of original party members is not in the signup form, the partymember is to be deleted
         memberCheck[i] ++;
-        del = 1;
+        del = 1; //set party member in list of original party members to be removed
       }
     }
-    console.log(partyMembers[i]);
-    console.log("del: " + del);
-    if(del == 1) {//check if part needs to be removed. 
+
+    if(del == 1) {//check if the original party member needs to be removed
       deleteStmt = "UPDATE participants " +
         "SET " +
         "partyID=null, " + 
         "regStatus = 'Cancelled' " +
-        "WHERE eventID=? AND partyID=? AND participantID=?;";
+        "WHERE eventID=? AND partyID=? AND participantID=?;"; //to remove party member, set partyID to null and regStatus to Cancelled. Keep row in the DB for history tracking
       let deletion = await sequelize.query(deleteStmt,
       {
         replacements: [eventID, partyID, partyMembers[i].participantID],
@@ -741,14 +735,14 @@ async function updateParty(signup, eventID, partyID) {
     }
   }
 
-  for(i = 1; i <= partysize; i++) {
-    if(memberCheck[i] == partyMembers.length) {
+  for(i = 1; i <= partysize; i++) { //loop to look at party members in updated signup form
+    if(memberCheck[i] == partyMembers.length) { //if the partymember is never included in the original party member list, this is a new party member and a new entry must be created
       const queryStmt = "SELECT participantID FROM participants WHERE ((firstName = ? AND lastName = ?) OR email = ?  OR phone = ?) AND participantID NOT IN (SELECT participantID FROM participants WHERE eventID = ?);";
       const query = await sequelize.query(queryStmt,
       {
         replacements: [signup[`part${i}fname`], signup[`part${i}lname`], signup[`part${i}phone`], signup[`part${i}email`], eventID],
         type: sequelize.QueryTypes.SELECT
-      });
+      }); //history check same as in insertParty 
       var newParticipantID = uuidv4();
       if(query[0] != undefined) {
         newParticipantID = query[0].participantID;

@@ -77,8 +77,12 @@ function getEventMetadata(event) {
     logger.log(md);
     return JSON.stringify(JSON.parse(md));
 }
-
-function eventMetadataWrapper(signup, metadata) {
+/**
+ * Returns an object with key value pairs being the name of the additional question asked and the answer given based on the completed form
+ * @param {JSON} signup completed signup form
+ * @param {JSON} metadata object that has additional questions and their question type as key value pairs
+ */
+function eventMetadataWrapper(signup, metadata) { 
     var md = '{';
     metadata = JSON.parse(metadata);
     const extraFields = Object.keys(metadata);
@@ -107,7 +111,10 @@ function cleanupEventData(events){
 function trimTime(time){
     return time.slice(0, time.length-6) + " " + time.slice(time.length-2);
 }
-
+/**
+ * Returns a string for the given time in the format HH:MM AM/PM
+ * @param {datetime} time datetime object
+ */
 function trimRegTime(time){
     if(time.slice(0, time.length-6).length == 4) {
         return "0" + time.slice(0, time.length-6) + " " + time.slice(time.length-2);

@@ -1,11 +1,11 @@
 $("#addpart").click(add_function);
-
+//function that will add an extra participant div containing all the questions needed for an extra party member
 function add_function(event) {
-    var intId = $("#partymembers div").length + 1;
-    if(intId < $(this).attr("maxSize")) {
+    var intId = $("#partymembers div").length + 1; //checks div of parent page that contains the extra party members for how many extra party members there are
+    if(intId < $(this).attr("maxSize")) { //checks to make sure that the new participant added will not exceed the max party size for the event
         var partWrapper = $(`<div style="text-align:right; padding-right:25%;" class="partwrapper" id="part${intId}"/>`);
         partWrapper.data("idx", intId);
-
+        //declares the labels and fields for the new div
         var pLabel = $(`<h2>Party Member ${intId + 1}</h2>`);
         var pFNameLabel = $(`<label for="part${intId}fname">Participant ${intId + 1} First Name: </label>`);
         var pFName = $(`<input required type="text" id="part${intId}fname" name="part${intId}fname" class="partFName name" placeholder="Party Member First Name Here"><br>`);
@@ -29,7 +29,7 @@ function add_function(event) {
         var pERelation = $(`<input type="text" id="part${intId}erelation" name="part${intId}erelation" class = "relation" required><br>`);
         var pEPhoneLabel = $(`<label for="part${intId}ephone" >Participant ${intId + 1} Emergency Contact Phone Number: </label>`);
         var pEPhone = $(`<input required type="text" id="part${intId}ephone" name="part${intId}ephone" class="eContactPhone" placeholder="Party Member Emergency Contact Phone Number Here"/><br>`);
-
+        //appends the lables and field names in order of appearance for the form onto the new div to be added
         partWrapper.append(pLabel);
         partWrapper.append(pFNameLabel);
         partWrapper.append(pFName);
@@ -53,12 +53,12 @@ function add_function(event) {
         partWrapper.append(pBoat);
         partWrapper.append(pCPRLabel);
         partWrapper.append(pCPR);
-        $("#partymembers").append(partWrapper);
-    } else {
+        $("#partymembers").append(partWrapper); //appends newly created div to the form
+    } else { //sends alert message to screen that the max party size has been reached for the event
         alert("Max Party Size Reached");
     }
 }
 
-$("#remove").click(function () {
+$("#remove").click(function () { //remove the last div(last new partymember) in the partymembers div
     $('div:last-child', '#partymembers').remove();
 });
