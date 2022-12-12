@@ -19,7 +19,7 @@
     "cookie-session": "^1.4.0",
     "dc-tableview": "^2.0.1",
     "ejs": "^3.0.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "jest": "^25.2.7",
     "jquery": "^3.5.0",
     "jsdom": "^16.2.1",
